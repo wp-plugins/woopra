@@ -3,7 +3,7 @@
 Plugin Name: Woopra
 Plugin URI: http://www.woopra.com
 Description: This plugin adds Woopra's real-time analytics to any WordPress installation.  Simply sign up at Woopra.com, then activate the plugin and configure your site ID in the Woopra settings.
-Version: 1.3.2
+Version: 1.3.3
 Author: Elie El Khoury
 Author URI: http://www.woopra.com
 */
@@ -87,7 +87,7 @@ function woo_widget() {
 	echo "</script>\r\n";
 
        $websiteid = get_option('woopra_website_id');
-	echo "<script src=\"http://www.woopra.com/_servers/woopra.js\" type=\"text/javascript\"></script>";
+	echo "<script src=\"http://static.woopra.com/js/woopra.js\" type=\"text/javascript\"></script>";
 
 }
 
@@ -246,7 +246,7 @@ function woopra_print_admin_html() {
 
 
 function woopra_analytics_head() {
-	echo "<script src=\"". get_option('siteurl') ."/wp-content/plugins/woopra/woopra_analytics.js\"></script>\r\n";
+	echo "<script src=\"". get_option('siteurl') ."/wp-content/plugins/woopra/woopra_analytics.js?1\"></script>\r\n";
 	echo "<script src=\"". get_option('siteurl') ."/wp-content/plugins/woopra/swfobject.js\"></script>\r\n";
 	echo "<script src=\"". get_option('siteurl') ."/wp-content/plugins/woopra/datepicker.js\"></script>\r\n";
 	echo "<link rel='stylesheet' href='". get_option('siteurl') ."/wp-content/plugins/woopra/woopra_analytics.css' type='text/css' />";
