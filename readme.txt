@@ -1,5 +1,5 @@
 === Woopra Analytics Plugin ===
-Contributors: markjaquith, shane
+Contributors: eliekhoury, markjaquith, shane
 Web site: http://Woopra.com
 Tags: statistics, analytics, stats, real-time
 Requires at least: 2.0
