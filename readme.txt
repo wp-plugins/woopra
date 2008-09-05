@@ -1,6 +1,6 @@
 === Woopra Analytics Plugin ===
 Contributors: eliekhoury, markjaquith, shane
-Web site: http://Woopra.com
+Web site: http://www.woopra.com
 Tags: statistics, analytics, stats, real-time
 Requires at least: 2.0
 Tested up to: 2.6.1
