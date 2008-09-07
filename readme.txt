@@ -1,10 +1,10 @@
 === Woopra Analytics Plugin ===
-Contributors: eliekhoury, markjaquith, shane
+Contributors: eliekhoury, markjaquith, shanef
 Web site: http://www.woopra.com
 Tags: statistics, analytics, stats, real-time
 Requires at least: 2.0
 Tested up to: 2.6.1
-Stable tag: 1.3.3
+Stable tag: 1.3.4
 
 This plugin adds Woopra's real-time analytics to any WordPress installation.  Activate the plugin and configure your site ID in the Woopra settings.
 
