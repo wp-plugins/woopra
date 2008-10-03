@@ -3,7 +3,7 @@
 Plugin Name: Woopra
 Plugin URI: http://www.woopra.com
 Description: This plugin adds Woopra's real-time analytics to any WordPress installation.  Simply sign up at Woopra.com, then activate the plugin and configure your site ID in the Woopra settings.
-Version: 1.3.4
+Version: 1.3.5
 Author: Elie El Khoury
 Author URI: http://www.ekhoury.com
 */

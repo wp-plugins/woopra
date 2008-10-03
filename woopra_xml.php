@@ -33,7 +33,7 @@ class WoopraAPI {
 		{
 			return false;	//	they both need to be set for this to work
 		}
-		$this->server = floor(((int)($this->siteid))/100000000);
+		$this->server = floor(((float)($this->siteid))/100000000); 
 		return true;
 	}
 
