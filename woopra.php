@@ -3,7 +3,7 @@
 Plugin Name: Woopra
 Plugin URI: http://www.woopra.com
 Description: This plugin adds Woopra's real-time analytics to any WordPress installation.  Simply sign up at Woopra.com, then activate the plugin and configure your site ID in the Woopra settings.
-Version: 1.3.5
+Version: 1.3.6
 Author: Elie El Khoury
 Author URI: http://www.ekhoury.com
 */
@@ -21,6 +21,16 @@ function woo_session_start() {
 		$tmp_comment = get_comment($comment_id);
 		$woopra_events['Comment'] = $tmp_comment->comment_content;
 		unset($_SESSION['temp_woopra_comment']);
+	}
+	
+	if (get_option('woopra_show_searches')=='YES') {
+		if (isset($_GET['s'])) {
+			$woopra_events['Search'] = $_GET['s']; 
+		}
+	
+		if (isset($_GET['q'])) {
+			$woopra_events['Search'] = $_GET['q']; 
+		}
 	}
 }
 
@@ -172,6 +182,13 @@ function woopra_print_admin_html() {
 				update_option('woopra_show_comments','NO');
 			}
 			
+			if (isset($_POST['showsearches'])) {
+				update_option('woopra_show_searches','YES');
+			}
+			else {
+				update_option('woopra_show_searches','NO');
+			}
+			
 			if (isset($_POST['apikey'])) {
 				update_option('woopra_api_key', $_POST['apikey']);
 			}
@@ -234,6 +251,12 @@ function woopra_print_admin_html() {
 		<th scope="row">Show Comments</th>
 		<td>
 		<input type="checkbox" <?php echo (get_option('woopra_show_comments')=='YES')?"checked":""; ?> id="showcomments" name="showcomments"/> <label for="showcomments">Show comments as they are posted.</label><br />You will see an excerpt of the comment in the Woopra Live section
+		</td>
+		</tr>
+		<tr valign="top">
+		<th scope="row">Show Searches</th>
+		<td>
+		<input type="checkbox" <?php echo (get_option('woopra_show_searches')=='YES')?"checked":""; ?> id="showsearches" name="showsearches"/> <label for="showsearches">Show search queries.</label>
 		</td>
 		</tr>
 	</table>
