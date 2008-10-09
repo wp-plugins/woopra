@@ -14,6 +14,7 @@ class WoopraAPI {
     var $data = null;
 	var $counter = null;     
     var $current_tag = null;
+    var $connection_error = null;
     var $error_msg = null;
     var $founddata = false;
     
@@ -91,7 +92,7 @@ class WoopraAPI {
 
         if (!($fp = @fopen($this->url, 'rb')))
 		{
-            $this->error_msg = "Cannot open {$this->url}";
+            $this->connection_error = "Cannot open {$this->url}";
             return $this->error();
         }
 
