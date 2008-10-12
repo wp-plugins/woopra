@@ -5,7 +5,7 @@ function woopra_render_results($entries, $key) {
 
 if ($entries == null || sizeof($entries) == 0) {
 ?>
-<p align="center">Your query returned 0 results.<br/>Click <a href="#" onclick="refreshCurrent(); return false;">here</a> to retry again!</p>
+<p align="center"><?php _e("Your query returned 0 results."); ?><br/>Click <a href="#" onclick="refreshCurrent(); return false;">here</a> to retry again!</p>
 <?php
 return;
 }
@@ -369,11 +369,11 @@ function woopra_render_name($key, $name=NULL, $meta=NULL) {
 			case 'GET_PLATFORMS':
 				return woopra_platform_icon($name) . "&nbsp;&nbsp;" . $name;
 			case 'GET_PAGEVIEWS':
-				return $meta . "<br/>" . "<small><a href=\"http://".woopra_host."$name\" target=\"_blank\">$name</a></small>";
+				return $meta . "<br/>" . "<small><a href=\"http://".get_woopra_host()."$name\" target=\"_blank\">$name</a></small>";
 			case 'GET_PAGELANDINGS':
-				return $meta . "<br/>" . "<small><a href=\"http://".woopra_host."$name\" target=\"_blank\">$name</a></small>";
+				return $meta . "<br/>" . "<small><a href=\"http://".get_woopra_host()."$name\" target=\"_blank\">$name</a></small>";
 			case 'GET_PAGEEXITS':
-				return $meta . "<br/>" . "<small><a href=\"http://".woopra_host."$name\" target=\"_blank\">$name</a></small>";
+				return $meta . "<br/>" . "<small><a href=\"http://".get_woopra_host()."$name\" target=\"_blank\">$name</a></small>";
 			case 'GET_OUTGOINGLINKS':
 				return "<a href=\"$name\" target=\"_blank\">$name</a>";
 			case 'GET_DOWNLOADS':

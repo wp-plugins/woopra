@@ -34,10 +34,9 @@ function woopra_convert_date($date) {
 
 function woopra_line_chart_date($date) {
 	$date = (int)$date;
-	
 	$year = 2006 + (int)($date/100000);
 	$day_of_year = $date%100000;
-	$to_return = date('F jS', mktime(0,0,0,0,$day_of_year,$year)); 
+	$to_return = date('F jS', mktime(0,0,0,1,$day_of_year,$year)); 
 	return $to_return;
 }
 
