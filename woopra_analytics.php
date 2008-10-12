@@ -6,9 +6,6 @@ if (isset($_GET['wkey'])) {
 	include 'woopra_functions.php';
 	include 'woopra_renderer.php';
 	
-	define('woopra_host',get_woopra_host());
-	define('woopra_api_key', get_option('woopra_api_key'));
-
 	$key = $_GET['wkey'];
 	$key = str_replace("&amp;","&",$key);
 	
@@ -25,7 +22,7 @@ function woopra_analytics_show_content() {
 
 if (!woopra_check_analytics()) {
 ?>
-	<p align="center">Please provide your API Key & Woopra Site ID in order to show your analytics!</p>
+	<p align="center"><?php _e('Please provide your API Key & Woopra Site ID in order to show your analytics!') ?></p>
 <?php
 	return;
 }
@@ -42,8 +39,8 @@ if (!woopra_check_analytics()) {
 		<a id="daterangelink" href="#" onclick="return showDatePicker();" title="<?php _e('Click here to change the date range') ?>"><script type="text/javascript">document.write(getDateLinkText())</script></a>
 			<div id="datepickerdiv">
 				<table><tr>
-				<td align="center">From: <input type="text" class="w8em format-y-m-d divider-dash highlight-days-12 no-fade" id="dp-from" name="dp-from" value="" maxlength="10" /></td>
-				<td align="center">To: <input type="text" class="w8em format-y-m-d divider-dash highlight-days-12 no-fade" id="dp-to" name="dp-to" value="" maxlength="10" /></td>
+				<td align="center"><?php _e('From') ?>: <input type="text" class="w8em format-y-m-d divider-dash highlight-days-12 no-fade" id="dp-from" name="dp-from" value="" maxlength="10" /></td>
+				<td align="center"><?php _e('To') ?>: <input type="text" class="w8em format-y-m-d divider-dash highlight-days-12 no-fade" id="dp-to" name="dp-to" value="" maxlength="10" /></td>
 				</tr>
 				<tr>
 				<td colspan="2" style="padding-top: 5px; text-align: right;">
@@ -105,7 +102,7 @@ if (!woopra_check_analytics()) {
 	</script>
 	
 	<div id="woopra_footer">
-		Powered by <a href="http://www.woopra.com/">Woopra Analytics</a>
+		<?php printf( __('Powered by <a href="%1$s">Woopra Analytics</a>'), 'http://woopra.com'); ?>
 	</div>
 </div>
 <!-- Woopra Analytics Ends Here -->
@@ -123,8 +120,9 @@ function woopra_check_analytics() {
 function woopra_process_request($key,$start_date, $end_date, $limit, $offset) {
 	include 'woopra_xml.php';
 	$woopraXML = new WoopraAPI();
-	$woopraXML->hostname = woopra_host;
-	$woopraXML->siteid = get_option('woopra_website_id');	
+	$woopraXML->hostname = get_woopra_host();
+	$woopraXML->siteid = get_option('woopra_website_id');
+	$woopraXML->api_key = get_option('woopra_api_key');
 	$init = $woopraXML->Init();
 	$entries = null;
 	if ($init) {
@@ -135,7 +133,7 @@ function woopra_process_request($key,$start_date, $end_date, $limit, $offset) {
 	}
 	
 	if ($woopraXML->connection_error != null) {
-		die('<p style="text-align: center; background: #dc0303; padding: 10px; color: #fff;">The Woopra Plugin was not able to request your analytics data from the Woopra Engines.<br/><small>Your hosting provider is not allowing the Woopra Plugin to fetch data from the Woopra Servers.</small></p>');
+		die('<p style="text-align: center; background: #dc0303; padding: 10px; color: #fff;">'. __("The Woopra Plugin was not able to request your analytics data from the Woopra Engines.") . '<br/><small>'. __("Your hosting provider is not allowing the Woopra Plugin to fetch data from the Woopra Servers.") . '</small></p>');
 	}
 	
 	$woopraXML->clearData();
