@@ -1,0 +1,274 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Elie El Khoury
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/woopra\n"
+"POT-Creation-Date: 2008-10-14 13:26+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: woopra.php:207
+msgid ""
+"For more info about installation and customization, please visit <a href="
+"\"http://www.woopra.com/installation-guide\">the installation page in your "
+"member&#8217;s area"
+msgstr ""
+
+#: woopra.php:212
+msgid "Website ID"
+msgstr ""
+
+#: woopra.php:215
+msgid ""
+"You can find the Website's ID in <a href='http://www.woopra.com/"
+"members/'>your member&#8217;s area"
+msgstr ""
+
+#: woopra.php:222
+msgid ""
+"You can find the Website's API Key in <a href='http://www.woopra.com/"
+"members/'>your member&#8217;s area"
+msgstr ""
+
+#: woopra.php:226
+msgid "Show Analytics"
+msgstr ""
+
+#: woopra.php:233
+msgid "Ignore Administrator"
+msgstr ""
+
+#: woopra.php:239
+msgid "Admin Area"
+msgstr ""
+
+#: woopra.php:245
+msgid "Auto Tagging"
+msgstr ""
+
+#: woopra.php:247
+msgid "Automatically tag members &amp; commentators"
+msgstr ""
+
+#: woopra.php:251
+msgid "Show Comments"
+msgstr ""
+
+#: woopra.php:253
+msgid "Show comments as they are posted."
+msgstr ""
+
+#: woopra.php:253
+msgid "You will see an excerpt of the comment in the Woopra Live section"
+msgstr ""
+
+#: woopra.php:263
+msgid "Save Changes"
+msgstr ""
+
+#: woopra_analytics.php:25
+msgid ""
+"Please provide your API Key & Woopra Site ID in order to show your analytics!"
+msgstr ""
+
+#: woopra_analytics.php:37
+msgid "Refresh"
+msgstr ""
+
+#: woopra_analytics.php:39
+msgid "Click here to change the date range"
+msgstr ""
+
+#: woopra_analytics.php:42
+msgid "From"
+msgstr ""
+
+#: woopra_analytics.php:43
+msgid "To"
+msgstr ""
+
+#: woopra_analytics.php:47
+msgid "Cancel"
+msgstr ""
+
+#: woopra_analytics.php:48
+msgid "Apply Date Range"
+msgstr ""
+
+#: woopra_analytics.php:65
+msgid "Visitors"
+msgstr ""
+
+#: woopra_analytics.php:66
+msgid "Systems"
+msgstr ""
+
+#: woopra_analytics.php:67
+msgid "Pages"
+msgstr ""
+
+#: woopra_analytics.php:68
+msgid "Referrers"
+msgstr ""
+
+#: woopra_analytics.php:69
+msgid "Searches"
+msgstr ""
+
+#: woopra_analytics.php:71
+msgid "Overview"
+msgstr ""
+
+#: woopra_analytics.php:72
+msgid "Countries"
+msgstr ""
+
+#: woopra_analytics.php:73
+msgid "Tagged Visitors"
+msgstr ""
+
+#: woopra_analytics.php:74
+msgid "Bounce Rate"
+msgstr ""
+
+#: woopra_analytics.php:75
+msgid "Visit Durations"
+msgstr ""
+
+#: woopra_analytics.php:77
+msgid "Browsers"
+msgstr ""
+
+#: woopra_analytics.php:78
+msgid "Platforms"
+msgstr ""
+
+#: woopra_analytics.php:79
+msgid "Screen Resolutions"
+msgstr ""
+
+#: woopra_analytics.php:80
+msgid "Languages"
+msgstr ""
+
+#: woopra_analytics.php:82
+msgid "Pageviews"
+msgstr ""
+
+#: woopra_analytics.php:83
+msgid "Landing Pages"
+msgstr ""
+
+#: woopra_analytics.php:84
+msgid "Exit Pages"
+msgstr ""
+
+#: woopra_analytics.php:85
+msgid "Outgoing Links"
+msgstr ""
+
+#: woopra_analytics.php:86
+msgid "Downloads"
+msgstr ""
+
+#: woopra_analytics.php:88
+msgid "Referrer Types"
+msgstr ""
+
+#: woopra_analytics.php:89
+msgid "Regular Referrers"
+msgstr ""
+
+#: woopra_analytics.php:90
+msgid "Search Engines"
+msgstr ""
+
+#: woopra_analytics.php:91
+msgid "Feed Readers"
+msgstr ""
+
+#: woopra_analytics.php:92
+msgid "Emails"
+msgstr ""
+
+#: woopra_analytics.php:93
+msgid "Social Bookmarks"
+msgstr ""
+
+#: woopra_analytics.php:94
+msgid "Social Networks"
+msgstr ""
+
+#: woopra_analytics.php:95
+msgid "Media"
+msgstr ""
+
+#: woopra_analytics.php:96
+msgid "News"
+msgstr ""
+
+#: woopra_analytics.php:98
+msgid "Search Queries"
+msgstr ""
+
+#: woopra_analytics.php:99
+msgid "Keywords"
+msgstr ""
+
+#: woopra_analytics.php:105
+#, php-format
+msgid "Powered by <a href=\"%1$s\">Woopra Analytics</a>"
+msgstr ""
+
+#: woopra_analytics.php:136
+msgid ""
+"The Woopra Plugin was not able to request your analytics data from the "
+"Woopra Engines."
+msgstr ""
+
+#: woopra_analytics.php:136
+msgid ""
+"Your hosting provider is not allowing the Woopra Plugin to fetch data from "
+"the Woopra Servers."
+msgstr ""
+
+#: woopra_renderer.php:8
+msgid "Your query returned 0 results."
+msgstr ""
+
+#: woopra_renderer.php:8
+#, php-format
+msgid "%s <a href=\"#\" onclick=\"refreshCurrent(); return false;\">%s</a> %s "
+msgstr ""
+
+#. Plugin Name of an extension
+msgid "Woopra"
+msgstr ""
+
+#. Plugin URI of an extension
+msgid "http://www.woopra.com"
+msgstr ""
+
+#. Description of an extension
+msgid ""
+"This plugin adds Woopra's real-time analytics to any WordPress installation.  "
+"Simply sign up at Woopra.com, then activate the plugin and configure your "
+"site ID in the Woopra settings."
+msgstr ""
+
+#. Author of an extension
+msgid "Elie El Khoury"
+msgstr ""
+
+#. Author URI of an extension
+msgid "http://www.ekhoury.com"
+msgstr ""
