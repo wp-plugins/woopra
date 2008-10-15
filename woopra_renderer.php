@@ -2,11 +2,16 @@
 
 
 function woopra_render_results($entries, $key) {
+	
+load_plugin_textdomain('woopra', PLUGINDIR.'/'.dirname(plugin_basename(__FILE__)) . '/locale');
 
 if ($entries == null || sizeof($entries) == 0) {
 ?>
-<p align="center"><?php _e("Your query returned 0 results."); ?><br/><?php printf(__('%s <a href="#" onclick="refreshCurrent(); return false;">%s</a> %s '), 'Click', 'here', 'to retry again!'); ?></p>
+<p align="center"><?php _e("Your query returned 0 results.", 'woopra'); ?><br/><?php __('Click <a href="#" onclick="refreshCurrent(); return false;">here</a> to retry again!', 'woopra'); ?></p>
 <?php
+
+
+
 return;
 }
 
