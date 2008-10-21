@@ -8,6 +8,8 @@ Author: Elie El Khoury
 Author URI: http://www.ekhoury.com
 */
 
+load_plugin_textdomain('woopra', PLUGINDIR.'/'.dirname(plugin_basename(__FILE__)) . '/locale');
+
 function woo_session_start() {
 	global $woopra_events;
 

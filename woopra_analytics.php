@@ -143,6 +143,4 @@ function woopra_process_request($key,$start_date, $end_date, $limit, $offset) {
 	return $entries;
 }
 
-load_plugin_textdomain('woopra', PLUGINDIR.'/'.dirname(plugin_basename(__FILE__)) . '/locale');
-
 ?>
