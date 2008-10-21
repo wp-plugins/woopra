@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/woopra\n"
-"POT-Creation-Date: 2008-10-15 15:14+0000\n"
+"POT-Creation-Date: 2008-10-21 04:37+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,62 +16,62 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: woopra.php:206
+#: woopra.php:208
 msgid ""
 "For more info about installation and customization, please visit <a href="
 "\"http://www.woopra.com/installation-guide\">the installation page in your "
 "member&#8217;s area"
 msgstr ""
 
-#: woopra.php:211
+#: woopra.php:213
 msgid "Website ID"
 msgstr ""
 
-#: woopra.php:214
+#: woopra.php:216
 msgid ""
 "You can find the Website's ID in <a href='http://www.woopra.com/"
 "members/'>your member&#8217;s area"
 msgstr ""
 
-#: woopra.php:221
+#: woopra.php:223
 msgid ""
 "You can find the Website's API Key in <a href='http://www.woopra.com/"
 "members/'>your member&#8217;s area"
 msgstr ""
 
-#: woopra.php:225
+#: woopra.php:227
 msgid "Show Analytics"
 msgstr ""
 
-#: woopra.php:232
+#: woopra.php:234
 msgid "Ignore Administrator"
 msgstr ""
 
-#: woopra.php:238
+#: woopra.php:240
 msgid "Admin Area"
 msgstr ""
 
-#: woopra.php:244
+#: woopra.php:246
 msgid "Auto Tagging"
 msgstr ""
 
-#: woopra.php:246
+#: woopra.php:248
 msgid "Automatically tag members &amp; commentators"
 msgstr ""
 
-#: woopra.php:250
+#: woopra.php:252
 msgid "Show Comments"
 msgstr ""
 
-#: woopra.php:252
+#: woopra.php:254
 msgid "Show comments as they are posted."
 msgstr ""
 
-#: woopra.php:252
+#: woopra.php:254
 msgid "You will see an excerpt of the comment in the Woopra Live section"
 msgstr ""
 
-#: woopra.php:262
+#: woopra.php:264
 msgid "Save Changes"
 msgstr ""
 
@@ -241,11 +241,11 @@ msgid ""
 "the Woopra Servers."
 msgstr ""
 
-#: woopra_renderer.php:10
+#: woopra_renderer.php:8
 msgid "Your query returned 0 results."
 msgstr ""
 
-#: woopra_renderer.php:10
+#: woopra_renderer.php:8
 msgid ""
 "Click <a href=\"#\" onclick=\"refreshCurrent(); return false;\">here</a> to "
 "retry again!"
