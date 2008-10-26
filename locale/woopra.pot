@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/woopra\n"
-"POT-Creation-Date: 2008-10-26 02:35+0000\n"
+"POT-Creation-Date: 2008-10-26 02:53+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,76 +16,88 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: woopra.php:108 woopra.php:109 woopra.php:117 woopra.php:118
+#: woopra.php:110 woopra.php:111 woopra.php:119 woopra.php:120
 msgid "Woopra Analytics"
 msgstr ""
 
-#: woopra.php:127 woopra.php:128
+#: woopra.php:129 woopra.php:130
 msgid "Woopra Settings"
 msgstr ""
 
-#: woopra.php:197
+#: woopra.php:194
+msgid "Settings updated!"
+msgstr ""
+
+#: woopra.php:199
 msgid ""
 "For more info about installation and customization, please visit <a href="
 "\"http://www.woopra.com/installation-guide\">the installation page in your "
 "member&#8217;s area"
 msgstr ""
 
-#: woopra.php:205
+#: woopra.php:204
+msgid "API Key"
+msgstr ""
+
+#: woopra.php:204
+msgid "(Optional)"
+msgstr ""
+
+#: woopra.php:207
 msgid ""
 "You can find the Website's API Key in <a href='http://www.woopra.com/"
 "members/'>your member&#8217;s area"
 msgstr ""
 
-#: woopra.php:209
+#: woopra.php:211
 msgid "Show Analytics"
 msgstr ""
 
-#: woopra.php:212
+#: woopra.php:214
 msgid "At the dashboard menu"
 msgstr ""
 
-#: woopra.php:212
+#: woopra.php:214
 msgid "At the top level menu"
 msgstr ""
 
-#: woopra.php:221
+#: woopra.php:223
 msgid "Ignore Administrator"
 msgstr ""
 
-#: woopra.php:227
+#: woopra.php:229
 msgid "Admin Area"
 msgstr ""
 
-#: woopra.php:233
+#: woopra.php:235
 msgid "Auto Tagging"
 msgstr ""
 
-#: woopra.php:235
+#: woopra.php:237
 msgid "Automatically tag members &amp; commentators"
 msgstr ""
 
-#: woopra.php:239
+#: woopra.php:241
 msgid "Show Comments"
 msgstr ""
 
-#: woopra.php:241
+#: woopra.php:243
 msgid "Show comments as they are posted."
 msgstr ""
 
-#: woopra.php:241
+#: woopra.php:243
 msgid "You will see an excerpt of the comment in the Woopra Live section"
 msgstr ""
 
-#: woopra.php:245
+#: woopra.php:247
 msgid "Show Searches"
 msgstr ""
 
-#: woopra.php:247
+#: woopra.php:249
 msgid "Show search queries."
 msgstr ""
 
-#: woopra.php:251
+#: woopra.php:253
 msgid "Save Changes"
 msgstr ""
 
