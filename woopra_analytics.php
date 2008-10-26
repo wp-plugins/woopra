@@ -121,7 +121,6 @@ function woopra_process_request($key,$start_date, $end_date, $limit, $offset) {
 	include 'woopra_xml.php';
 	$woopraXML = new WoopraAPI();
 	$woopraXML->hostname = get_woopra_host();
-	$woopraXML->siteid = get_option('woopra_website_id');
 	$woopraXML->api_key = get_option('woopra_api_key');
 	$init = $woopraXML->Init();
 	$entries = null;

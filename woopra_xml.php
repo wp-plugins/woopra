@@ -19,8 +19,6 @@ class WoopraAPI {
     var $founddata = false;
     
     //	Woopra Vars
-    var $siteid = null;
-    var $server = null;
 	var $api_key = null;
     var $hostname = null;
     
@@ -31,11 +29,10 @@ class WoopraAPI {
 	 */
 	function Init()
 	{
-		if ((!$this->siteid) || (!$this->api_key))
+		if (!$this->api_key)
 		{
 			return false;	//	they both need to be set for this to work
 		}
-		$this->server = floor(((float)($this->siteid))/100000000); 
 		return true;
 	}
 
@@ -51,7 +48,7 @@ class WoopraAPI {
 	 */
 	function setXML($area, $start_day, $end_day, $limit, $offset)
 	{
-		$this->url = "http://engine".$this->server.".woopra.com/api/output_format=xml&website=".$this->hostname."&api_key=".$this->api_key."&query=".$area."&start_day=".$start_day."&end_day=".$end_day."&limit=".$limit."&offset=".$offset;
+		$this->url = "http://".$this->hostname.".woopra-ns.com/api/output_format=xml&website=".$this->hostname."&api_key=".$this->api_key."&query=".$area."&start_day=".$start_day."&end_day=".$end_day."&limit=".$limit."&offset=".$offset;
 		return true;	//	URL is set
 	}
 	

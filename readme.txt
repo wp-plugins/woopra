@@ -1,10 +1,10 @@
 === Woopra Analytics Plugin ===
-Contributors: eliekhoury, markjaquith, shanef
+Contributors: eliekhoury, markjaquith, ShaneF
 Web site: http://www.woopra.com
 Tags: statistics, analytics, stats, real-time
 Requires at least: 2.0
 Tested up to: 2.7.0
-Stable tag: 1.3.8
+Stable tag: 1.4.0
 
 This plugin adds Woopra's real-time analytics to any WordPress installation.  Activate the plugin and configure your site ID in the Woopra settings.
 
@@ -31,8 +31,8 @@ These installation instructions assume you have an active account established on
 1. Extract the Woopra.zip file to a location on your local machine
 2. Upload the `woopra` folder and all contents into the `/wp-content/plugins/` directory
 3. Activate the plugin through the 'Plugins' menu in WordPress
-4. Configure your Website ID and API keys in the Woopra Settings menu
-(Your ID and API key can be found in the Members area on Woopra.com)
+4. Configure your API key in the Woopra Settings menu
+(Your API key can be found in the Members area on Woopra.com)
 
 IMPORTANT NOTE: 
 In order for the WordPress Plugin to work, your WordPress theme must have the following code immediately before the </BODY> element in the footer.php file:
@@ -41,3 +41,6 @@ In order for the WordPress Plugin to work, your WordPress theme must have the fo
 
 For more detailed installation instructions refer to:
 http://www.woopra.com/installation-guide/
+
+For more support refer to:
+http://www.woopra.com/forums/

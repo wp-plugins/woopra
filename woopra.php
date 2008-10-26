@@ -71,15 +71,7 @@ function woo_widget() {
 	global $woopra_visitor;
 	global $woopra_events;
 	
-	$woopra_id = get_option('woopra_website_id');
-
-	if ($woopra_id == NULL || $woopra_id == '') {
-		echo '<!-- Woopra Plugin requires setup -->';
-		return;
-	}
-
 	echo "<script type=\"text/javascript\">\r\n";
-	echo "var woopra_id = '" . $woopra_id . "';\r\n";
 	echo "var woopra_visitor = new Array();\r\n";
 	echo "var woopra_event = new Array();\r\n";
 
@@ -96,8 +88,6 @@ function woo_widget() {
 	}
 
 	echo "</script>\r\n";
-
-       $websiteid = get_option('woopra_website_id');
 	echo "<script src=\"http://static.woopra.com/js/woopra.js\" type=\"text/javascript\"></script>";
 
 }
@@ -115,8 +105,8 @@ function woopra_add_menu () {
 	if (function_exists('add_menu_page')) {
 		if (get_option('woopra_analytics_tab') && get_option('woopra_analytics_tab') =='toplevel') {
 			add_menu_page(
-				"Woopra Analytics"
-				, "Woopra Analytics"
+				__("Woopra Analytics")
+				, __("Woopra Analytics")
 				, "manage_options"
 				, "woopra_analytics.php"
 				, "woopra_analytics_show_content"); 
@@ -124,8 +114,8 @@ function woopra_add_menu () {
 		else {
 			add_submenu_page(
 				'index.php',
- 				"Woopra Analytics"
- 				, "Woopra Analytics"
+ 				__("Woopra Analytics")
+ 				, __("Woopra Analytics")
 				, 'manage_options'
 				, "woopra-analytics"
  				, "woopra_analytics_show_content");
@@ -134,8 +124,8 @@ function woopra_add_menu () {
 	}
 	if (function_exists('add_options_page')) {
 		 add_options_page(
-		 	"Woopra Settings"
-		 	, "Woopra Settings"
+		 	__("Woopra Settings")
+		 	, __("Woopra Settings")
 		 	, 7
 		 	, basename(__FILE__)
 		 	, 'woopra_print_admin_html');
@@ -148,7 +138,7 @@ function woopra_print_admin_html() {
 	
 	<?php
 
-                $smsg = "";
+		$smsg = "";
 		if (isset($_POST['submitoptions'])) {
 			check_admin_referer('update-woopra-options');
 			if (isset($_POST['autotag'])) {
@@ -209,13 +199,6 @@ function woopra_print_admin_html() {
 	<form action="" method="post">
 	<?php if ( function_exists('wp_nonce_field') ) wp_nonce_field('update-woopra-options'); ?>
 	<table class="form-table">
-		<tr valign="top">
-		<th scope="row"><?php _e('Website ID', 'woopra') ?></th>
-		<td>
-		<input type="text" value="<?php echo attribute_escape( get_option('woopra_website_id') ); ?>" id="websiteid" name="websiteid"/><br/>
-		<?php _e("You can find the Website's ID in <a href='http://www.woopra.com/members/'>your member&#8217;s area", 'woopra') ?></a>
-		</td>
-		</tr>
 		<tr valign="top">
 		<th scope="row">API Key <small>(Optional)</small></th>
 		<td>
