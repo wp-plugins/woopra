@@ -101,6 +101,9 @@ function woopra_browser_icon($browser) {
     if (stripos($browser, "safari") !== false) {
         return woopra_get_image("browsers/safari");
     }
+    if (stripos($browser, "chrome") !== false) {
+        return woopra_get_image("browsers/chrome");
+    }
     if (stripos($browser, "opera") !== false) {
         return woopra_get_image("browsers/opera");
     }

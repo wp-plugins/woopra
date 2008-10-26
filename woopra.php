@@ -189,7 +189,7 @@ function woopra_print_admin_html() {
 
 			?>
 
-			<div id="message" class="updated fade"><p>Settings updated!</p></div>
+			<div id="message" class="updated fade"><p><?php _e('Settings updated!') ?></p></div>
 
 	<?php } ?>
         
@@ -199,7 +199,7 @@ function woopra_print_admin_html() {
 	<?php if ( function_exists('wp_nonce_field') ) wp_nonce_field('update-woopra-options'); ?>
 	<table class="form-table">
 		<tr valign="top">
-		<th scope="row">API Key <small>(Optional)</small></th>
+		<th scope="row"><?php _e('API Key', 'woopra') ?><small><?php _e('(Optional)', 'woopra') ?></small></th>
 		<td>
 		<input type="text" value="<?php echo attribute_escape( get_option('woopra_api_key') ); ?>" id="apikey" name="apikey"/><br/>
 		<?php _e("You can find the Website's API Key in <a href='http://www.woopra.com/members/'>your member&#8217;s area", 'woopra') ?></a>
