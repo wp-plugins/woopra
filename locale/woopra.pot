@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/woopra\n"
-"POT-Creation-Date: 2008-10-21 04:37+0000\n"
+"POT-Creation-Date: 2008-10-26 02:35+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,62 +16,76 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: woopra.php:208
+#: woopra.php:108 woopra.php:109 woopra.php:117 woopra.php:118
+msgid "Woopra Analytics"
+msgstr ""
+
+#: woopra.php:127 woopra.php:128
+msgid "Woopra Settings"
+msgstr ""
+
+#: woopra.php:197
 msgid ""
 "For more info about installation and customization, please visit <a href="
 "\"http://www.woopra.com/installation-guide\">the installation page in your "
 "member&#8217;s area"
 msgstr ""
 
-#: woopra.php:213
-msgid "Website ID"
-msgstr ""
-
-#: woopra.php:216
-msgid ""
-"You can find the Website's ID in <a href='http://www.woopra.com/"
-"members/'>your member&#8217;s area"
-msgstr ""
-
-#: woopra.php:223
+#: woopra.php:205
 msgid ""
 "You can find the Website's API Key in <a href='http://www.woopra.com/"
 "members/'>your member&#8217;s area"
 msgstr ""
 
-#: woopra.php:227
+#: woopra.php:209
 msgid "Show Analytics"
 msgstr ""
 
-#: woopra.php:234
+#: woopra.php:212
+msgid "At the dashboard menu"
+msgstr ""
+
+#: woopra.php:212
+msgid "At the top level menu"
+msgstr ""
+
+#: woopra.php:221
 msgid "Ignore Administrator"
 msgstr ""
 
-#: woopra.php:240
+#: woopra.php:227
 msgid "Admin Area"
 msgstr ""
 
-#: woopra.php:246
+#: woopra.php:233
 msgid "Auto Tagging"
 msgstr ""
 
-#: woopra.php:248
+#: woopra.php:235
 msgid "Automatically tag members &amp; commentators"
 msgstr ""
 
-#: woopra.php:252
+#: woopra.php:239
 msgid "Show Comments"
 msgstr ""
 
-#: woopra.php:254
+#: woopra.php:241
 msgid "Show comments as they are posted."
 msgstr ""
 
-#: woopra.php:254
+#: woopra.php:241
 msgid "You will see an excerpt of the comment in the Woopra Live section"
 msgstr ""
 
-#: woopra.php:264
+#: woopra.php:245
+msgid "Show Searches"
+msgstr ""
+
+#: woopra.php:247
+msgid "Show search queries."
+msgstr ""
+
+#: woopra.php:251
 msgid "Save Changes"
 msgstr ""
 
@@ -160,7 +174,7 @@ msgstr ""
 msgid "Languages"
 msgstr ""
 
-#: woopra_analytics.php:82
+#: woopra_analytics.php:82 woopra_renderer.php:226
 msgid "Pageviews"
 msgstr ""
 
@@ -229,13 +243,13 @@ msgstr ""
 msgid "Powered by <a href=\"%1$s\">Woopra Analytics</a>"
 msgstr ""
 
-#: woopra_analytics.php:136
+#: woopra_analytics.php:135
 msgid ""
 "The Woopra Plugin was not able to request your analytics data from the "
 "Woopra Engines."
 msgstr ""
 
-#: woopra_analytics.php:136
+#: woopra_analytics.php:135
 msgid ""
 "Your hosting provider is not allowing the Woopra Plugin to fetch data from "
 "the Woopra Servers."
@@ -249,6 +263,22 @@ msgstr ""
 msgid ""
 "Click <a href=\"#\" onclick=\"refreshCurrent(); return false;\">here</a> to "
 "retry again!"
+msgstr ""
+
+#: woopra_renderer.php:86
+msgid "Hits"
+msgstr ""
+
+#: woopra_renderer.php:223
+msgid "Avg Time Spent"
+msgstr ""
+
+#: woopra_renderer.php:224
+msgid "New Visitors"
+msgstr ""
+
+#: woopra_renderer.php:225
+msgid "Visits"
 msgstr ""
 
 #. Plugin Name of an extension
