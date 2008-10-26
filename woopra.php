@@ -3,7 +3,7 @@
 Plugin Name: Woopra
 Plugin URI: http://www.woopra.com
 Description: This plugin adds Woopra's real-time analytics to any WordPress installation.  Simply sign up at Woopra.com, then activate the plugin and configure your site ID in the Woopra settings.
-Version: 1.3.8
+Version: 1.4.0
 Author: Elie El Khoury
 Author URI: http://www.ekhoury.com
 */
@@ -187,7 +187,6 @@ function woopra_print_admin_html() {
 				update_option('woopra_api_key','');
 			}
 
-			update_option('woopra_website_id', $_POST['websiteid']);
 			?>
 
 			<div id="message" class="updated fade"><p>Settings updated!</p></div>
@@ -209,38 +208,43 @@ function woopra_print_admin_html() {
 		<tr valign="top">
 		<th scope="row"><?php _e('Show Analytics', 'woopra') ?></th>
 		<td>
-		<input type="radio" <?php echo (get_option('woopra_analytics_tab') || get_option('woopra_analytics_tab')!='toplevel')?"checked":""; ?> id ="woopratab1" name="woopratab" value="dashboard"/> <label for="woopratab1">At the dashboard menu</label><br />
-		<input type="radio" <?php echo (get_option('woopra_analytics_tab') && get_option('woopra_analytics_tab')=='toplevel')?"checked":""; ?> id ="woopratab2" name="woopratab" value="toplevel"/> <label for="woopratab2">At the top level menu</label>
+		<?php
+			$woopra_tab_options = array('dashboard' => __("At the dashboard menu"), 'toplevel' => __('At the top level menu'));
+			foreach ( $woopra_tab_options as $key => $value) {
+				$selected = (get_option('woopra_analytics_tab') == $key) ? 'checked="checked"' : '';
+				echo "\n\t<label><input id='$key' type='radio' name='woopratab' value='$key' $selected/> $value</label><br />";
+			}
+		?>
 		</td>
 		</tr>
 		<tr valign="top">
 		<th scope="row"><?php _e('Ignore Administrator', 'woopra') ?></th>
 		<td>
-		<input type="checkbox" <?php echo (get_option('woopra_ignore_admin')=='YES')?"checked":""; ?> id ="ignoreadmin" name="ignoreadmin"/> <label for="ignoreadmin">Ignore Administrator Visits</label><br />Enable this check box if you want Woopra to ignore your or any other administrator visits.
+		<input type="checkbox" <?php checked('YES', get_option('woopra_ignore_admin')); ?> id="ignoreadmin" name="ignoreadmin"/> <label for="ignoreadmin">Ignore Administrator Visits</label><br />Enable this check box if you want Woopra to ignore your or any other administrator visits.
 		</td>
 		</tr>
 		<tr valign="top">
 		<th scope="row"><?php _e('Admin Area', 'woopra') ?></th>
 		<td>
-		<input type="checkbox" <?php echo (get_option('woopra_track_admin')=='YES')?"checked":""; ?> id ="trackadmin" name="trackadmin"/> <label for="trackadmin">Track admin pages</label><br />Admin pages are all pages under <?php echo get_option('siteurl'); ?>/wp-admin/
+		<input type="checkbox" <?php checked('YES', get_option('woopra_track_admin')); ?> id="trackadmin" name="trackadmin"/> <label for="trackadmin">Track admin pages</label><br />Admin pages are all pages under <?php echo get_option('siteurl'); ?>/wp-admin/
 		</td>
 		</tr>
 		<tr valign="top">
 		<th scope="row"><?php _e('Auto Tagging', 'woopra') ?></th>
 		<td>
-		<input type="checkbox" <?php echo (get_option('woopra_auto_tag_commentators')=='YES')?"checked":""; ?> id="autotag" name="autotag"/> <label for="autotag"><?php _e('Automatically tag members &amp; commentators', 'woopra') ?></label>
+		<input type="checkbox" <?php checked('YES', get_option('woopra_auto_tag_commentators')); ?> id="autotag" name="autotag"/> <label for="autotag"><?php _e('Automatically tag members &amp; commentators', 'woopra') ?></label>
 		</td>
 		</tr>
 		<tr valign="top">
 		<th scope="row"><?php _e('Show Comments', 'woopra') ?></th>
 		<td>
-		<input type="checkbox" <?php echo (get_option('woopra_show_comments')=='YES')?"checked":""; ?> id="showcomments" name="showcomments"/> <label for="showcomments"><?php _e('Show comments as they are posted.', 'woopra') ?></label><br /><?php _e('You will see an excerpt of the comment in the Woopra Live section', 'woopra') ?>
+		<input type="checkbox" <?php checked('YES', get_option('woopra_show_comments')); ?> id="showcomments" name="showcomments"/> <label for="showcomments"><?php _e('Show comments as they are posted.', 'woopra') ?></label><br /><?php _e('You will see an excerpt of the comment in the Woopra Live section', 'woopra') ?>
 		</td>
 		</tr>
 		<tr valign="top">
-		<th scope="row">Show Searches</th>
+		<th scope="row"><?php _e('Show Searches', 'woopra') ?></th>
 		<td>
-		<input type="checkbox" <?php echo (get_option('woopra_show_searches')=='YES')?"checked":""; ?> id="showsearches" name="showsearches"/> <label for="showsearches">Show search queries.</label>
+		<input type="checkbox" <?php checked('YES', get_option('woopra_show_searches')); ?> id="showsearches" name="showsearches"/> <label for="showsearches"><?php _e('Show search queries.', 'woopra') ?></label>
 		</td>
 		</tr>
 	</table>
