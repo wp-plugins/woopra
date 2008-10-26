@@ -71,6 +71,7 @@ function woo_widget() {
 	global $woopra_visitor;
 	global $woopra_events;
 	
+	echo "<!-- Woopra Analytics Code -->\n";
 	echo "<script type=\"text/javascript\">\r\n";
 	echo "var woopra_visitor = new Array();\r\n";
 	echo "var woopra_event = new Array();\r\n";
@@ -89,6 +90,7 @@ function woo_widget() {
 
 	echo "</script>\r\n";
 	echo "<script src=\"http://static.woopra.com/js/woopra.js\" type=\"text/javascript\"></script>";
+	echo "\n<!-- End of Woopra Analytics Code -->";
 
 }
 
@@ -105,8 +107,8 @@ function woopra_add_menu () {
 	if (function_exists('add_menu_page')) {
 		if (get_option('woopra_analytics_tab') && get_option('woopra_analytics_tab') =='toplevel') {
 			add_menu_page(
-				__("Woopra Analytics")
-				, __("Woopra Analytics")
+				__("Woopra Analytics", 'woopra')
+				, __("Woopra Analytics", 'woopra')
 				, "manage_options"
 				, "woopra_analytics.php"
 				, "woopra_analytics_show_content"); 
@@ -114,8 +116,8 @@ function woopra_add_menu () {
 		else {
 			add_submenu_page(
 				'index.php',
- 				__("Woopra Analytics")
- 				, __("Woopra Analytics")
+ 				__("Woopra Analytics", 'woopra')
+ 				, __("Woopra Analytics", 'woopra')
 				, 'manage_options'
 				, "woopra-analytics"
  				, "woopra_analytics_show_content");
@@ -124,8 +126,8 @@ function woopra_add_menu () {
 	}
 	if (function_exists('add_options_page')) {
 		 add_options_page(
-		 	__("Woopra Settings")
-		 	, __("Woopra Settings")
+		 	__("Woopra Settings", 'woopra')
+		 	, __("Woopra Settings", 'woopra')
 		 	, 7
 		 	, basename(__FILE__)
 		 	, 'woopra_print_admin_html');
@@ -189,7 +191,7 @@ function woopra_print_admin_html() {
 
 			?>
 
-			<div id="message" class="updated fade"><p><?php _e('Settings updated!') ?></p></div>
+			<div id="message" class="updated fade"><p><?php _e('Settings updated!', 'woopra') ?></p></div>
 
 	<?php } ?>
         
@@ -209,7 +211,7 @@ function woopra_print_admin_html() {
 		<th scope="row"><?php _e('Show Analytics', 'woopra') ?></th>
 		<td>
 		<?php
-			$woopra_tab_options = array('dashboard' => __("At the dashboard menu"), 'toplevel' => __('At the top level menu'));
+			$woopra_tab_options = array('dashboard' => __("At the dashboard menu", 'woopra'), 'toplevel' => __('At the top level menu', 'woopra'));
 			foreach ( $woopra_tab_options as $key => $value) {
 				$selected = (get_option('woopra_analytics_tab') == $key) ? 'checked="checked"' : '';
 				echo "\n\t<label><input id='$key' type='radio' name='woopratab' value='$key' $selected/> $value</label><br />";

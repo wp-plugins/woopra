@@ -83,7 +83,7 @@ function renderDefaultModel($entries, $key) {
 <tr>
 	<th>&nbsp;</th>
 	<th><?php echo woopra_render_name($key); ?></th>
-	<th class="center" width="100"><?php _e("Hits") ?></th>
+	<th class="center" width="100"><?php _e("Hits", 'woopra') ?></th>
 	<th width="400">&nbsp;</th>
 </tr>
 <?php
@@ -220,10 +220,10 @@ function renderOverview($entries) {
 <table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
 <tr>
 	<th>Day</th>
-	<th class="center"><?php _e("Avg Time Spent") ?></th>
-	<th class="center"><?php _e("New Visitors") ?></th>
-	<th class="center"><?php _e("Visits") ?></th>
-	<th class="center"><?php _e("Pageviews") ?></th>
+	<th class="center"><?php _e("Avg Time Spent", 'woopra') ?></th>
+	<th class="center"><?php _e("New Visitors", 'woopra') ?></th>
+	<th class="center"><?php _e("Visits", 'woopra') ?></th>
+	<th class="center"><?php _e("Pageviews", 'woopra') ?></th>
 	<th width="400">&nbsp;</th>
 </tr>
 <?php
