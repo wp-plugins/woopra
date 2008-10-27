@@ -111,7 +111,7 @@ if (!woopra_check_analytics()) {
 }
 
 function woopra_check_analytics() {
-	if (get_option('woopra_api_key') && get_option('woopra_website_id') && get_option('woopra_api_key') != "" && get_option('woopra_website_id') != "") {
+	if (get_option('woopra_api_key') && get_option('woopra_api_key') != "") {
 		return true;
 	}
 	return false;
