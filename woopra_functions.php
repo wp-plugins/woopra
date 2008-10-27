@@ -42,10 +42,10 @@ function woopra_line_chart_date($date) {
 
 function get_woopra_host() {
 	$site = get_option('siteurl');
-	$url = preg_replace("/^http:\/\//", "",$site);
-	$url_tokens = explode("/", $url);
-	$url = $url_tokens[0];
-	return $url;
+	preg_match('@^(?:http://)?([^/]+)@i', $site, $matches);
+	$host = $matches[1];
+	preg_match('/[^.]+\.[^.]+$/', $host, $matches);
+	return $matches[0];
 }
 
 function woopra_encode($string) {
