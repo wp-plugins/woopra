@@ -44,7 +44,7 @@ function get_woopra_host() {
 	$site = get_option('siteurl');
 	preg_match('@^(?:http://)?([^/]+)@i', $site, $matches);
 	$host = $matches[1];
-	return preg_replace('!^www\.!i', '', $host)
+	return preg_replace('!^www\.!i', '', $host);
 }
 
 function woopra_encode($string) {
