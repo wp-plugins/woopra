@@ -36,21 +36,21 @@ function woo_session_start() {
 }
 
 function woo_detect() {
-	global $woopra_visitor;
+    global $woopra_visitor;
 
-	$author = str_replace("\"","\\\"",$_COOKIE['comment_author_'.COOKIEHASH]);
-	$email = str_replace("\"","\\\"",$_COOKIE['comment_author_email_'.COOKIEHASH]);
-	if (!empty($author)) {
-		$woopra_visitor['name'] = $author;
-		$woopra_visitor['email'] = $email;
-	}
+    $author = str_replace("\"","\\\"",$_COOKIE['comment_author_'.COOKIEHASH]);
+    $email = str_replace("\"","\\\"",$_COOKIE['comment_author_email_'.COOKIEHASH]);
+    if (!empty($author)) {
+        $woopra_visitor['name'] = $author;
+        $woopra_visitor['email'] = $email;
+    }
 
-	if (is_user_logged_in()) {
-		global $userdata;
-		get_currentuserinfo();
-		$woopra_visitor['name'] = $userdata->user_login;
-		$woopra_visitor['email'] = $userdata->user_email;
-	}
+    if (is_user_logged_in()) {
+        global $userdata;
+        get_currentuserinfo();
+        $woopra_visitor['name'] = $userdata->display_name;
+        $woopra_visitor['email'] = $userdata->user_email;
+    }
 }
 
 function woo_comment($comment_id) {
