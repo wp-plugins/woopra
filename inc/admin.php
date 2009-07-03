@@ -284,9 +284,8 @@ class WoopraAdmin extends Woopra {
 	 */
 	function woopra_add_menu() {
 		if (function_exists('add_menu_page')) {
-			if (get_option('analytics_tab') && get_option('analytics_tab') ==	'toplevel') {
-				//	This is untested.
-				add_menu_page(__("Woopra Analytics", 'woopra'), __("Woopra Analytics", 'woopra'), "manage_options", "woopra_analytics.php", "woopra_analytics_show_content"); 
+			if ($this->get_option('analytics_tab') && $this->get_option('analytics_tab') ==	'toplevel') {
+				add_menu_page(__("Woopra Analytics", 'woopra'), __("Woopra Analytics", 'woopra'), "manage_options", "woopra-analytics.php", "woopra_analytics_show_content"); 
 			} else {
 				add_submenu_page('index.php', __("Woopra Analytics", 'woopra'), __("Woopra Analytics", 'woopra'), 'manage_options', "woopra-analytics", "woopra_analytics_show_content");
 			}
