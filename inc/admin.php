@@ -185,7 +185,7 @@ class WoopraAdmin extends Woopra {
 <div class="wrap">
 <?php screen_icon(); ?>
 	<h2><?php _e( 'Woopra Settings', 'woopra' ); ?></h2>
-	<p><?php _e('For more info about installation and customization, please visit <a href="http://www.woopra.com/installation-guide">the installation page in your member&#8217;s area', 'woopra') ?></a></p>
+	<p><?php _e('For more info about installation and customization, please visit <a href="http://www.woopra.com/installation-guide">the installation page in your member&#8217;s area</a>', 'woopra') ?></p>
 	
 	<form method="post" action="options.php">
 	<?php settings_fields('woopra'); ?>
