@@ -28,7 +28,7 @@ class WoopraFrontend extends Woopra {
 	function __construct() {
 		Woopra::__construct();
 		
-		//	Actions
+		//	Frontend Actions
 		add_action(	'template_redirect',		array(&$this, 'woopra_detect')					);
 		add_action( 'wp_footer', 				array(&$this, 'woopra_widget'), 			10	);
 		if ($this->get_option('woopra_track_admin'))
@@ -44,19 +44,29 @@ class WoopraFrontend extends Woopra {
 		
 	}
 	
+	function woopra_status() {
+		if ($this->get_option('run_status') == 'on')
+			return true;
+		else
+			return false;
+	}
+	
 	/**
 	 * Create the Javascript Code at the Bottom
 	 * @since 1.4.1
 	 * @return none
 	 */
 	function woopra_widget() {
-		$this->debug("woopra_widget()");
+		
+		if (!$this->woopra_status())
+			return;
+			
 		echo "<!-- Woopra Analytics Code -->\n";
 		echo "<script type=\"text/javascript\">\r\n";
 		echo "var woopra_visitor = new Array();\r\n";
 		echo "var woopra_event = new Array();\r\n";
 
-		if ($this->get_option('auto_tag_commentators') && !empty($this->woopra_visitor['name'])) {
+		if ($this->get_option('auto_tagging') || !empty($this->woopra_visitor['name'])) {
 			echo "woopra_visitor['name'] = '" . js_escape($this->woopra_visitor['name']) . "';\r\n";
 			echo "woopra_visitor['email'] = '" . js_escape($this->woopra_visitor['email']) . "';\r\n";
 			echo "woopra_visitor['avatar'] = 'http://www.gravatar.com/avatar.php?gravatar_id=" . md5(strtolower($this->woopra_visitor['email'])) . "&size=60&default=http%3A%2F%2Fstatic.woopra.com%2Fimages%2Favatar.png';\r\n";

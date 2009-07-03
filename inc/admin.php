@@ -11,6 +11,16 @@
 class WoopraAdmin extends Woopra {
 
 	/**
+	 * @var string
+	 */
+	var $plugin_file;
+	
+	/**
+	 * @var string
+	 */
+	var $plugin_basename;
+
+	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
 	 * @since 1.4.1
 	 * @return none
@@ -28,27 +38,23 @@ class WoopraAdmin extends Woopra {
 	function __construct() {
 		Woopra::__construct();
 		
+		if ( version_compare( $this->get_option('version'), $this->version, '!=' ) && $this->get_option('version') !== false )
+			$this->check_upgrade();
+		
+		$this->plugin_file = dirname( dirname ( __FILE__ ) ) . '/woopra.php';
+		$this->plugin_basename = plugin_basename( $this->plugin_file );
+		
 		//	Load Transations File
 		load_plugin_textdomain( 'woopra', false, '/woopra/locale' );
-		
+
 		//	Run this when installed or upgraded.
-		register_activation_hook(__FILE__, array(&$this, 'init') );
+		register_activation_hook( $this->plugin_file , array(&$this, 'init') );
 		
-		//	Actions
+		//	Admin Actions
 		add_action( 'admin_menu',               array(&$this, 'register_settings_page') 		);
 		add_action( 'admin_init',				array(&$this, 'register_settings' ) 			);
 		add_action(	'admin_menu', 				array(&$this, 'woopra_add_menu') 				);
-		add_action(	'template_redirect',		array(&$this, 'woopra_detect')					);
 		add_action( 'admin_print_scripts',		array(&$this, 'woopra_analytics_head') 			);
-		add_action( 'wp_footer', 				array(&$this, 'woopra_widget'), 			10	);
-		
-		//	Initilize Action Code
-		/*
-		$all_events = array_merge($this->woopra_events['main'], $this->woopra_events['admin']);
-		foreach ($all_events as $event_name) {
-			add_action( $event_name, 			array(&$this, $this->process_event) );
-		}
-		*/
 		
 	}
 	
@@ -58,13 +64,10 @@ class WoopraAdmin extends Woopra {
 	 * @return none
 	 */
 	function init() {
-		$this->debug("init()");
-		if (!get_option('woopra')) {
+		if (!get_option('woopra'))
 			add_option('woopra', $this->defaults());
-			$this->first_upgrade();	// maybe not needed.
-		} else {
+		else
 			$this->check_upgrade();
-		}
 	}
 	
 	/**
@@ -73,23 +76,7 @@ class WoopraAdmin extends Woopra {
 	 * @return none
 	 */
 	function register_settings () {
-		$this->debug("register_settings()");
 		register_setting( 'woopra', 'woopra', array(&$this , 'update') );
-	}
-
-	/**
-	 * This funcition is run on the first time this pluin is installed from 1.4.1
-	 * @return none
-	 */
-	function first_upgrade() {
-		//	Restore the user's current options
-		//	Delete Options
-		delete_option('woopra_analytics_tab');
-		delete_option('woopra_api_key');
-		delete_option('woopra_auto_tag_commentators');
-		delete_option('woopra_ignore_admin');
-		delete_option('woopra_show_comments');
-		delete_option('woopra_track_admin');
 	}
 	
 	/**
@@ -98,7 +85,36 @@ class WoopraAdmin extends Woopra {
 	 * @return none
 	 */
 	function check_upgrade () {
-		// update poss. new default options with current options. But how do we check that? :P
+		if ( version_compare($this->get_option('version'), WOOPRA_VERSION, '<') )
+			$this->upgrade(WOOPRA_VERSION);
+	}
+
+	/**
+	 * Upgrade options 
+	 *
+	 * @return none
+	 * @since 1.4.1
+	 */
+	function upgrade($ver) {
+		if ( $ver == '1.4.1' ) {
+			$woopra = get_option('woopra');
+			
+			/* Upgrading from non-class to class */
+			$tagging = (get_option('woopra_auto_tag_commentators' == 'YES')) ? 1 : 0;
+			$ignoreadmin = (get_option('woopra_ignore_admin' == 'YES')) ? 1 : 0;
+			$trackadmin = (get_option('woopra_track_admin' == 'YES')) ? 1 : 0;
+						
+			$newopts = array (
+					'version'		=>	$this->version,
+					'api_key'		=>	get_option('woopra_api_key'),
+					'analytics_tab'	=>	get_option('woopra_analytics_tab'),
+					'run_status'	=>	'on',
+					'ignore_admin'	=>	$tagging,
+					'ignore_admin'	=>	$ignoreadmin,
+					'track_admin'	=>	$trackadmin,
+			);
+			update_option( 'woopra', array_merge($woopra, $newopts) );
+		}
 	}
 
 	/**
@@ -107,7 +123,15 @@ class WoopraAdmin extends Woopra {
 	 * @return array
 	 */
 	function defaults() {
-		$defaults = array();
+		$defaults = array(
+			'version' 		=> '',
+			'api_key'		=> '',
+			'analytics_tab'	=> 'dashboard',
+			'run_status'	=> 'on',
+			'auto_tagging'	=> 1,
+			'ignore_admin'	=> 0,
+			'track_admin'	=> 0,		
+		);
 		return $defaults;
 	}
 
@@ -118,7 +142,14 @@ class WoopraAdmin extends Woopra {
 	 * @return none
 	 */
 	function update($options) {
-		return $options;
+		if ( isset($options['delete']) && $options['delete'] == 'true' ) {
+			delete_option('woopra');
+		} else if ( isset($options['default']) && $options['default'] == 'true' ) {
+			return $this->defaults();
+		} else {
+			unset($options['delete'], $options['default']);
+			return $options;
+		}
 	}
 
 	/**
@@ -127,7 +158,6 @@ class WoopraAdmin extends Woopra {
 	 * @return none
 	 */
 	function register_settings_page() {
-		$this->debug("register_settings_page()");
 		add_options_page( __('Woopra Settings', 'woopra'), __("Woopra Settings", 'woopra'), 'manage_options', 'woopra', array(&$this, 'settings_page') );
 	}
 
@@ -136,16 +166,14 @@ class WoopraAdmin extends Woopra {
 	 * @since 1.4.1
 	 * @return none
 	 */
-	function settings_page() {
-		$this->debug("settings_page()");
-		 ?>
+	function settings_page() { ?>
 	
 <div class="wrap">
 <?php screen_icon(); ?>
 	<h2><?php _e( 'Woopra Settings', 'woopra' ); ?></h2>
 	<p><?php _e('For more info about installation and customization, please visit <a href="http://www.woopra.com/installation-guide">the installation page in your member&#8217;s area', 'woopra') ?></a></p>
 	
-	<form id="woopra_settings_form" method="post" action="options.php">
+	<form method="post" action="options.php">
 	<?php settings_fields('woopra'); ?>
 	
 	<h3><? _e('Main Settings'); ?></h3>
@@ -153,7 +181,7 @@ class WoopraAdmin extends Woopra {
 		<tr valign="top">
 			<th scope="row"><?php _e('API Key', 'woopra') ?><small><?php _e('(Optional)', 'woopra') ?></small></th>
 				<td>
-					<input type="text" value="<?php echo attribute_escape( get_option('woopra_api_key') ); ?>" id="woopra_api_key" name="woopra_api_key"/><br/>
+					<input type="text" value="<?php echo attribute_escape( $this->get_option('api_key') ); ?>" id="api_key" name="woopra[api_key]"/><br/>
 					<?php _e("You can find the Website's API Key in <a href='http://www.woopra.com/members/'>your member&#8217;s area", 'woopra') ?></a>
 				</td>
 		</tr>
@@ -163,8 +191,8 @@ class WoopraAdmin extends Woopra {
 			<?php
 				$woopra_tab_options = array('dashboard' => __("At the dashboard menu", 'woopra'), 'toplevel' => __('At the top level menu', 'woopra'));
 				foreach ( $woopra_tab_options as $key => $value) {
-					$selected = (get_option('woopra_analytics_tab') == $key) ? 'checked="checked"' : '';
-					echo "\n\t<label><input id='$key' type='radio' name='woopra_analytics_tab' value='$key' $selected/> $value</label><br />";
+					$selected = ($this->get_option('analytics_tab') == $key) ? 'checked="checked"' : '';
+					echo "\n\t<label><input id='$key' type='radio' name='woopra[analytics_tab]' value='$key' $selected/> $value</label><br />";
 				}
 			?>
 			</td>
@@ -177,24 +205,30 @@ class WoopraAdmin extends Woopra {
 			<th scope="row"><?php _e('Status', 'woopra') ?></th>
 			<td>
 			<?php
-				$woopra_status_options = array('on' => __("On", 'woopra'), 'off' => __('Off', 'woopra'));
-				foreach ( $woopra_status_options as $key => $value) {
-					$selected = (get_option('woopra_status_option') == $key) ? 'checked="checked"' : '';
-					echo "\n\t<label><input id='$key' type='radio' name='woopra_status_option' value='$key' $selected/> $value</label><br />";
+				$run_statuss = array('on' => __("On", 'woopra'), 'off' => __('Off', 'woopra'));
+				foreach ( $run_statuss as $key => $value) {
+					$selected = ($this->get_option('run_status') == $key) ? 'checked="checked"' : '';
+					echo "\n\t<label><input id='$key' type='radio' name='woopra[run_status]' value='$key' $selected/> $value</label><br />";
 				}
 			?>
 			</td>
 		</tr>
 		<tr valign="top">
+			<th scope="row"><?php _e('Auto Tagging', 'woopra') ?></th>
+			<td>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('auto_tagging')); ?> id="auto_tagging" name="woopra[auto_tagging]"/> <label for="auto_tagging"><?php _e("Automatically Tag Members &amp; Commentators"); ?></label><br /><?php _e("Enable this check box if you want Woopra to auto-tag visitors."); ?>
+			</td>
+		</tr>
+		<tr valign="top">
 			<th scope="row"><?php _e('Ignore Administrator', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" <?php checked('1', get_option('woopra_ignore_admin')); ?> id="woopra_ignore_admin" name="woopra_ignore_admin"/> <label for="woopra_ignore_admin"><?php _e("Ignore Administrator Visits"); ?></label><br /><?php _e("Enable this check box if you want Woopra to ignore your or any other administrator visits."); ?>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('ignore_admin')); ?> id="ignore_admin" name="woopra[ignore_admin]"/> <label for="ignore_admin"><?php _e("Ignore Administrator Visits"); ?></label><br /><?php _e("Enable this check box if you want Woopra to ignore your or any other administrator visits."); ?>
 			</td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><?php _e('Admin Area', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" <?php checked('1', get_option('woopra_track_admin')); ?> id="woopra_track_admin" name="woopra_track_admin"/> <label for="woopra_track_admin"><?php _e("Track Admin Pages"); ?></label><br /><?php printf(__("Admin pages are all pages under %s"), get_option('siteurl')."/wp-admin/" ); ?>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_admin')); ?> id="track_admin" name="woopra[track_admin]"/> <label for="track_admin"><?php _e("Track Admin Pages"); ?></label><br /><?php printf(__("Admin pages are all pages under %s"), $this->get_option('siteurl')."/wp-admin/" ); ?>
 			</td>
 		</tr>
 	</table>
@@ -206,7 +240,7 @@ class WoopraAdmin extends Woopra {
 			<td>
 			<?php
 				foreach ( $this->woopra_events['main'] as $action => $data) {
-					echo "\n\t<input type=\"checkbox\"" . checked('1', get_option('woopra_event_' . $action)) . " id=\"" . $action . "\" name=\"woopra_event[".$action."]\"/> <label for=\"woopra_event[".$action."]\">".$data['label']."</label><br />".$data['description'];						
+					echo "\n\t<input type=\"checkbox\"" . checked('1', $this->get_option('woopra_event_' . $action)) . " id=\"" . $action . "\" name=\"woopra[woopra_event][".$action."]\"/> <label for=\"woopra[woopra_event][".$action."]\">".$data['label']."</label><br />".$data['description'];						
 				}
 			?>				
 			</td>
@@ -216,7 +250,7 @@ class WoopraAdmin extends Woopra {
 			<td>
 			<?php
 				foreach ( $this->woopra_events['admin'] as $action => $data) {
-					echo "\n\t<input type=\"checkbox\"" . checked('1', get_option('woopra_event_' . $action)) . " id=\"" . $action . "\" name=\"woopra_event[".$action."]\"/> <label for=\"woopra_event[".$action."]\">".$data['label']."</label><br />".$data['description'];						
+					echo "\n\t<input type=\"checkbox\"" . checked('1', $this->get_option('woopra_event_' . $action)) . " id=\"" . $action . "\" name=\"woopra[woopra_event][".$action."]\"/> <label for=\"woopra[woopra_event][".$action."]\">".$data['label']."</label><br />".$data['description'];						
 				}
 			?>
 			</td>
@@ -226,7 +260,7 @@ class WoopraAdmin extends Woopra {
 			<td>
 			<?php
 				foreach ( $this->woopra_events['custom'] as $action => $data) {
-					echo "\n\t<input type=\"checkbox\"" . checked('1', get_option('woopra_event_' . $action)) . " id=\"" . $action . "\" name=\"woopra_event[".$action."]\"/> <label for=\"woopra_event[".$action."]\">".$data['label']."</label><br />".$data['description'];						
+					echo "\n\t<input type=\"checkbox\"" . checked('1', $this->get_option('woopra_event_' . $action)) . " id=\"" . $action . "\" name=\"woopra[woopra_event][".$action."]\"/> <label for=\"woopra[woopra_event][".$action."]\">".$data['label']."</label><br />".$data['description'];						
 				}
 				if (!count($this->woopra_events['custom']))
 					echo "<strong>" . __('No Custom Events Regestiered.') . "</strong>";
@@ -243,17 +277,14 @@ class WoopraAdmin extends Woopra {
 	
 	<?php }
 
-	/** NON-WORDPRESS RELATED CODE **/
-
 	/**
 	 * Add the Menu to Access the Stat Pages
 	 * @since 1.4.1
 	 * @return none
 	 */
 	function woopra_add_menu() {
-		$this->debug("woopra_add_menu()");
 		if (function_exists('add_menu_page')) {
-			if (get_option('woopra_analytics_tab') && get_option('woopra_analytics_tab') ==	'toplevel') {
+			if (get_option('analytics_tab') && get_option('analytics_tab') ==	'toplevel') {
 				//	This is untested.
 				add_menu_page(__("Woopra Analytics", 'woopra'), __("Woopra Analytics", 'woopra'), "manage_options", "woopra_analytics.php", "woopra_analytics_show_content"); 
 			} else {

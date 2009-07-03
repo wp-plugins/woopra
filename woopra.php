@@ -17,7 +17,9 @@
  * @package woopra
  */
 
- /*
+DEFINE ('WOOPRA_VERSION', '1.4.1');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
+
+/*
 
 **************************************************************************
 
@@ -31,7 +33,13 @@ Author URI:   http://www.woopra.com/
 **************************************************************************/
 
 class Woopra {
-	
+
+	/**
+	 * Current Version
+	 * @var string
+	 */
+	var $version = WOOPRA_VERSION;
+
 	/**
 	 * Options array containing all options for this plugin
 	 * @since 1.4.1
@@ -80,15 +88,17 @@ class Woopra {
 	/** THIS IS CUSTOM CODE THAT CAN BE DELETED LATER ON **/
 
 	/** DEBUG VAR **/
-	var $debug = true;
+	var $debug = false;
 	/**
 	 * Debug code. Has to be turned on for it to work.
 	 * @return none
 	 * @see $this->debug
 	 */
-	function debug($string) {
+	function debug($string, $exit = false) {
 		if ($this->debug)
 			echo $string . "<br/>";
+		if ($exit)
+			exit;
 	}
 }
 
