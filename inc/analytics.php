@@ -88,7 +88,7 @@ class WoopraAnalytics extends WoopraAdmin {
 		echo "<script src=\"". get_option('siteurl') ."/wp-content/plugins/woopra/js/analytics.js?1\"></script>\r\n";
 		echo "<script src=\"". get_option('siteurl') ."/wp-content/plugins/woopra/js/swfobject.js\"></script>\r\n";
 		echo "<script src=\"". get_option('siteurl') ."/wp-content/plugins/woopra/js/datepicker.js\"></script>\r\n";
-		echo "<link rel='stylesheet' href='". get_option('siteurl') ."/wp-content/plugins/woopra/css/woopra_analytics.css' type='text/css' />\r\n";
+		echo "<link rel='stylesheet' href='". get_option('siteurl') ."/wp-content/plugins/woopra/css/analytics.css' type='text/css' />\r\n";
 		echo "<link rel='stylesheet' href='". get_option('siteurl') ."/wp-content/plugins/woopra/css/datepicker.css' type='text/css' />\r\n";
 	}
 	
@@ -115,6 +115,39 @@ class WoopraAnalytics extends WoopraAdmin {
 			$this->analytics_warn();
 		} else {
 			/** HTML CODE START **/
+			?>
+<!-- Woopra Analytics Starts Here -->
+<div id="woopra_analytics_global">
+	<div id="woopra_analytics_box">
+		
+		<div class="woptions">
+		<a href="#" onclick="return refreshCurrent();"><?php _e('Refresh', 'woopra') ?></a>
+		&nbsp;-&nbsp;
+		<a id="daterangelink" href="#" onclick="return showDatePicker();" title="<?php _e('Click here to change the date range', 'woopra') ?>"><script type="text/javascript">document.write(getDateLinkText())</script></a>
+			<div id="datepickerdiv">
+				<table><tr>
+				<td align="center"><?php _e('From', 'woopra') ?>: <input type="text" class="w8em format-y-m-d divider-dash highlight-days-12 no-fade" id="dp-from" name="dp-from" value="" maxlength="10" /></td>
+				<td align="center"><?php _e('To', 'woopra') ?>: <input type="text" class="w8em format-y-m-d divider-dash highlight-days-12 no-fade" id="dp-to" name="dp-to" value="" maxlength="10" /></td>
+				</tr>
+				<tr>
+				<td colspan="2" style="padding-top: 5px; text-align: right;">
+				<input value="<?php _e('Cancel', 'woopra') ?>" name="approveit" class="button-secondary" type="submit" onclick="return closeDatePicker();">
+				<input value="<?php _e('Apply Date Range', 'woopra') ?>" name="approveit" class="button-secondary" type="submit" onclick="return applyDatePicker();">
+				</td>
+				</tr>
+				</table>
+			</div>
+		</div>
+
+		<ul id="woopra-super-tabs">
+		</ul>
+		
+		
+	</div>
+</div>
+<!-- Woopra Analytics Ends Here -->
+
+			<?php
 			/** HTML CODE END **/
 		}
 		
