@@ -12,7 +12,8 @@
 class WoopraAnalytics extends WoopraAdmin {
 
 	/**
-	 * @var
+	 * Store the API key
+	 * @var string
 	 */
 	var $api_key;
 	

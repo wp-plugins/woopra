@@ -109,6 +109,7 @@ class Woopra {
 if (is_admin()) {
 	require_once( dirname(__FILE__) . '/inc/admin.php' );
 	require_once( dirname(__FILE__) . '/inc/analytics.php' );
+	require_once( dirname(__FILE__) . '/inc/xml.php' );
 	$WoopraAdmin = new WoopraAdmin();
 }
 //	Always Run the Front End Code
