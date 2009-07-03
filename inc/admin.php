@@ -54,7 +54,6 @@ class WoopraAdmin extends Woopra {
 		add_action( 'admin_menu',               array(&$this, 'register_settings_page') 		);
 		add_action( 'admin_init',				array(&$this, 'register_settings' ) 			);
 		add_action(	'admin_menu', 				array(&$this, 'woopra_add_menu') 				);
-		add_action( 'admin_print_scripts',		array(&$this, 'woopra_analytics_head') 			);
 		
 	}
 	
@@ -159,6 +158,21 @@ class WoopraAdmin extends Woopra {
 	 */
 	function register_settings_page() {
 		add_options_page( __('Woopra Settings', 'woopra'), __("Woopra Settings", 'woopra'), 'manage_options', 'woopra', array(&$this, 'settings_page') );
+	}
+
+	/**
+	 * Add the Menu to Access the Stat Pages
+	 * @since 1.4.1
+	 * @return none
+	 */
+	function woopra_add_menu() {
+		if (function_exists('add_menu_page')) {
+			if ($this->get_option('analytics_tab') && $this->get_option('analytics_tab') ==	'toplevel') {
+				add_menu_page(__("Woopra Analytics", 'woopra'), __("Woopra Analytics", 'woopra'), "manage_options", "woopra-analytics.php", array(&$this, 'content_page') ); 
+			} else {
+				add_submenu_page('index.php', __("Woopra Analytics", 'woopra'), __("Woopra Analytics", 'woopra'), 'manage_options', "woopra-analytics", array(&$this, 'content_page') );
+			}
+		}
 	}
 
 	/**
@@ -278,19 +292,13 @@ class WoopraAdmin extends Woopra {
 	<?php }
 
 	/**
-	 * Add the Menu to Access the Stat Pages
+	 * The content page.
 	 * @since 1.4.1
 	 * @return none
 	 */
-	function woopra_add_menu() {
-		if (function_exists('add_menu_page')) {
-			if ($this->get_option('analytics_tab') && $this->get_option('analytics_tab') ==	'toplevel') {
-				add_menu_page(__("Woopra Analytics", 'woopra'), __("Woopra Analytics", 'woopra'), "manage_options", "woopra-analytics.php", "woopra_analytics_show_content"); 
-			} else {
-				add_submenu_page('index.php', __("Woopra Analytics", 'woopra'), __("Woopra Analytics", 'woopra'), 'manage_options', "woopra-analytics", "woopra_analytics_show_content");
-			}
-		}
+	function content_page() {
+		$WoopraAnalytics = new WoopraAnalytics;
+		$WoopraAnalytics->main();
 	}
-
 
 }
