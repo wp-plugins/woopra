@@ -43,7 +43,7 @@ class WoopraAnalytics extends WoopraAdmin {
 		
 	}
 	
-	// Display a notice telling the user to fill in their bit.ly details
+	// Display a notice telling the user to fill in their Woopra details
 	function analytics_warn() {
 		echo '<div class="error"><p>' . sprintf( __( 'You must fill in your API Key in order to view Analytics. Please fill it out on the <a href="%s">settings page</a> in order for you to view your analytics.', 'woopra' ), admin_url('options-general.php?page=woopra') ) . "</p></div>\n";
 	}
