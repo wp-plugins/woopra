@@ -11,7 +11,7 @@
  * plugin capability, and a wide range of additional feature / functionality currently being
  * readied for deployment. We invite you to sign up and experience the power of Woopra first hand!
  *
- * @author Elie El Khoury and Shane
+ * @author Elie El Khoury <elie@woopra.com> and Shane Froebel <shane@bugssite.org>
  * @version 1.4.1
  * @copyright 2007-2009
  * @package woopra
