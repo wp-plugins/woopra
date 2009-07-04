@@ -1,6 +1,5 @@
 <?php
 
-
 if (isset($_GET['wkey'])) {
 	
 	include 'woopra_functions.php';
@@ -137,7 +136,8 @@ function woopra_process_request($key,$start_date, $end_date, $limit, $offset) {
 	
 	$woopraXML->clearData();
 	
-	//print_r($entries);
+	?><pre><?php echo print_r($entries); ?></pre><?php
+	
 	
 	return $entries;
 }
