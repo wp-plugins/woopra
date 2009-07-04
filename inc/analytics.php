@@ -32,6 +32,9 @@ class WoopraAnalytics extends WoopraAdmin {
 	 */
 	var $date_to;
 	
+	var $start_date;
+	var $end_date;
+	
 	/**
 	 * @var int
 	 */
@@ -70,8 +73,6 @@ class WoopraAnalytics extends WoopraAdmin {
 		//	Load the API key into this Class
 		$this->api_key = $this->get_option('api_key');
 		
-		//	Actions
-		
 	}
 	
 	// Display a notice telling the user to fill in their Woopra details
@@ -99,10 +100,10 @@ class WoopraAnalytics extends WoopraAdmin {
 	 */
 	function main() { 
 		
-		// Prase the URL
-		if (isset($_GET['wkey']))
+		$this->generate_data();
 		
 		$this->woopra_analytics_head(); // do no matter what!
+
 		?>
 		
 		<div class="wrap">
@@ -119,7 +120,6 @@ class WoopraAnalytics extends WoopraAdmin {
 <!-- Woopra Analytics Starts Here -->
 <div id="woopra_analytics_global">
 	<div id="woopra_analytics_box">
-		
 		<div class="woptions">
 		<a href="#" onclick="return refreshCurrent();"><?php _e('Refresh', 'woopra') ?></a>
 		&nbsp;-&nbsp;
@@ -141,8 +141,53 @@ class WoopraAnalytics extends WoopraAdmin {
 
 		<ul id="woopra-super-tabs">
 		</ul>
+	</div>
+	<!-- Woopra Javascript Code Starts Here -->
+	<script type="text/javascript">
+	
+	woopra_website = '<?php echo get_option("siteurl"); ?>';
 		
-		
+	addSuperTab('<?php _e("Visitors", 'woopra') ?>','visitors');
+	addSuperTab('<?php _e("Systems", 'woopra') ?>','systems');
+	addSuperTab('<?php _e("Pages", 'woopra') ?>','pages');
+	addSuperTab('<?php _e("Referrers", 'woopra') ?>','referrers');
+	addSuperTab('<?php _e("Searches", 'woopra') ?>','searches');
+	
+	addSubTab('<?php _e("Overview", 'woopra') ?>', 'overview', 'visitors', 'GET_GLOBALS');
+	addSubTab('<?php _e("Countries", 'woopra') ?>', 'countries', 'visitors', 'GET_COUNTRIES');
+	addSubTab('<?php _e("Tagged Visitors", 'woopra') ?>', 'taggedvisitors', 'visitors', 'GET_SPECIALVISITORS');
+	addSubTab('<?php _e("Bounce Rate", 'woopra') ?>', 'bounces', 'visitors', 'GET_VISITBOUNCES');
+	addSubTab('<?php _e("Visit Durations", 'woopra') ?>', 'durations', 'visitors', 'GET_VISITDURATIONS');
+	
+	addSubTab('<?php _e("Browsers", 'woopra') ?>', 'browsers', 'systems', 'GET_BROWSERS');
+	addSubTab('<?php _e("Platforms", 'woopra') ?>', 'platforms', 'systems', 'GET_PLATFORMS');
+	addSubTab('<?php _e("Screen Resolutions", 'woopra') ?>', 'resolutions', 'systems', 'GET_RESOLUTIONS');
+	addSubTab('<?php _e("Languages", 'woopra') ?>', 'languages', 'systems', 'GET_LANGUAGES');
+	
+	addSubTab('<?php _e("Pageviews", 'woopra') ?>', 'pageviews', 'pages', 'GET_PAGEVIEWS');
+	addSubTab('<?php _e("Landing Pages", 'woopra') ?>', 'landing', 'pages', 'GET_PAGELANDINGS');
+	addSubTab('<?php _e("Exit Pages", 'woopra') ?>', 'exit', 'pages', 'GET_PAGEEXITS');
+	addSubTab('<?php _e("Outgoing Links", 'woopra') ?>', 'outgoing', 'pages', 'GET_OUTGOINGLINKS');
+	addSubTab('<?php _e("Downloads", 'woopra') ?>', 'downloads', 'pages', 'GET_DOWNLOADS');
+	
+	addSubTab('<?php _e("Referrer Types", 'woopra') ?>', 'reftypes', 'referrers', 'GET_REFERRERTYPES');
+	addSubTab('<?php _e("Regular Referrers", 'woopra') ?>', 'refdefault', 'referrers', 'GET_REFERRERS&type=DEFAULT');
+	addSubTab('<?php _e("Search Engines", 'woopra') ?>', 'refsearch', 'referrers', 'GET_REFERRERS&type=SEARCHENGINES');
+	addSubTab('<?php _e("Feed Readers", 'woopra') ?>', 'reffeeds', 'referrers', 'GET_REFERRERS&type=FEEDS');
+	addSubTab('<?php _e("Emails", 'woopra') ?>', 'refmails', 'referrers', 'GET_REFERRERS&type=MAILS');
+	addSubTab('<?php _e("Social Bookmarks", 'woopra') ?>', 'refbookmarks', 'referrers', 'GET_REFERRERS&type=SOCIALBOOKMARKS');
+	addSubTab('<?php _e("Social Networks", 'woopra') ?>', 'refnetworks', 'referrers', 'GET_REFERRERS&type=SOCIALNETWORKS');
+	addSubTab('<?php _e("Media", 'woopra') ?>', 'refmedia', 'referrers', 'GET_REFERRERS&type=MEDIA');
+	addSubTab('<?php _e("News", 'woopra') ?>', 'refnews', 'referrers', 'GET_REFERRERS&type=NEWS');
+	
+	addSubTab('<?php _e("Search Queries", 'woopra') ?>', 'queries', 'searches', 'GET_QUERIES');
+	addSubTab('<?php _e("Keywords", 'woopra') ?>', 'keywords', 'searches', 'GET_KEYWORDS');
+	
+	setCurrentSuperTab('visitors');
+	</script>
+	<!-- Woopra Javascript Code Ends Here -->
+	<div id="woopra_footer">
+		<?php printf( __('Powered by <a href="%1$s">Woopra Analytics</a>', 'woopra'), 'http://woopra.com'); ?>
 	</div>
 </div>
 <!-- Woopra Analytics Ends Here -->
@@ -156,8 +201,6 @@ class WoopraAnalytics extends WoopraAdmin {
 		</div>
 		
 		<?php
-		
-		$this->generate_data();
 	
 	}
 	
@@ -166,14 +209,23 @@ class WoopraAnalytics extends WoopraAdmin {
 	 * @return 
 	 */
 	function generate_data() {
+		if (isset($_GET['wkey'])) {
 		
-		
-		$start_date = $this->woopra_convert_date($this->date_from);
-		$end_date = $this->woopra_convert_date($this->date_to);
-		
-		/** LAST LINES **/
-		if ($this->process_xml($this->key, $start_date, $end_date, $this->limit, $this->offset))
-			$this->render_results($this->key);	
+			$key = $_GET['wkey'];
+			
+			$this->key = str_replace("&amp;", "&", $key);
+			$this->date_from = $_GET['from'];
+			$this->date_to = $_GET['to'];
+			
+			$start_date = $this->woopra_convert_date($this->date_from);
+			$end_date = $this->woopra_convert_date($this->date_to);
+			
+			/** LAST LINES **/
+			if ($this->process_xml($this->key, $start_date, $end_date, $this->limit, $this->offset))	
+				$this->render_results($this->key);				
+			
+			die();
+		}
 	}
 	
 	/**
@@ -203,6 +255,7 @@ class WoopraAnalytics extends WoopraAdmin {
 		}
 		
 		$xml->clear_data();
+		unset($xml);
 		return true;
 	}
 	
@@ -219,8 +272,360 @@ class WoopraAnalytics extends WoopraAdmin {
 		return preg_replace('!^www\.!i', '', $host);
 	}
 	
-	function woopra_convert_date($value) {
+	private function woopra_convert_date($date) {
+		$values = split('-', $date);
+		$y = (int)$values[0];
+		$day_of_year = date('z', mktime(0, 0, 0, (int)$values[1], (int)$values[2] , (int)$values[0]));
+		$wdate = (100000 * ($y-2006)) + $day_of_year + 1;
+		return $wdate;
+	}
+	
+	private function woopra_contains($str, $sub) {
+		return strpos($str, $sub) !== false;
+	}
+	
+	private function sort_analytics_response($entries) {
+		usort($entries, 'compare_analytics_entries');
+	}
+	
+	private function render_chart_data($entries, $key) {
 		
+		$counter = 0;
+		$max = woopra_get_max($entries, 'hits');
+		$max = woopra_rounded_max($max);
+	
+		$values = '';
+		$labels = '';
+		foreach($entries as $entry) {
+			$day = (int)$entry['day'];
+			$hits = (int)$entry['hits'];
+			if ($values != '') {
+				$values .= ',';
+				$labels .= ',';
+			}
+			$values .= $hits;
+			$labels .= $this->woopra_encode(woopra_line_chart_date($day));
+		}
+		$values = $values;
+		$labels = $labels;
+		
+		$data = "&x_label_style=10,0x000000,0,5&\r\n";
+		$data .= "&x_axis_steps=1&\r\n";
+		$data .= "&y_ticks=5,10,5&\r\n";
+		$data .= "&line=3,0xB0E050,Jan,12&\r\n";
+		$data .= "&values=$values&\r\n";
+		$data .= "&x_labels=$labels&\r\n";
+		$data .= "&y_min=0&\r\n";
+		$data .= "&y_max=$max&\r\n";
+		$data .= "&tool_tip=%23x_label%23%3A+%23val%23%20hits&
+		\r\n";
+		echo $data;
+	}
+	
+	private function render_expanded_referrers($entries, $key) {
+
+		$bydaykey = str_replace('GET_REFERRERS&', 'GET_REFERRERS_BY_DAY&', $key);
+		$bydaykey = str_replace 
+		?>
+		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
+		<?php
+		
+		$counter = 0;
+		$sum = $this->woopra_get_sum($entries, 'hits');
+		foreach ($entries as $entry) {
+		
+			$id = (int) $entry['id'];
+			$name = urldecode($entry['name']);
+			$hits = (int) $entry['hits'];
+			$meta = urldecode($entry['meta']);
+		
+			$percent = 0;
+			if ($sum != 0) {
+				$percent = round($hits*100/$sum);
+			}
+			$hashid = $this->woopra_friendly_hash($key);
+			?>
+			<tr class="<?php echo (($counter++%2==0) ? "expanded_even_row" : "expanded_row"); ?>">
+				<td class="wrank"><?php echo $counter; ?></td>
+				<td><span class="ellipsis"><a href="<?php echo $name; ?>" target="_blank"><?php echo $this->woopra_render_name($key, $name, $meta); ?></a></span></td>
+				<td width="100" class="center whighlight"><a href="#" onclick="return expandByDay('<?php echo $bydaykey; ?>', '<?php echo $hashid; ?>',<?php echo $id; ?>)"><?php echo $hits; ?></a></td>
+				<td class="wbar"><?php echo $this->woopra_bar($percent); ?></td>
+			</tr>
+			<tr id="wlc-<?php echo $hashid; ?>-<?php echo $id; ?>" style=" height: 120px; display: none;"><td class="wlinechart" id="linecharttd-<?php echo $hashid; ?>-<?php echo $id; ?>" colspan="4"></td></tr>
+			<tr id="refexp-<?php echo $hashid; ?>-<?php echo $id; ?>" style="display: none;"><td colspan="4"><div id="refexptd-<?php echo $hashid; ?>-<?php echo $id; ?>"></div></td></tr>
+			<?php
+		}
+		?>
+		</table>
+		<?php
+	}
+	
+	private function render_referrers($entries, $key) {
+
+		$bydaykey = str_replace('GET_REFERRERS&', 'GET_REFERRERS_BY_DAY&', $key);
+		?>
+		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
+		<tr>
+			<th>&nbsp;</th>
+			<th><?php _e('Referrer'); ?></th>
+			<th class="center" width="100"><?php _e('Hits'); ?></th>
+			<th width="400">&nbsp;</th>
+		</tr>
+		<?php
+		
+		$counter = 0;
+		$sum = $this->woopra_get_sum($entries, 'hits');
+		foreach($entries as $entry) {
+		
+		$id = (int)$entry['id'];
+		$name = urldecode($entry['name']);
+		$hits = (int)$entry['hits'];
+		$meta = urldecode($entry['meta']);
+		
+		$percent = 0;
+		if ($sum != 0) {
+			$percent = round($hits*100/$sum);
+		}
+		$hashid = $this->woopra_friendly_hash($key);
+		?>
+		<tr<?php echo (($counter++%2==0) ? " class=\"even_row\"" : "" ); ?>>
+			<td class="wrank"><?php echo $counter; ?></td>
+		<?php if ($this->woopra_key_expansible($key)) { ?>
+			<td><span class="ellipsis"><a href="#" onclick="return expandReferrer('<?php echo $key . '&id=' . $id; ?>', '<?php echo $hashid .'-'. $id; ?>')"><?php echo $this->woopra_render_name($key, $name, $meta); ?></a></span></td>
+		<?php } else { ?>
+			<td><span class="ellipsis"><a href="http://<?php echo $name; ?>" target="_blank"><?php echo $this->woopra_render_name($key, $name, $meta); ?></a></span></td>
+		<?php } ?>
+			<td width="100" class="center whighlight"><a href="#" onclick="return expandByDay('<?php echo $bydaykey; ?>', '<?php echo $hashid; ?>',<?php echo $id; ?>)"><?php echo $hits; ?></a></td>
+			<td class="wbar"><?php echo $this->woopra_bar($percent) ?></td>
+		</tr>
+		<tr id="wlc-<?php echo $hashid; ?>-<?php echo $id ?>" style=" height: 120px; display: none;"><td class="wlinechart" id="linecharttd-<?php echo $hashid ?>-<?php echo $id; ?>" colspan="4"></td></tr>
+		<tr id="refexp-<?php echo $hashid; ?>-<?php echo $id; ?>" style="display: none;"><td colspan="4" style="padding: 0;"><div id="refexptd-<?php echo $hashid; ?>-<?php echo $id; ?>"></div></td></tr>
+		<?php
+		}
+		?>
+		</table>
+		<?php
+	}
+	
+	private function woopra_get_sum($entries, $key) {
+		$sum = 0;
+		foreach ($entries as $entry) {
+			$val = (int) $entry[$key];
+			$sum = $sum + $val;
+		}
+		return $sum;
+	}
+	
+	private function woopra_key_expansible($key) {
+		if ($this->woopra_contains($key, '&type=SEARCHENGINES') || $this->woopra_contains($key, '&type=FEEDS') || $this->woopra_contains($key, '&type=MAILS')) {
+			return false;
+		}
+		return true;
+	}
+	
+	private function woopra_friendly_hash($value) {
+		return substr(md5($value),0,4);
+	}
+	
+	private function woopra_get_max($entries, $key) {
+		$max = 0;
+		foreach ($entries as $entry) {
+			$val = (int) $entry[$key];
+			if ($val > $max)
+				$max = $val;
+		}
+		
+		return $max;
+	}
+	
+	private function woopra_seconds_to_string($seconds) {
+		$min = floor($seconds/60);
+		$sec = $seconds%60;
+		return $min . "m " . $sec . "s";
+	}
+	
+	private function woopra_date_to_string($date) {
+		$date = (int) $date;
+		$year = 2006 + (int) ($date/100000);
+		$day_of_year = $date%100000;
+		$to_return = date('F j, Y', mktime(0,0,0,1,$day_of_year,$year)); 
+		return $to_return;
+	}
+	
+	private function woopra_bar($percent) {
+		$barurl = get_option('siteurl') . '/wp-content/plugins/woopra/images/bar.png';
+		$width = $percent . "%";
+		if ($percent < 1)
+			$width = "1";
+		
+		return '<img src="'.$barurl.'" width="'.$width.'" height="16" />';
+	}
+	
+	private function woopra_render_name($key, $name = null, $meta = null) {
+		if (is_null($name)) {
+			switch ($key) {
+				case 'GET_COUNTRIES':
+					return __('Country');
+				case 'GET_VISITBOUNCES':
+					return __('Pageviews per Visit');
+				case 'GET_VISITDURATIONS':
+					return __('Durations');
+				case 'GET_BROWSERS':
+					return __('Browser');
+				case 'GET_PLATFORMS':
+					return __('Platform');
+				case 'GET_RESOLUTIONS':
+					return __('Resolution');
+				case 'GET_LANGUAGES':
+					return __('Language');
+				case 'GET_PAGEVIEWS':
+					return __('Pages');
+				case 'GET_PAGELANDINGS':
+					return __('Landing Pages');
+				case 'GET_PAGEEXITS':
+					return __('Exit Pages');
+				case 'GET_OUTGOINGLINKS':
+					return __('Outgoing Links');
+				case 'GET_DOWNLOADS':
+					return __('Downloads');
+				case 'GET_QUERIES':
+					return __('Search Queries');
+				case 'GET_KEYWORDS':
+					return __('Keywords');
+				default:
+					return __('Name');
+			}
+		} else {
+			switch ($key) {
+				case 'GET_COUNTRIES':
+					return $this->woopra_country_flag($name) . " " . $this->woopra_get_country_name($name);
+				case 'GET_SPECIALVISITORS':
+					$vars = Array();
+					parse_str($meta, $vars);
+					$avatar = 'http://static.woopra.com/images/avatar.png';
+					if (isset($vars['avatar'])) {
+						$avatar = $vars['avatar']; 
+					}
+					$toreturn .= '<img style="float: left; margin-right: 9px;" src="'.$avatar.'" width="32" height="32" /> ';
+					$toreturn .= "<strong>$name</strong>";
+					if (isset($vars['email'])) {
+						$toreturn .= '<br/><small>(<a href="mailto:'.$vars['email'].'">'.$vars['email'].'</a>)</small>';
+					}
+					return $toreturn;
+				case 'GET_VISITBOUNCES':
+					$post_text = 'pageviews';
+					if ($name == '1') {
+						$post_text = 'pageview';
+					}
+					return $name . " " . $post_text;
+				case 'GET_VISITDURATIONS':
+					$name = str_replace('-', ' to ', $name);
+					return $name . ' minutes';
+				case 'GET_BROWSERS':
+					return $this->woopra_browser_icon($name) . "&nbsp;&nbsp;" . $name;
+				case 'GET_PLATFORMS':
+					return $this->woopra_platform_icon($name) . "&nbsp;&nbsp;" . $name;
+				case 'GET_PAGEVIEWS':
+					return $meta . "<br/>" . "<small><a href=\"http://".get_woopra_host()."$name\" target=\"_blank\">$name</a></small>";
+				case 'GET_PAGELANDINGS':
+					return $meta . "<br/>" . "<small><a href=\"http://".get_woopra_host()."$name\" target=\"_blank\">$name</a></small>";
+				case 'GET_PAGEEXITS':
+					return $meta . "<br/>" . "<small><a href=\"http://".get_woopra_host()."$name\" target=\"_blank\">$name</a></small>";
+				case 'GET_OUTGOINGLINKS':
+					return "<a href=\"$name\" target=\"_blank\">$name</a>";
+				case 'GET_DOWNLOADS':
+					return "<a href=\"$name\" target=\"_blank\">$name</a>";
+				default:
+					return $name;
+			}
+		}
+	}
+	
+	private function render_overview($entries) {	
+	?>
+		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
+		<tr>
+			<th><?php _e("Day", 'woopra') ?><</th>
+			<th class="center"><?php _e("Avg Time Spent", 'woopra') ?></th>
+			<th class="center"><?php _e("New Visitors", 'woopra') ?></th>
+			<th class="center"><?php _e("Visits", 'woopra') ?></th>
+			<th class="center"><?php _e("Pageviews", 'woopra') ?></th>
+			<th width="400">&nbsp;</th>
+		</tr>
+		<?php
+		$counter = 0;
+		$max = $this->woopra_get_max($entries, 'pageviews');
+		foreach($entries as $entry) {
+			
+			$pageviews = (int) $entry['pageviews'];
+			$percent = round($pageviews*100/$max);
+			$timespenttotal = (int) $entry['timespenttotal'];
+			$timesamples = (int) $entry['timespentsamples'];
+		
+			$timespent = 0;
+			if ($timesamples != 0) {
+				$timespent = round(($timespenttotal/1000)/$timesamples);
+			}
+			$timespentstring = $this->woopra_seconds_to_string($timespent);
+		
+			$newvisitors =(int) $entry['newvisitors'];
+			$visitors = (int) $entry['visitors'];
+			$newvisitorsstring = "-";
+			if ($newvisitors <= $visitors && $visitors != 0) {
+				$newvisitorsstring = (int) ($newvisitors*100/$visitors) . '%';
+			}
+			?>
+			<tr<?php echo (($counter++%2==0)?" class=\"even_row\"":""); ?>>
+				<td class="whighlight"><?php echo $this->woopra_date_to_string($entry['day']); ?></td>
+				<td class="center"><?php echo $timespentstring; ?></td>
+				<td class="center"><?php echo $newvisitorsstring; ?></td>
+				<td class="center" class="center"><?php echo $entry['visits']; ?></td>
+				<td class="center whighlight"><?php echo $entry['pageviews']; ?></td>
+				<td class="wbar"><?php echo $this->woopra_bar($percent); ?></td>
+			</tr>
+		<?php
+		}
+		?>
+		</table>
+	<?php
+	}
+	
+	/** RENDERING RESULTS **/
+	
+	private function render_results($key) {
+		if ($this->entries == null || sizeof($this->entries) == 0) {
+			echo '<p align="center">' . __("Your query returned 0 results.", 'woopra') . '<br/>' . __('Click <a href="#" onclick="refreshCurrent(); return false;">here</a> to retry again!', 'woopra') . '</p>';
+			return;
+		} else {
+			$this->sort_analytics_response($this->entries);
+			
+			if ($this->woopra_contains($this->key, 'BY_DAY')) {
+				$this->render_chart_data($this->entries, $this->key);
+				return;
+			}
+			
+			if ($this->woopra_contains($this->key, 'GET_REFERRERS&')) {
+				if ($this->woopra_contains($this->key, '&id=')) {
+					$this->render_expanded_referrers($this->entries, $this->key);
+				} else {
+					$this->render_referrers($this->entries, $this->key);
+				}
+				return;
+			}
+			
+			switch ($this->key) {
+				case 'GET_GLOBALS':
+					$this->render_overview($this->entries);
+					break;
+				case 'GET_COUNTRIES':
+					include_once 'woopra_countries.php';
+					renderDefaultModel($entries,'GET_COUNTRIES');
+					break;
+				default:
+					renderDefaultModel($entries,$key);
+					break;
+			}
+		}
 	}
 	
 }
