@@ -96,9 +96,7 @@ class WoopraXML extends WoopraAnalytics {
 	 */
 	function init() {
 		if (!$this->api_key)
-		{
 			return false;
-		}
 		return true;
 	}
 	
