@@ -112,7 +112,7 @@ class WoopraXML extends WoopraAnalytics {
 	 * @param object $offset
 	 */
 	function set_xml($key, $start_date, $end_date, $limit, $offset) {
-		$this->url = "http://".$this->hostname.".woopra-ns.com/api/output_format=xml&website=".$this->hostname."&api_key=".$this->api_key."&query=".$key."&start_day=".$start_day."&end_day=".$end_day."&limit=".$limit."&offset=".$offset;
+		$this->url = "http://".$this->hostname.".woopra-ns.com/api/output_format=xml&website=".$this->hostname."&api_key=".$this->api_key."&query=".$key."&start_day=".$start_date."&end_day=".$end_date."&limit=".$limit."&offset=".$offset;
 		return true;
 	}
 	
@@ -143,9 +143,8 @@ class WoopraXML extends WoopraAnalytics {
         xml_set_character_data_handler($this->parser, 'char_xml');
 
         xml_parser_set_option($this->parser, XML_OPTION_CASE_FOLDING, false);
-
         if (!($fp = @fopen($this->url, 'rb'))) {
-            $this->connection_error = sprintf(__("Cannot open {$this->url}"), 'WoopraXML::parse(148)');
+            $this->connection_error = sprintf(__("%s: Cannot open {$this->url}"), 'WoopraXML::parse(148)');
             return $this->error();
         }
 
