@@ -32,9 +32,6 @@ class WoopraAnalytics extends WoopraAdmin {
 	 */
 	var $date_to;
 	
-	var $start_date;
-	var $end_date;
-	
 	/**
 	 * @var int
 	 */
