@@ -2,7 +2,8 @@
 /**
  * WoopraAdmin Class for Woopra
  *
- * This class contains all functions and actions required for Woopra to work on the frontend of WordPress
+ * This class contains all functions and actions required
+ * for Woopra to work on the backend of WordPress.
  *
  * @since 1.4.1
  * @package woopra
@@ -59,19 +60,11 @@ class WoopraAdmin extends Woopra {
 		add_action( 'admin_menu',               array(&$this, 'register_settings_page') 			);
 		add_action(	'admin_menu', 				array(&$this, 'woopra_add_menu') 					);
 		add_action( 'admin_init',				array(&$this, 'admin_init' ) 						);
-		
-		/*
-		wp_register_script( 'woopra-analytics',		$this->plugin_url() . '/js/analytics.js' 		);
-		wp_register_script( 'woopra-swfobject',		$this->plugin_url() . '/js/swfobject.js',	false,	'1.4.1',	true );
-		wp_register_script( 'woopra-datepicker',		$this->plugin_url() . '/js/datepicker.js',	false,	'1.4.1',	true );
-		wp_localize_script(	'woopra-analytics', 'woopradefaultL10n', array(
-				'apikey' => $this->get_option('api_key'),
-				'error' => __('An error has happened. Please try again later.', 'woopra')
-			)
-		);
-		*/
+		add_action( 'admin_enqueue_scripts', 	array(&$this, 'enqueue' ) 							);
 				
 	}
+	
+	/*** MAIN FUNCTIONS ***/
 	
 	/**
 	 * Initialize Woopra Default Settings
@@ -84,6 +77,30 @@ class WoopraAdmin extends Woopra {
 		else
 			$this->check_upgrade();
 	}
+
+	/**
+	 * Regestration of the Setting Page
+	 * @since 1.4.1
+	 * @return none
+	 */
+	function register_settings_page() {
+		add_options_page( __('Woopra Settings', 'woopra'), __("Woopra Settings", 'woopra'), 'manage_options', 'woopra', array(&$this, 'settings_page') );
+	}
+
+	/**
+	 * Add the Menu to Access the Stat Pages
+	 * @since 1.4.1
+	 * @return none
+	 */
+	function woopra_add_menu() {
+		if (function_exists('add_menu_page')) {
+			if ($this->get_option('analytics_tab') && $this->get_option('analytics_tab') ==	'toplevel') {
+				add_menu_page(__("Woopra Analytics", 'woopra'), __("Woopra Analytics", 'woopra'), "manage_options", "woopra-analytics.php", array(&$this, 'content_page') ); 
+			} else {
+				add_submenu_page('index.php', __("Woopra Analytics", 'woopra'), __("Woopra Analytics", 'woopra'), 'manage_options', "woopra-analytics", array(&$this, 'content_page') );
+			}
+		}
+	}
 	
 	/**
 	 * Whitelist the 'woopra' options
@@ -93,6 +110,31 @@ class WoopraAdmin extends Woopra {
 	function admin_init () {
 		register_setting( 'woopra', 'woopra', array(&$this , 'update') );
 	}
+	
+	/**
+	 * Scripts Enqueue
+	 * @since 1.4.1
+	 * @param object $hook_action
+	 * @return none
+	 */
+	function enqueue($hook_action) {
+		$plugin_url = $this->plugin_url();
+		if ('dashboard_page_woopra-analytics' == $hook_action) {
+			wp_enqueue_script( 'woopra-analytics',	$plugin_url. '/js/analytics.js'	);
+			wp_localize_script( 'woopra-analytics', 'woopradefaultL10n', array(
+									'apikey'	=>	$this->get_option('api_key'),
+	                                'error'		=>	__('An error has happened. Please try again later.', 'woopra')
+								)
+			);
+			wp_enqueue_script( 'woopra-swfobject',	$plugin_url . '/js/swfobject.js'	);
+			wp_enqueue_script( 'woopra-datepicker',	$plugin_url . '/js/datepicker.js'	);
+			
+			wp_enqueue_style( 'woopra-analytics',	$plugin_url . '/css/analytics.css'	);
+			wp_enqueue_style( 'woopra-datepicker',	$plugin_url . '/css/datepicker.css'	);			
+		}
+	}
+	
+	/*** OTHER FUNCTIONS ***/
 	
 	/**
 	 * Check if an upgraded is needed
@@ -164,30 +206,6 @@ class WoopraAdmin extends Woopra {
 		} else {
 			unset($options['delete'], $options['default']);
 			return $options;
-		}
-	}
-
-	/**
-	 * Regestration of the Setting Page
-	 * @since 1.4.1
-	 * @return none
-	 */
-	function register_settings_page() {
-		add_options_page( __('Woopra Settings', 'woopra'), __("Woopra Settings", 'woopra'), 'manage_options', 'woopra', array(&$this, 'settings_page') );
-	}
-
-	/**
-	 * Add the Menu to Access the Stat Pages
-	 * @since 1.4.1
-	 * @return none
-	 */
-	function woopra_add_menu() {
-		if (function_exists('add_menu_page')) {
-			if ($this->get_option('analytics_tab') && $this->get_option('analytics_tab') ==	'toplevel') {
-				add_menu_page(__("Woopra Analytics", 'woopra'), __("Woopra Analytics", 'woopra'), "manage_options", "woopra-analytics.php", array(&$this, 'content_page') ); 
-			} else {
-				add_submenu_page('index.php', __("Woopra Analytics", 'woopra'), __("Woopra Analytics", 'woopra'), 'manage_options', "woopra-analytics", array(&$this, 'content_page') );
-			}
 		}
 	}
 
