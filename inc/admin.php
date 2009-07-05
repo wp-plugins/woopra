@@ -61,7 +61,7 @@ class WoopraAdmin extends Woopra {
 		add_action(	'admin_menu', 				array(&$this, 'woopra_add_menu') 					);
 		add_action( 'admin_init',				array(&$this, 'admin_init' ) 						);
 		add_action( 'admin_enqueue_scripts', 	array(&$this, 'enqueue' ) 							);
-				
+		
 	}
 	
 	/*** MAIN FUNCTIONS ***/
