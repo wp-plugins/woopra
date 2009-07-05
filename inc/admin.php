@@ -343,7 +343,7 @@ class WoopraAdmin extends Woopra {
 	 * @return none
 	 */
 	function content_page() {
-		$WoopraAnalytics = new WoopraAnalytics;
+		$WoopraAnalytics = new WoopraAnalytics();
 		$WoopraAnalytics->main();
 		unset($WoopraAnalytics);
 	}
@@ -354,7 +354,7 @@ class WoopraAdmin extends Woopra {
 	 * @return none
 	 */
 	function render_page() {
-		$WoopraRender = new WoopraRender;
+		$WoopraRender = new WoopraRender();
 		unset($WoopraRender);
 	}
 
