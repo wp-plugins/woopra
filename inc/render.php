@@ -8,10 +8,8 @@
  * @package woopra
  * @subpackage render
  */
-
-
-
-class WoopraRender extends WoopraAnalytics {
+require_once( 'xml.php' );
+class WoopraRender {
 
 	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
@@ -33,5 +31,8 @@ class WoopraRender extends WoopraAnalytics {
 	}
 
 }
+
+$WoopraRender = new WoopraRender;
+$WoopraRender->generate_data();
 
 ?>

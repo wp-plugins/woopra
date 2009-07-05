@@ -19,6 +19,11 @@ class WoopraAdmin extends Woopra {
 	 * @var string
 	 */
 	var $plugin_basename;
+	
+	/**
+	 * @var
+	 */
+	var $page_hookname;
 
 	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
@@ -51,10 +56,21 @@ class WoopraAdmin extends Woopra {
 		register_activation_hook( $this->plugin_file , array(&$this, 'init') );
 		
 		//	Admin Actions
-		add_action( 'admin_menu',               array(&$this, 'register_settings_page') 		);
-		add_action( 'admin_init',				array(&$this, 'register_settings' ) 			);
-		add_action(	'admin_menu', 				array(&$this, 'woopra_add_menu') 				);
+		add_action( 'admin_menu',               array(&$this, 'register_settings_page') 			);
+		add_action(	'admin_menu', 				array(&$this, 'woopra_add_menu') 					);
+		add_action( 'admin_init',				array(&$this, 'admin_init' ) 						);
 		
+		/*
+		wp_register_script( 'woopra-analytics',		$this->plugin_url() . '/js/analytics.js' 		);
+		wp_register_script( 'woopra-swfobject',		$this->plugin_url() . '/js/swfobject.js',	false,	'1.4.1',	true );
+		wp_register_script( 'woopra-datepicker',		$this->plugin_url() . '/js/datepicker.js',	false,	'1.4.1',	true );
+		wp_localize_script(	'woopra-analytics', 'woopradefaultL10n', array(
+				'apikey' => $this->get_option('api_key'),
+				'error' => __('An error has happened. Please try again later.', 'woopra')
+			)
+		);
+		*/
+				
 	}
 	
 	/**
@@ -74,7 +90,7 @@ class WoopraAdmin extends Woopra {
 	 * @since 1.4.1
 	 * @return none
 	 */
-	function register_settings () {
+	function admin_init () {
 		register_setting( 'woopra', 'woopra', array(&$this , 'update') );
 	}
 	

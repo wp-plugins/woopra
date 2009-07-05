@@ -74,6 +74,16 @@ class Woopra {
 	}
 	
 	/**
+	 * Get the full URL to the plugin
+	 * @return string
+	 * @since 1.4.1
+	 */
+	function plugin_url() {
+		$plugin_url = plugins_url ( plugin_basename ( dirname ( __FILE__ ) ) );
+		return $plugin_url;
+	}
+	
+	/**
 	 * Get an option from the array.
 	 * @return 
 	 * @param object $option
@@ -109,8 +119,6 @@ class Woopra {
 if (is_admin()) {
 	require_once( dirname(__FILE__) . '/inc/admin.php' );
 	require_once( dirname(__FILE__) . '/inc/analytics.php' );
-	require_once( dirname(__FILE__) . '/inc/render.php' );
-	require_once( dirname(__FILE__) . '/inc/xml.php' );
 	$WoopraAdmin = new WoopraAdmin();
 }
 //	Always Run the Front End Code
