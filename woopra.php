@@ -57,6 +57,9 @@ class Woopra {
 	 */
 	var $woopra_vistor;
 
+	/** DEBUG VAR **/
+	var $debug = false;
+
 	/**
 	 * Compatability for PHP 4.
 	 * @since 1.4.1
@@ -102,8 +105,6 @@ class Woopra {
 
 	/** THIS IS CUSTOM CODE THAT CAN BE DELETED LATER ON **/
 
-	/** DEBUG VAR **/
-	var $debug = false;
 	/**
 	 * Debug code. Has to be turned on for it to work.
 	 * @return none
