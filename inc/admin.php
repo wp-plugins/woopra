@@ -12,19 +12,18 @@
 class WoopraAdmin extends Woopra {
 
 	/**
+	 * The main plugin file.
+	 * @since 1.4.1
 	 * @var string
 	 */
 	var $plugin_file;
 	
 	/**
+	 * Where the file is located.
+	 * @since 1.4.1
 	 * @var string
 	 */
 	var $plugin_basename;
-	
-	/**
-	 * @var
-	 */
-	var $page_hookname;
 
 	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
@@ -44,9 +43,11 @@ class WoopraAdmin extends Woopra {
 	function __construct() {
 		Woopra::__construct();
 		
+		//	Should we be upgrading the options?
 		if ( version_compare( $this->get_option('version'), $this->version, '!=' ) && $this->get_option('version') !== false )
 			$this->check_upgrade();
 		
+		//	Store Plugin Location Information
 		$this->plugin_file = dirname( dirname ( __FILE__ ) ) . '/woopra.php';
 		$this->plugin_basename = plugin_basename( $this->plugin_file );
 		
@@ -151,8 +152,7 @@ class WoopraAdmin extends Woopra {
 	}
 
 	/**
-	 * Upgrade options 
-	 *
+	 * Upgrade options
 	 * @return none
 	 * @since 1.4.1
 	 */
@@ -174,6 +174,14 @@ class WoopraAdmin extends Woopra {
 					'ignore_admin'	=>	$ignoreadmin,
 					'track_admin'	=>	$trackadmin,
 			);
+			
+			/* Delete old options */
+			delete_option('woopra_auto_tag_commentators');
+			delete_option('woopra_ignore_admin');
+			delete_option('woopra_track_admin');
+			delete_option('woopra_api_key');
+			delete_option('woopra_analytics_tab');
+			
 			update_option( 'woopra', array_merge($woopra, $newopts) );
 		}
 	}
@@ -198,7 +206,6 @@ class WoopraAdmin extends Woopra {
 
 	/**
 	 * Update/validate the options in the options table from the POST
-	 *
 	 * @since 1.4.1
 	 * @return none
 	 */
@@ -337,6 +344,7 @@ class WoopraAdmin extends Woopra {
 	function content_page() {
 		$WoopraAnalytics = new WoopraAnalytics;
 		$WoopraAnalytics->main();
+		unset($WoopraAnalytics);
 	}
 	
 	/**
@@ -346,6 +354,7 @@ class WoopraAdmin extends Woopra {
 	 */
 	function render_page() {
 		$WoopraRender = new WoopraRender;
+		unset($WoopraRender);
 	}
 
 }
