@@ -96,8 +96,6 @@ class WoopraAnalytics extends WoopraAdmin {
 	<!-- Woopra Javascript Code Starts Here -->
 	<script type="text/javascript">
 	
-	woopra_website = '<?php echo get_option("siteurl"); ?>';
-		
 	addSuperTab('<?php _e("Visitors", 'woopra') ?>','visitors');
 	addSuperTab('<?php _e("Systems", 'woopra') ?>','systems');
 	addSuperTab('<?php _e("Pages", 'woopra') ?>','pages');

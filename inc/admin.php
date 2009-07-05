@@ -118,8 +118,8 @@ class WoopraAdmin extends Woopra {
 	/**
 	 * Scripts and Style Enqueue
 	 * @since 1.4.1
-	 * @param object $hook_action
 	 * @return none
+	 * @param object $hook_action
 	 */
 	function enqueue($hook_action) {
 		$plugin_url = $this->plugin_url();
@@ -127,8 +127,9 @@ class WoopraAdmin extends Woopra {
 			wp_enqueue_script( 'woopra-analytics',	$plugin_url. '/js/analytics.js'	);
 			wp_localize_script( 'woopra-analytics', 'woopradefaultL10n', array(
 									'apikey'	=>	$this->get_option('api_key'),
+									'siteurl'	=>	get_option('siteurl'),
+									'baseurl'	=>	$plugin_url,
 	                                'error'		=>	__('An error has happened. Please try again later.', 'woopra'),
-									'siteurl'	=>	get_option('siteurl')
 								)
 			);
 			wp_enqueue_script( 'woopra-swfobject',	$plugin_url . '/js/swfobject.js'	);
