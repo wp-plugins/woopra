@@ -8,7 +8,7 @@
  * @package woopra
  * @subpackage xml
  */
-class WoopraXML extends WoopraAnalytics {
+class WoopraXML {
 
 	/**
 	 * @since 1.4.1
@@ -86,7 +86,7 @@ class WoopraXML extends WoopraAnalytics {
 	 * @constructor
 	 */
 	function __construct() {
-		
+	
 	}
 	
 	/**
@@ -114,60 +114,43 @@ class WoopraXML extends WoopraAnalytics {
 		return true;
 	}
 	
-    /**
-     * Process the XML file once the setting we want is set.
-     * @since 1.4.1
-     * @return
-     */
-    function process_data()
-	{
-    	$this->clear_data();
-        return $this->parse();
-    }
-	
 	/**
 	 * @since 1.4.1
 	 * @return none
 	 */
 	function clear_data() {
-		$this->data = Array();
+		$this->data = null;
     	$this->counter = 0;
 	}
 	
-    function parse() {
-        $this->parser = xml_parser_create ("UTF-8");
+	/**
+	 * 
+	 * @return 
+	 */
+    function process_data() {
+        $this->parser = xml_parser_create("UTF-8");
         xml_set_object($this->parser, $this);
         xml_set_element_handler($this->parser, 'start_xml', 'end_xml');
         xml_set_character_data_handler($this->parser, 'char_xml');
-
         xml_parser_set_option($this->parser, XML_OPTION_CASE_FOLDING, false);
+				
         if (!($fp = @fopen($this->url, 'rb'))) {
-            $this->connection_error = sprintf(__("%s: Cannot open {$this->url}"), 'WoopraXML::parse(148)');
-            return $this->error();
+            return false;
         }
 
         while (($data = fread($fp, 8192))) {
             if (!xml_parse($this->parser, $data, feof($fp))) {
-                $this->error_msg = sprintf(__('%s: XML error at line %d column %d'), 'WoopraXML::parse(154)', xml_get_current_line_number($this->parser), xml_get_current_column_number($this->parser));
-                return $this->error();
+            	return false;
             }
         }
         
-        if ($this->founddata) {
+        if ($this->founddata)
         	return true;
-        } else {
-        	$this->error_msg = sprintf(__("%s: No data entries."), 'WoopraXML::parse(162)');
-        	return false;
-        }     
+        else 
+        	return false;    
     }
 	
-	/**
-	 * 
-	 * @return boolea
-	 */
-	function error() {
-		return false;
-	}
+
 	
 	/** PRIVATE FUNCTIONS **/
 	
