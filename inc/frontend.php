@@ -44,6 +44,11 @@ class WoopraFrontend extends Woopra {
 		
 	}
 	
+	/**
+	 * What is Woopra Status?
+	 * @since 1.4.1
+	 * @return boolean
+	 */
 	function woopra_status() {
 		if ($this->get_option('run_status') == 'on')
 			return true;
@@ -71,11 +76,12 @@ class WoopraFrontend extends Woopra {
 			echo "woopra_visitor['email'] = '" . js_escape($this->woopra_visitor['email']) . "';\r\n";
 			echo "woopra_visitor['avatar'] = 'http://www.gravatar.com/avatar.php?gravatar_id=" . md5(strtolower($this->woopra_visitor['email'])) . "&size=60&default=http%3A%2F%2Fstatic.woopra.com%2Fimages%2Favatar.png';\r\n";
 		}
-			
+		
+		// @todo Add Event Related Code
+		
 		echo "</script>\r\n";
 		echo "<script src=\"http://static.woopra.com/js/woopra.js\" type=\"text/javascript\"></script>";
 		echo "\n<!-- End of Woopra Analytics Code -->";
-		
 	}
 
 	/**
@@ -94,12 +100,12 @@ class WoopraFrontend extends Woopra {
 			$this->woopra_visitor['email'] = $email;
 		}
 	
+		// Wait? The user is logged in. Get that data instead.
 		if (is_user_logged_in()) {
 			get_currentuserinfo();
 			$this->woopra_visitor['name'] = $current_user->display_name;
 			$this->woopra_visitor['email'] = $current_user->user_email;
 		}
-		
 	}
 	
 }
