@@ -8,60 +8,65 @@
  * @package woopra
  * @subpackage render
  */
- 
-error_reporting(E_ALL);
- 
-require_once( 'xml.php' );
-
+require_once('xml.php');
 class WoopraRender {
 
 	/**
+	 * @since 1.4.1
 	 * @var string
 	 */
 	var $key;
 	
 	/**
+	 * @since 1.4.1
 	 * @var string
 	 */
 	var $api_key;
 	
 	/**
+	 * @since 1.4.1
 	 * @var string
 	 */
 	var $date_from;
 	
 	/**
+	 * @since 1.4.1
 	 * @var string
 	 */
 	var $date_to;
 	
 	/**
+	 * @since 1.4.1
 	 * @var int
 	 */
 	var $limit = 50;
 	
 	/**
+	 * @since 1.4.1
 	 * @var int
 	 */
 	var $offset = 0;
 	
 	/**
-	 * @var
+	 * @since 1.4.1
+	 * @var string
 	 */
 	var $hostname;
 	
 	/**
-	 * @var
+	 * @since 1.4.1
+	 * @var array
 	 */
 	var $entries;
 	
 	/**
-	 * @var
+	 * @since 1.4.1
+	 * @var array
 	 */
 	var $countries;
 
 	/** DEBUG VAR **/
-	var $debug = true;
+	var $debug = false;
 
 	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
@@ -81,6 +86,7 @@ class WoopraRender {
 	function __construct() {
 		//	Country List Create
 		$this->init_countries();
+		//	Generate the Data
 		$this->generate_data();	
 	}
 
@@ -88,6 +94,7 @@ class WoopraRender {
 
 	/**
 	 * Debug code. Has to be turned on for it to work.
+	 * @since 1.4.1
 	 * @return none
 	 * @see $this->debug
 	 */
@@ -121,11 +128,13 @@ class WoopraRender {
 			if ($this->process_xml($this->key, $start_date, $end_date, $this->limit, $this->offset))	
 				$this->render_results();
 		}
+		exit;
 	}
 	
 	/**
 	 * Process XML Request
-	 * @return 
+	 * @since 1.4.1
+	 * @return boolean
 	 * @param object $key
 	 * @param object $start_date
 	 * @param object $end_date
@@ -146,9 +155,8 @@ class WoopraRender {
 				}
 			}
 		}
-		
 		if ($xml->connection_error != null || $xml->error_msg != null || !$xml->init()) {
-			echo '<div class="error"><p>' . sprintf('The Woopra Plugin was not able to request your analytics data from the Woopra Engines<br/><small>Your hosting provider is not allowing the Woopra Plugin to fetch data from the Woopra Servers.<br/>%s<br/><a href="http://www.woopra.com/forums/">Report this error onto the forums!</a>', $xml->connection_error . $xml->error_msg) . '</small></p></div>';
+			echo '<div class="error"><p>' . sprintf(__('The Woopra Plugin was not able to request your analytics data from the Woopra Engines<br/><small>Your hosting provider is not allowing the Woopra Plugin to fetch data from the Woopra Servers.<br/>%s<br/><a href="http://www.woopra.com/forums/">Report this error onto the forums!</a>'), $xml->connection_error . $xml->error_msg) . '</small></p></div>';
 			return false;
 		}
 		$xml->clear_data();
@@ -156,10 +164,15 @@ class WoopraRender {
 		return true;
 	}
 
+	/**
+	 * Render the Results
+	 * @since 1.4.1
+	 * @return none
+	 */
 	function render_results() {
 		
 		if ($this->entries == null || sizeof($this->entries) == 0) {
-			echo '<p align="center">Your query returned 0 results.<br/>Click <a href="#" onclick="refreshCurrent(); return false;">here</a> to retry again!</p>';
+			echo '<p align="center">' . _('Your query returned 0 results.<br/>Click <a href="#" onclick="refreshCurrent(); return false;">here</a> to retry again!') . '</p>';
 			return;
 		} else {
 			$this->sort_analytics_response($this->entries);
@@ -192,15 +205,21 @@ class WoopraRender {
 		}
 	}
 	
+	/**
+	 * Render the Overview
+	 * @since 1.4.1
+	 * @return 
+	 * @param object $entries
+	 */
 	function render_overview($entries) {	
 	?>
 		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
 		<tr>
-			<th><?php //_e("Day", 'woopra') ?></th>
-			<th class="center"><?php //_e("Avg Time Spent", 'woopra') ?></th>
-			<th class="center"><?php //_e("New Visitors", 'woopra') ?></th>
-			<th class="center"><?php //_e("Visits", 'woopra') ?></th>
-			<th class="center"><?php //_e("Pageviews", 'woopra') ?></th>
+			<th><?php _e("Day", 'woopra') ?></th>
+			<th class="center"><?php _e("Avg Time Spent", 'woopra') ?></th>
+			<th class="center"><?php _e("New Visitors", 'woopra') ?></th>
+			<th class="center"><?php _e("Visits", 'woopra') ?></th>
+			<th class="center"><?php _e("Pageviews", 'woopra') ?></th>
 			<th width="400">&nbsp;</th>
 		</tr>
 		<?php
@@ -241,13 +260,20 @@ class WoopraRender {
 	<?php
 	}
 	
+	/**
+	 * Render the default model
+	 * @since 1.4.1
+	 * @return 
+	 * @param object $entries
+	 * @param object $key
+	 */
 	function render_default_model($entries, $key) {
 		?>
 		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
 		<tr>
 			<th>&nbsp;</th>
 			<th><?php echo $this->woopra_render_name($key); ?></th>
-			<th class="center" width="100"><?php //_e("Hits", 'woopra') ?></th>
+			<th class="center" width="100"><?php _e("Hits", 'woopra') ?></th>
 			<th width="400">&nbsp;</th>
 		</tr>
 		<?php
@@ -279,12 +305,8 @@ class WoopraRender {
 		<?php
 	}
 	
-	/** PRIVATE FUNCTIONS **/
+	/** PRIVATE FUNCTIONS -- NOT DOCUMENTED **/
 	
-	/**
-	 * 
-	 * @return 
-	 */
 	private function woopra_host() {
 		$site = $this->hostname;
 		preg_match('@^(?:http://)?([^/]+)@i', $site, $matches);
@@ -395,8 +417,8 @@ class WoopraRender {
 		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
 		<tr>
 			<th>&nbsp;</th>
-			<th><?php //_e('Referrer'); ?></th>
-			<th class="center" width="100"><?php //_e('Hits'); ?></th>
+			<th><?php _e('Referrer'); ?></th>
+			<th class="center" width="100"><?php _e('Hits'); ?></th>
 			<th width="400">&nbsp;</th>
 		</tr>
 		<?php
@@ -713,7 +735,7 @@ class WoopraRender {
 	        return $this->woopra_get_image("browsers/ie7");
 	    }
 	    if (stripos($browser, "explorer 8") !== false) {
-	        return $this->woopra_get_image("browsers/ie7");
+	        return $this->woopra_get_image("browsers/ie7");	//	should this me updated?
 	    }
 	    if (stripos($browser, "explorer") !== false) {
 	        return $this->woopra_get_image("browsers/ie");
@@ -788,35 +810,35 @@ class WoopraRender {
 		if (is_null($name)) {
 			switch ($key) {
 				case 'GET_COUNTRIES':
-					/* return __('Country'); */
+					return __('Country');
 				case 'GET_VISITBOUNCES':
-					/* return __('Pageviews per Visit');
+					return __('Pageviews per Visit');
 				case 'GET_VISITDURATIONS':
-					/* return __('Durations'); */
+					return __('Durations');
 				case 'GET_BROWSERS':
-					/* return __('Browser'); */
+					return __('Browser');
 				case 'GET_PLATFORMS':
-					/* return __('Platform'); */
+					return __('Platform');
 				case 'GET_RESOLUTIONS':
-					/* return __('Resolution'); */
+					return __('Resolution');
 				case 'GET_LANGUAGES':
-					/* return __('Language'); */
+					return __('Language');
 				case 'GET_PAGEVIEWS':
-					/* return __('Pages'); */
+					return __('Pages');
 				case 'GET_PAGELANDINGS':
-					/* return __('Landing Pages'); */
+					return __('Landing Pages');
 				case 'GET_PAGEEXITS':
-					/* return __('Exit Pages'); */
+					return __('Exit Pages');
 				case 'GET_OUTGOINGLINKS':
-					/* return __('Outgoing Links'); */
+					return __('Outgoing Links');
 				case 'GET_DOWNLOADS':
-					/* return __('Downloads'); */
+					return __('Downloads');
 				case 'GET_QUERIES':
-					/* return __('Search Queries'); */
+					return __('Search Queries');
 				case 'GET_KEYWORDS':
-					/* return __('Keywords'); */
+					return __('Keywords');
 				default:
-					/* return __('Name'); */
+					return __('Name');
 			}
 		} else {
 			switch ($key) {
@@ -865,7 +887,5 @@ class WoopraRender {
 	}
 	
 }
-
-$WoopraRender = new WoopraRender;
 
 ?>
