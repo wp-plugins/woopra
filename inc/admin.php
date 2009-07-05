@@ -112,7 +112,7 @@ class WoopraAdmin extends Woopra {
 	}
 	
 	/**
-	 * Scripts Enqueue
+	 * Scripts and Style Enqueue
 	 * @since 1.4.1
 	 * @param object $hook_action
 	 * @return none
