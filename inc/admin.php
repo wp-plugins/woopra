@@ -123,7 +123,8 @@ class WoopraAdmin extends Woopra {
 			wp_enqueue_script( 'woopra-analytics',	$plugin_url. '/js/analytics.js'	);
 			wp_localize_script( 'woopra-analytics', 'woopradefaultL10n', array(
 									'apikey'	=>	$this->get_option('api_key'),
-	                                'error'		=>	__('An error has happened. Please try again later.', 'woopra')
+	                                'error'		=>	__('An error has happened. Please try again later.', 'woopra'),
+									'siteurl'	=>	get_option('siteurl')
 								)
 			);
 			wp_enqueue_script( 'woopra-swfobject',	$plugin_url . '/js/swfobject.js'	);
