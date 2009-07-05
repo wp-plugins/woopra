@@ -12,7 +12,7 @@
 class WoopraAnalytics extends WoopraAdmin {
 
 	/**
-	 * Store the API key
+	 * @since 1.4.1
 	 * @var string
 	 */
 	var $api_key;
@@ -41,7 +41,11 @@ class WoopraAnalytics extends WoopraAdmin {
 		
 	}
 	
-	// Display a notice telling the user to fill in their Woopra details
+	/**
+	 * Display a notice telling the user to fill in their Woopra details
+	 * @since 1.4.1
+	 * @return none
+	 */
 	function analytics_warn() {
 		echo '<div class="error"><p>' . sprintf( __( 'You must fill in your API Key in order to view Analytics. Please fill it out on the <a href="%s">settings page</a> in order for you to view your analytics.', 'woopra' ), admin_url('options-general.php?page=woopra') ) . "</p></div>\n";
 	}
@@ -51,9 +55,7 @@ class WoopraAnalytics extends WoopraAdmin {
 	 * @since 1.4.1
 	 * @return none
 	 */
-	function main() { 
-		
-		?>
+	function main() { ?>
 		
 		<div class="wrap">
 		<?php screen_icon(); ?>
@@ -146,11 +148,8 @@ class WoopraAnalytics extends WoopraAdmin {
 		}
 		
 		?>
-		
 		</div>
-		
 		<?php
-	
 	}
 	
 }
