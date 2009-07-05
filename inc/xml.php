@@ -92,7 +92,7 @@ class WoopraXML {
 	/**
 	 * Initialization of the Process Check
 	 * @since 1.4.1
-	 * @return boolen
+	 * @return boolean
 	 */
 	function init() {
 		if (!$this->api_key)
@@ -102,7 +102,7 @@ class WoopraXML {
 	
 	/**
 	 * Set the XML File Location
-	 * @return 
+	 * @return boolean
 	 * @param object $key
 	 * @param object $start_date
 	 * @param object $end_date
@@ -126,7 +126,8 @@ class WoopraXML {
 	
 	/**
 	 * Process the XML File
-	 * @return 
+	 * @since 1.4.1
+	 * @return boolean
 	 */
     function process_data() {
         $this->parser = xml_parser_create("UTF-8");
@@ -157,13 +158,14 @@ class WoopraXML {
 	
 	/**
 	 * Resturn False
+	 * @since 1.4.1
 	 * @return boolean
 	 */
 	function error() {
 		return false;
 	}
 	
-	/** PRIVATE FUNCTIONS **/
+	/** PRIVATE FUNCTIONS - NOT DOCUMENTED **/
 	
 	function start_xml($parser, $name, $attribs) {
 		if (($name == "entry") && (!$this->founddata))
