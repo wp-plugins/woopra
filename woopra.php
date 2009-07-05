@@ -17,6 +17,11 @@
  * @package woopra
  */
 
+/**
+ * Define the Woopra Plugin Version
+ * @since 1.4.1
+ * @return none
+ */
 DEFINE ('WOOPRA_VERSION', '1.4.1');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
 
 /*
@@ -35,27 +40,26 @@ Author URI:   http://www.woopra.com/
 class Woopra {
 
 	/**
-	 * Current Version
+	 * @since 1.4.1
 	 * @var string
 	 */
 	var $version = WOOPRA_VERSION;
 
 	/**
-	 * Options array containing all options for this plugin
 	 * @since 1.4.1
 	 * @var string
 	 */
 	var $options;
 
 	/**
-	 * Current vistor information on the site are stored in this varabile.
-	 * @var string 
 	 * @since 1.4.1
+	 * @var string 
 	 */
 	var $woopra_vistor;
 
 	/**
 	 * Compatability for PHP 4.
+	 * @since 1.4.1
 	 * @return none
 	 */
 	function Woopra() {
@@ -75,8 +79,8 @@ class Woopra {
 	
 	/**
 	 * Get the full URL to the plugin
-	 * @return string
 	 * @since 1.4.1
+	 * @return string
 	 */
 	function plugin_url() {
 		$plugin_url = plugins_url ( plugin_basename ( dirname ( __FILE__ ) ) );
@@ -85,7 +89,8 @@ class Woopra {
 	
 	/**
 	 * Get an option from the array.
-	 * @return 
+	 * @since 1.4.1
+	 * @return none
 	 * @param object $option
 	 */
 	function get_option($option) {
@@ -114,11 +119,13 @@ class Woopra {
 
 /**
  * Instantiate the WoopraFrontend or WoopraAdmin Class
- * If we are in the admin load the admin view else load the frontend code.
+ * If we are in the admin load the admin view. Always run the frontend code since
+ * we add the ability to track administrators.
  */
 if (is_admin()) {
 	require_once( dirname(__FILE__) . '/inc/admin.php' );
 	require_once( dirname(__FILE__) . '/inc/analytics.php' );
+	require_once( dirname(__FILE__) . '/inc/render.php' );
 	$WoopraAdmin = new WoopraAdmin();
 }
 //	Always Run the Front End Code
