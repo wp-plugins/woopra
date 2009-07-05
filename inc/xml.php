@@ -101,7 +101,7 @@ class WoopraXML {
 	}
 	
 	/**
-	 * 
+	 * Set the XML File Location
 	 * @return 
 	 * @param object $key
 	 * @param object $start_date
@@ -115,6 +115,7 @@ class WoopraXML {
 	}
 	
 	/**
+	 * Clear the Data
 	 * @since 1.4.1
 	 * @return none
 	 */
@@ -124,7 +125,7 @@ class WoopraXML {
 	}
 	
 	/**
-	 * 
+	 * Process the XML File
 	 * @return 
 	 */
     function process_data() {
@@ -135,22 +136,32 @@ class WoopraXML {
         xml_parser_set_option($this->parser, XML_OPTION_CASE_FOLDING, false);
 				
         if (!($fp = @fopen($this->url, 'rb'))) {
-            return false;
+            $this->connection_error = sprintf(__("%s: Cannot open {$this->url}"), 'WoopraXML::parse(148)');
+            return $this->error();
         }
 
         while (($data = fread($fp, 8192))) {
             if (!xml_parse($this->parser, $data, feof($fp))) {
-            	return false;
+                $this->error_msg = sprintf(__('%s: XML error at line %d column %d'), 'WoopraXML::parse(154)', xml_get_current_line_number($this->parser), xml_get_current_column_number($this->parser));
+                return $this->error();
             }
         }
         
-        if ($this->founddata)
+        if ($this->founddata) {
         	return true;
-        else 
-        	return false;    
+        } else {
+        	$this->error_msg = sprintf(__("%s: No data entries."), 'WoopraXML::parse(162)');
+        	return $this->error();
+        }     
     }
 	
-
+	/**
+	 * Resturn False
+	 * @return boolean
+	 */
+	function error() {
+		return false;
+	}
 	
 	/** PRIVATE FUNCTIONS **/
 	
@@ -170,7 +181,6 @@ class WoopraXML {
 		if ($this->founddata)
 			$this->data[$this->counter][$this->current_tag] = $data;
 	}
-	
 }
 
 ?>
