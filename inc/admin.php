@@ -62,6 +62,9 @@ class WoopraAdmin extends Woopra {
 		add_action( 'admin_init',				array(&$this, 'admin_init' ) 						);
 		add_action( 'admin_enqueue_scripts', 	array(&$this, 'enqueue' ) 							);
 		
+		//	AJAX Render
+		add_action(	'wp_ajax_woopra',			array(&$this, 'render_page' ) 						);
+		
 	}
 	
 	/*** MAIN FUNCTIONS ***/
@@ -334,6 +337,15 @@ class WoopraAdmin extends Woopra {
 	function content_page() {
 		$WoopraAnalytics = new WoopraAnalytics;
 		$WoopraAnalytics->main();
+	}
+	
+	/**
+	 * The render page.
+	 * @since 1.4.1
+	 * @return none
+	 */
+	function render_page() {
+		$WoopraRender = new WoopraRender;
 	}
 
 }
