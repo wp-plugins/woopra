@@ -41,8 +41,6 @@ class WoopraFrontend extends Woopra {
 		
 		//	Process Events
 		$this->event = new WoopraEvents('frontend');
-		//	@todo This is where we should be getting the events that are 'processed' and storing them
-		//	in an array so we can add them to the javascript code widget.
 	}
 	
 	/**
