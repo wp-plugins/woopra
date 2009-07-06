@@ -67,12 +67,10 @@ class WoopraEvents {
 		 * These are all standard events that WordPress has that Woopra
 		 * built-in it's system.
 		 */
-		
-		//	@todo fliters? an action?
-		
 		$default_events = array(
 			array(
-				'name'		=>	__('Comment'),
+				'name'		=>	__('Comments'),
+				'label'		=>	__('Show comments as they are posted.'),
 				'function'	=>	'get_comment',
 				'object'	=>	'comment_content',
 				'value'		=>	'',
@@ -238,11 +236,11 @@ class WoopraEvents_Admin extends WoopraEvents {
 		$this->default_events = $this->register_events();
 		$all_events = $this->default_events;
 		foreach ($all_events as $event_name => $data) {
-			//	@todo It should be here to see if we should be processing the event.			
+			//	@todo It should be here to see if we should be processing the event.
+			//	Using $Woopra->get_option();		
 			add_action( $data['action'], 			array(&$this, 'process_events') );
 		}
 	}
-
 	
 }
 

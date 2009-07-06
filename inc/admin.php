@@ -12,14 +12,24 @@
 class WoopraAdmin extends Woopra {
 
 	/**
-	 * The main plugin file.
+	 * @since 1.4.1
+	 * @var
+	 */
+	var $event;
+	
+	/**
+	 * @since 1.4.1
+	 * @var
+	 */
+	var $_events;
+
+	/**
 	 * @since 1.4.1
 	 * @var string
 	 */
 	var $plugin_file;
 	
 	/**
-	 * Where the file is located.
 	 * @since 1.4.1
 	 * @var string
 	 */
@@ -58,13 +68,16 @@ class WoopraAdmin extends Woopra {
 		register_activation_hook( $this->plugin_file , array(&$this, 'init') );
 		
 		//	Admin Actions
-		add_action( 'admin_menu',               array(&$this, 'register_settings_page') 			);
+		add_action( 'admin_menu',				array(&$this, 'register_settings_page') 			);
 		add_action(	'admin_menu', 				array(&$this, 'woopra_add_menu') 					);
 		add_action( 'admin_init',				array(&$this, 'admin_init' ) 						);
 		add_action( 'admin_enqueue_scripts', 	array(&$this, 'enqueue' ) 							);
 		
 		//	AJAX Render
 		add_action(	'wp_ajax_woopra',			array(&$this, 'render_page' ) 						);
+		
+		//	Process Events
+		$this->event = new WoopraEvents('admin');
 		
 	}
 	
@@ -129,8 +142,7 @@ class WoopraAdmin extends Woopra {
 									'apikey'	=>	$this->get_option('api_key'),
 									'siteurl'	=>	get_option('siteurl'),
 									'baseurl'	=>	$plugin_url,
-	                                'error'		=>	__('An error has happened. Please try again later.', 'woopra'),
-								)
+									'error'		=>	__('An error has happened. Please try again later.', 'woopra'),
 			);
 			wp_enqueue_script( 'woopra-swfobject',	$plugin_url . '/js/swfobject.js'	);
 			wp_enqueue_script( 'woopra-datepicker',	$plugin_url . '/js/datepicker.js'	);
@@ -200,7 +212,7 @@ class WoopraAdmin extends Woopra {
 			'run_status'	=> 'on',
 			'auto_tagging'	=> 1,
 			'ignore_admin'	=> 0,
-			'track_admin'	=> 0,		
+			'track_admin'	=> 0,
 		);
 		return $defaults;
 	}
@@ -226,7 +238,13 @@ class WoopraAdmin extends Woopra {
 	 * @since 1.4.1
 	 * @return none
 	 */
-	function settings_page() { ?>
+	function settings_page() {
+	
+	$this->_events = $this->event->register_events();
+	$event_status = $this->get_option('woopra_event');
+
+	
+	?>
 	
 <div class="wrap">
 <?php screen_icon(); ?>
@@ -300,8 +318,8 @@ class WoopraAdmin extends Woopra {
 			<th scope="row"><?php _e('Main Area Events', 'woopra') ?></th>
 			<td>
 			<?php
-				foreach ( $this->woopra_events['main'] as $action => $data) {
-					echo "\n\t<input type=\"checkbox\"" . checked('1', $this->get_option('woopra_event_' . $action)) . " id=\"" . $action . "\" name=\"woopra[woopra_event][".$action."]\"/> <label for=\"woopra[woopra_event][".$action."]\">".$data['label']."</label><br />".$data['description'];						
+				foreach ( $this->_events as $event => $data) {
+					echo "\n\t<input type=\"checkbox\" value=\"1\"" . checked( '1', $event_status[$data['action']], false ) . " id=\"" . $data['action'] . "\" name=\"woopra[woopra_event][".$data['action']."]\"/> <label for=\"woopra[woopra_event][".$data['action']."]\">".$data['name']."</label><br />".$data['label'];
 				}
 			?>				
 			</td>
@@ -310,8 +328,9 @@ class WoopraAdmin extends Woopra {
 			<th scope="row"><?php _e('Admin Area Events', 'woopra') ?></th>
 			<td>
 			<?php
-				foreach ( $this->woopra_events['admin'] as $action => $data) {
-					echo "\n\t<input type=\"checkbox\"" . checked('1', $this->get_option('woopra_event_' . $action)) . " id=\"" . $action . "\" name=\"woopra[woopra_event][".$action."]\"/> <label for=\"woopra[woopra_event][".$action."]\">".$data['label']."</label><br />".$data['description'];						
+				foreach ( $this->_events as $event => $data) {
+					if ($data['adminonly'])
+						echo "\n\t<input type=\"checkbox\" value=\"1\"" . checked( '1', $event_status[$data['action']], false ) . " id=\"" . $data['action'] . "\" name=\"woopra[woopra_event][".$data['action']."]\"/> <label for=\"woopra[woopra_event][".$data['action']."]\">".$data['name']."</label><br />".$data['label'];
 				}
 			?>
 			</td>
@@ -320,14 +339,14 @@ class WoopraAdmin extends Woopra {
 			<th scope="row"><?php _e('Third Party Events', 'woopra') ?></th>
 			<td>
 			<?php
-				foreach ( $this->woopra_events['custom'] as $action => $data) {
-					echo "\n\t<input type=\"checkbox\"" . checked('1', $this->get_option('woopra_event_' . $action)) . " id=\"" . $action . "\" name=\"woopra[woopra_event][".$action."]\"/> <label for=\"woopra[woopra_event][".$action."]\">".$data['label']."</label><br />".$data['description'];						
+				foreach ( $this->custom_events_events as $event => $data) {
+					echo "\n\t<input type=\"checkbox\" value=\"1\"" . checked( '1', $custom_event_status[$data['action']], false ) . " id=\"" . $data['action'] . "\" name=\"woopra[woopra_event][".$data['action']."]\"/> <label for=\"woopra[woopra_event][".$data['action']."]\">".$data['name']."</label><br />".$data['label'];
 				}
-				if (!count($this->woopra_events['custom']))
+				if (!count($this->custom_events))
 					echo "<strong>" . __('No Custom Events Regestiered.') . "</strong>";
 			?>
 			</td>
-		</tr>				
+		</tr>
 	</table>
 	
 	<p class="submit">
