@@ -80,7 +80,7 @@ class WoopraFrontend extends Woopra {
 			echo print_r($this->event->current_event);
 			
 		//	Generate the Javascript for the event!
-		echo $this->event->print_javascript($this->event->current_event);
+		$this->event->print_javascript($this->event->current_event);
 		
 		echo "</script>\r\n";
 		echo "<script src=\"http://static.woopra.com/js/woopra.js\" type=\"text/javascript\"></script>";

@@ -59,10 +59,7 @@ class WoopraEvents {
 	
 	/**
 	 * Register Events
-	 * 
-	 * 3rd party plugins should be 'hooking' into this function
-	 * 
-	 * @since
+	 * @since 1.4.1
 	 * @return 
 	 */
 	function register_events() {
@@ -70,13 +67,17 @@ class WoopraEvents {
 		 * These are all standard events that WordPress has that Woopra
 		 * built-in it's system.
 		 */
+		
 		//	@todo fliters? an action?
 		
+		
 		$this->default_events = array(
-			'comment_post' => array(
+			array(
 				'name'		=>	__('Comment'),
-				'function'	=>	'get_comment(%i)',
+				'function'	=>	'get_comment',
+				'object'	=>	'comment_content',
 				'value'		=>	'',
+				'action'	=>	'comment_post',
 			),
 		);
 		
@@ -94,7 +95,7 @@ class WoopraEvents {
 		if (!isset($_SESSION))
 			session_start();
 		
-		$_SESSION['woopra']['events'][$event] = $args;
+		$_SESSION['woopra']['events'][$event] = $args;		
 	}
 	
 	/**
@@ -117,19 +118,56 @@ class WoopraEvents {
 	 * @param object $event
 	 */
 	function print_javascript($event) {
-		foreach ($event as $event_name => $event_value) {
-			echo "woopra_event['" . $this->get_event_display_name($event_name) . "'] = '" . js_escape($event_value) . "';\r\n";
-		}
-	}
-	
-	function get_event_display_name($event) {
 		$this->register_events();
-		foreach ($this->default_events as $event_name => $event_datablock) {
-			if ($event_name == $event)
-				return $event_datablock['name'];			
+		foreach ($event as $event_name => $event_value) {
+			echo "woopra_event['" . $this->event_display($event_name['action']) . "'] = '" . js_escape($this->event_value($event_name, $event_value)) . "';\r\n";
 		}
+		unset($_SESSION['woopra']['events']);
 	}
 	
+	/**
+	 * 
+	 * @return 
+	 * @param object $data
+	 */
+	function event_display($data) {
+		foreach ($this->default_events as $event_name => $event_datablock) {
+			if ($event_name == $data)
+				return $event_datablock['name'];
+		}
+	}
+		
+	/**
+	 * Process the event's value.
+	 * 
+	 * @return 
+	 * @param object $event
+	 * @param object $data
+	 */
+	function event_value($event, $args) {
+		foreach ($this->default_events as $event_name => $event_datablock) {
+			if ($event_name == $event) {
+				if ((isset($event_datablock['function'])) && (function_exists($event_datablock['function']))) {
+					$func_args = array(); 
+					if (! is_array($args)) {
+						$args_array = preg_split("%,%", $args); 
+						foreach ($args_array as $arg_array) 
+							array_push($func_args, $arg_array);
+					} else {
+						$func_args = $args;
+					}
+					$value = call_user_func_array($event_datablock['function'], $func_args);	//	 More Complex
+					if (is_object($value))
+						return $value->{$event_datablock['object']};
+					else
+						return $value;
+				} else {
+					return $event_datablock['value'];	// Simple Value Used
+				}
+			}
+		}
+	}
+
 }
 
 /**
@@ -154,8 +192,8 @@ class WoopraEvents_Frontend extends WoopraEvents {
 	 */
 	function __construct() {		
 		$all_events = $this->register_events();
-		foreach ($all_events as $event_name) {
-			add_action( $event_name, 			array(&$this, 'process_events') );
+		foreach ($all_events as $event_name => $data) {
+			add_action( $data['action'], 			array(&$this, 'process_events') );
 		}
 	}
 	
