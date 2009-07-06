@@ -147,9 +147,8 @@ function expandByDay(key, hashid, id) {
 		return false;
 	}
 	row.className = 'loaded';
-
 	var so = new SWFObject(woopradefaultL10n.baseurl + "/flash/open-flash-chart.swf", hashid, "968", "110", "9", "#ff0000");
-	so.addVariable("data", escape(woopradefaultL10n.siteurl + '/wp-admin/admin-ajax.php?action=woopra&apikey=' + woopradefaultL10n.apikey + '&siteurl=' + woopradefaultL10n.siteurl + '&wkey=' + escape(key) + '&from=' + date_from + '&to=' + date_to));
+	so.addVariable("data", escape(woopradefaultL10n.siteurl + '/wp-admin/admin-ajax.php?action=woopra&apikey=' + woopradefaultL10n.apikey + '&wkey=' + escape(key) + '&from=' + date_from + '&to=' + date_to));
 	so.addParam("allowScriptAccess", "sameDomain");
 	so.addParam("wmode", "transparent");
 	so.addParam("bgcolor", "#FFFFFF");
@@ -247,6 +246,6 @@ function requestData(pageid, key) {
             }
         }
     };
-	xhr.open('GET', woopradefaultL10n.siteurl + '/wp-admin/admin-ajax.php?action=woopra&apikey=' + woopradefaultL10n.apikey + '&siteurl=' + woopradefaultL10n.siteurl + '&wkey=' + escape(key) + '&from=' + date_from + '&to=' + date_to); 
+	xhr.open('GET', woopradefaultL10n.siteurl + '/wp-admin/admin-ajax.php?action=woopra&apikey=' + woopradefaultL10n.apikey + '&wkey=' + escape(key) + '&from=' + date_from + '&to=' + date_to); 
     xhr.send(null);
 }

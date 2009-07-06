@@ -9,7 +9,7 @@
  * @subpackage render
  */
 require_once('xml.php');
-class WoopraRender {
+class WoopraRender extends WoopraAdmin {
 
 	/**
 	 * @since 1.4.1
@@ -84,6 +84,9 @@ class WoopraRender {
 	 * @constructor
 	 */
 	function __construct() {
+		WoopraAdmin::__construct();
+		Woopra::__construct();
+		
 		//	Country List Create
 		$this->init_countries();
 		//	Generate the Data
@@ -119,7 +122,7 @@ class WoopraRender {
 			$this->key = str_replace("&amp;", "&", $_GET['wkey']);
 			$this->date_from = $_GET['from'];
 			$this->date_to = $_GET['to'];
-			$this->hostname = $_GET['siteurl'];
+			$this->hostname = get_option('siteurl');
 			
 			$start_date = $this->woopra_convert_date($this->date_from);
 			$end_date = $this->woopra_convert_date($this->date_to);
@@ -179,7 +182,7 @@ class WoopraRender {
 			
 			if ($this->woopra_contains($this->key, 'BY_DAY')) {
 				$this->render_chart_data($this->entries, $this->key);
-				return;
+				exit;
 			}
 			
 			if ($this->woopra_contains($this->key, 'GET_REFERRERS&')) {
@@ -188,7 +191,7 @@ class WoopraRender {
 				} else {
 					$this->render_referrers($this->entries, $this->key);
 				}
-				return;
+				exit;
 			}
 			
 			switch ($this->key) {
@@ -336,6 +339,20 @@ class WoopraRender {
 		$day_of_year = $date%100000;
 		$to_return = date('F jS', mktime(0,0,0,1,$day_of_year,$year));
 		return $to_return;
+	}
+	
+	private function woopra_rounded_max($max) {
+		$values = array(10,20,30,40,50,60,70,80,90,100,120,150,200,250,300,400,500,600,700,800,900,1000,1200,1500,2000,2500,5000,10000,20000,50000,100000,200000,500000,1000000,2000000,5000000,10000000,50000000);
+		$result = 10;
+		foreach ($values as $value) {
+			if ($value > $max)
+				return $value;
+		}
+		return $max;
+	}
+	
+	private function woopra_encode($string) {
+		return str_replace(',', '%2C', urlencode($string));
 	}
 	
 	private function render_chart_data($entries, $key) {
@@ -500,7 +517,7 @@ class WoopraRender {
 	}
 	
 	private function woopra_bar($percent) {
-		$barurl = $this->hostname . '/wp-content/plugins/woopra/images/bar.png';
+		$barurl = $this->plugin_url() . '/images/bar.png';
 		$width = $percent . "%";
 		if ($percent < 1)
 			$width = "1";
