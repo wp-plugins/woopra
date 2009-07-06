@@ -50,7 +50,7 @@ class WoopraEvents {
 			$WoopraEvent_Global = new WoopraEvents_Frontend();
 		if ($area == 'admin')
 			$WoopraEvent_Global = new WoopraEvents_Admin();
-		
+
 		add_action('template_redirect', 	array(&$this, 'session_start') );
 		
 		return $WoopraEvent_Global;
@@ -70,8 +70,7 @@ class WoopraEvents {
 		
 		//	@todo fliters? an action?
 		
-		
-		$this->default_events = array(
+		$default_events = array(
 			array(
 				'name'		=>	__('Comment'),
 				'function'	=>	'get_comment',
@@ -81,7 +80,7 @@ class WoopraEvents {
 			),
 		);
 		
-		return $this->default_events;
+		return $default_events;
 	}
 	
 	/**
@@ -118,7 +117,7 @@ class WoopraEvents {
 	 * @param object $event
 	 */
 	function print_javascript($event) {
-		$this->register_events();
+		$this->default_events = $this->register_events();
 		foreach ($event as $event_name => $event_value) {
 			echo "woopra_event['" . $this->event_display($event_name['action']) . "'] = '" . js_escape($this->event_value($event_name, $event_value)) . "';\r\n";
 		}
@@ -190,11 +189,15 @@ class WoopraEvents_Frontend extends WoopraEvents {
 	 * 
 	 * @return 
 	 */
-	function __construct() {		
-		$all_events = $this->register_events();
+	function __construct() {
+		$Woopra = new Woopra;
+		$this->default_events = $this->register_events();
+		$all_events = $this->default_events;
 		foreach ($all_events as $event_name => $data) {
+			//	@todo It should be here to see if we should be processing the event.			
 			add_action( $data['action'], 			array(&$this, 'process_events') );
 		}
+		
 	}
 	
 	/**
@@ -231,7 +234,13 @@ class WoopraEvents_Admin extends WoopraEvents {
 	 * @return 
 	 */
 	function __construct() {
-	
+		$Woopra = new Woopra;
+		$this->default_events = $this->register_events();
+		$all_events = $this->default_events;
+		foreach ($all_events as $event_name => $data) {
+			//	@todo It should be here to see if we should be processing the event.			
+			add_action( $data['action'], 			array(&$this, 'process_events') );
+		}
 	}
 
 	
