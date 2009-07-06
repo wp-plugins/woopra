@@ -215,7 +215,7 @@ class WoopraRender {
 	?>
 		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
 		<tr>
-			<th><?php _e("Day", 'woopra') ?></th>
+			<th class="center"><?php _e("Day", 'woopra') ?></th>
 			<th class="center"><?php _e("Avg Time Spent", 'woopra') ?></th>
 			<th class="center"><?php _e("New Visitors", 'woopra') ?></th>
 			<th class="center"><?php _e("Visits", 'woopra') ?></th>
