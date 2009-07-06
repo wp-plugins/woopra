@@ -124,13 +124,14 @@ class Woopra {
  * we add the ability to track administrators.
  */
 if (is_admin()) {
-	require_once( dirname(__FILE__) . '/inc/admin.php' );
-	require_once( dirname(__FILE__) . '/inc/analytics.php' );
-	require_once( dirname(__FILE__) . '/inc/render.php' );
+	require_once( dirname(__FILE__) . '/inc/admin.php' 		);
+	require_once( dirname(__FILE__) . '/inc/analytics.php' 	);
+	require_once( dirname(__FILE__) . '/inc/render.php' 	);
 	$WoopraAdmin = new WoopraAdmin();
 }
 //	Always Run the Front End Code
-require_once( dirname(__FILE__) . '/inc/frontend.php' );
+require_once( dirname(__FILE__) . '/inc/frontend.php' 		);
+require_once( dirname(__FILE__) . '/inc/events.php' 		);	
 $WoopraFrontend = new WoopraFrontend();
 
 ?>

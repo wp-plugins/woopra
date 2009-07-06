@@ -1,6 +1,6 @@
 <?php
 /**
- * WoopraEvents Class for Woopra
+ * WoopraEvents_Frontend and WoopraEvents_Admin Class for Woopra
  *
  * This class contains all event related code including the API for other plugins to use.
  *
@@ -8,27 +8,40 @@
  * @package woopra
  * @subpackage events
  */
-class WoopraEvents extends Woopra {
 
-	/**
-	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
-	 * @since 1.4.1
-	 * @return none
-	 */
-	function WoopraEvents () {
+
+class WoopraEvents_Frontend extends WoopraFrontend {
+	
+	function WoopraEvents_Frontend () {
 		$this->__construct();
 	}
 
-	/**
-	 * Woopra Events
-	 * @since 1.4.1
-	 * @return none
-	 * @constructor
-	 */
-	function __construct() {
+	function __construct() {		
+		$all_events = $this->register_events();
+		foreach ($all_events as $event_name) {
+			add_action( $event_name, 			array(&$this, 'process_events') );
+		}
+	} 
+	
+	function register_events() {
+		
+		$events = array (
+			'wp_head',
+			'wp_footer',
+			'comment_post',
+		
+		);
+		
+		return $events;
+	}
+	
+	function process_events(&$args) {
+		
+		echo $args;
 		
 	}
-
+	
 }
+
 
 ?>

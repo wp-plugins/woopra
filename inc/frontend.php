@@ -34,14 +34,10 @@ class WoopraFrontend extends Woopra {
 		if ($this->get_option('woopra_track_admin'))
 			add_action( 'admin_footer',				array(&$this, 'woopra_widget'), 			10	);
 		
-		//	Initilize Action Code
-		/*
-		$all_events = array_merge($this->woopra_events['main'], $this->woopra_events['admin']);
-		foreach ($all_events as $event_name) {
-			add_action( $event_name, 			array(&$this, $this->process_event) );
-		}
-		*/
-		
+		//	Process Events
+		$WoopraEvents = new WoopraEvents_Frontend;
+		//	@todo This is where we should be getting the events that are 'processed' and storing them
+		//	in an array so we can add them to the javascript code widget.
 	}
 	
 	/**
