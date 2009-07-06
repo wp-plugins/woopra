@@ -11,6 +11,11 @@
 class WoopraFrontend extends Woopra {
 
 	/**
+	 * @var object
+	 */
+	var $event;
+
+	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
 	 * @since 1.4.1
 	 * @return none
@@ -35,7 +40,7 @@ class WoopraFrontend extends Woopra {
 			add_action( 'admin_footer',				array(&$this, 'woopra_widget'), 			10	);
 		
 		//	Process Events
-		$WoopraEvents = new WoopraEvents('frontend');
+		$this->event = new WoopraEvents('frontend');
 		//	@todo This is where we should be getting the events that are 'processed' and storing them
 		//	in an array so we can add them to the javascript code widget.
 	}
@@ -73,7 +78,8 @@ class WoopraFrontend extends Woopra {
 			echo "woopra_visitor['avatar'] = 'http://www.gravatar.com/avatar.php?gravatar_id=" . md5(strtolower($this->woopra_visitor['email'])) . "&size=60&default=http%3A%2F%2Fstatic.woopra.com%2Fimages%2Favatar.png';\r\n";
 		}
 		
-		// @todo Add Event Related Code
+		//	Generate the Javascript for the event!
+		echo $this->event->print_javascript($this->event->current_event);
 		
 		echo "</script>\r\n";
 		echo "<script src=\"http://static.woopra.com/js/woopra.js\" type=\"text/javascript\"></script>";
