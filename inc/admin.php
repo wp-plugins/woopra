@@ -235,7 +235,8 @@ class WoopraAdmin extends Woopra {
 	
 	<form method="post" action="options.php">
 	<?php settings_fields('woopra'); ?>
-	
+	<?php // @todo Add backwards compatability for 2.7.x and below... :( ?>
+		
 	<h3><? _e('Main Settings'); ?></h3>
 	<table class="form-table">
 		<tr valign="top">

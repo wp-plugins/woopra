@@ -123,6 +123,8 @@ class Woopra {
  * If we are in the admin load the admin view. Always run the frontend code since
  * we add the ability to track administrators in the admin section.
  */
+require_once( dirname(__FILE__) . '/inc/frontend.php' 		);
+require_once( dirname(__FILE__) . '/inc/events.php' 		);
 if (is_admin()) {
 	require_once( dirname(__FILE__) . '/inc/admin.php' 		);
 	require_once( dirname(__FILE__) . '/inc/analytics.php' 	);
@@ -130,8 +132,6 @@ if (is_admin()) {
 	$WoopraAdmin = new WoopraAdmin();
 }
 //	Always Run the Front End Code
-require_once( dirname(__FILE__) . '/inc/frontend.php' 		);
-require_once( dirname(__FILE__) . '/inc/events.php' 		);	
 $WoopraFrontend = new WoopraFrontend();
 
 ?>

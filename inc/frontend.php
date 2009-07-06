@@ -35,7 +35,7 @@ class WoopraFrontend extends Woopra {
 			add_action( 'admin_footer',				array(&$this, 'woopra_widget'), 			10	);
 		
 		//	Process Events
-		$WoopraEvents = new WoopraEvents_Frontend;
+		$WoopraEvents = new WoopraEvents('frontend');
 		//	@todo This is where we should be getting the events that are 'processed' and storing them
 		//	in an array so we can add them to the javascript code widget.
 	}
