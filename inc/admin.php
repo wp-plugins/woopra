@@ -143,6 +143,7 @@ class WoopraAdmin extends Woopra {
 									'siteurl'	=>	get_option('siteurl'),
 									'baseurl'	=>	$plugin_url,
 									'error'		=>	__('An error has happened. Please try again later.', 'woopra'),
+				)
 			);
 			wp_enqueue_script( 'woopra-swfobject',	$plugin_url . '/js/swfobject.js'	);
 			wp_enqueue_script( 'woopra-datepicker',	$plugin_url . '/js/datepicker.js'	);
