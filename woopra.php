@@ -119,9 +119,9 @@ class Woopra {
 }
 
 /**
- * Instantiate the WoopraFrontend or WoopraAdmin Class
+ * Start the WoopraFrontend or WoopraAdmin Class
  * If we are in the admin load the admin view. Always run the frontend code since
- * we add the ability to track administrators.
+ * we add the ability to track administrators in the admin section.
  */
 if (is_admin()) {
 	require_once( dirname(__FILE__) . '/inc/admin.php' 		);
