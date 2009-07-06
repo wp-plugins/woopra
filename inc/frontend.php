@@ -78,6 +78,9 @@ class WoopraFrontend extends Woopra {
 			echo "woopra_visitor['avatar'] = 'http://www.gravatar.com/avatar.php?gravatar_id=" . md5(strtolower($this->woopra_visitor['email'])) . "&size=60&default=http%3A%2F%2Fstatic.woopra.com%2Fimages%2Favatar.png';\r\n";
 		}
 		
+		if ($this->debug)
+			echo print_r($this->event->current_event);
+			
 		//	Generate the Javascript for the event!
 		echo $this->event->print_javascript($this->event->current_event);
 		

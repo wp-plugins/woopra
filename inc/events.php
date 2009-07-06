@@ -24,6 +24,12 @@ class WoopraEvents {
 	var $current_event;
 	
 	/**
+	 * @since 1.4.1
+	 * @var
+	 */
+	var $default_events;
+	
+	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
 	 * @return 
 	 * @param object $area[optional]
@@ -51,13 +57,39 @@ class WoopraEvents {
 		
 	}
 	
+	/**
+	 * Register Events
+	 * 
+	 * 3rd party plugins should be 'hooking' into this function
+	 * 
+	 * @since
+	 * @return 
+	 */
 	function register_events() {
-		$events = array(
-			'comment_post',
+		/*
+		 * These are all standard events that WordPress has that Woopra
+		 * built-in it's system.
+		 */
+		//	@todo fliters? an action?
+		
+		$this->default_events = array(
+			'comment_post' => array(
+				'name'		=>	__('Comment'),
+				'function'	=>	'get_comment(%i)',
+				'value'		=>	'',
+			),
 		);
-		return $events;
+		
+		return $this->default_events;
 	}
 	
+	/**
+	 * Process the event.
+	 * @since 1.4.1
+	 * @return 
+	 * @param object $event
+	 * @param object $args
+	 */
 	function process_event($event, &$args) {
 		if (!isset($_SESSION))
 			session_start();
@@ -65,6 +97,11 @@ class WoopraEvents {
 		$_SESSION['woopra']['events'][$event] = $args;
 	}
 	
+	/**
+	 * Start the session.
+	 * @since 1.4.1
+	 * @return 
+	 */
 	function session_start() {
 		if (!isset($_SESSION))
  			session_start();
@@ -81,7 +118,15 @@ class WoopraEvents {
 	 */
 	function print_javascript($event) {
 		foreach ($event as $event_name => $event_value) {
-			echo "woopra_event['$event_name'] = '" . js_escape($event_value) . "';\r\n";
+			echo "woopra_event['" . $this->get_event_display_name($event_name) . "'] = '" . js_escape($event_value) . "';\r\n";
+		}
+	}
+	
+	function get_event_display_name($event) {
+		$this->register_events();
+		foreach ($this->default_events as $event_name => $event_datablock) {
+			if ($event_name == $event)
+				return $event_datablock['name'];			
 		}
 	}
 	
