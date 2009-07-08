@@ -201,8 +201,12 @@ class WoopraEvents_Frontend extends WoopraEvents {
 		$Woopra = new Woopra;
 		$this->default_events = $this->register_events();
 		$all_events = $this->default_events;
-		foreach ($all_events as $event_name => $data) {			
-			add_action( $data['action'], 			array(&$this, 'process_events') );
+
+		$event_status = $Woopra->get_option('woopra_event');		
+
+		foreach ($all_events as $event_name => $data) {	
+			if ($event_status[$data['action']])
+				add_action( $data['action'], 			array(&$this, 'process_events') );
 		}
 		
 	}
@@ -244,8 +248,12 @@ class WoopraEvents_Admin extends WoopraEvents {
 		$Woopra = new Woopra;
 		$this->default_events = $this->register_events();
 		$all_events = $this->default_events;
+
+		$event_status = $Woopra->get_option('woopra_event');		
+
 		foreach ($all_events as $event_name => $data) {	
-			add_action( $data['action'], 			array(&$this, 'admin_process_events') );
+			if ($event_status[$data['action']])
+				add_action( $data['action'], 			array(&$this, 'admin_process_events') );
 		}
 	}
 	
