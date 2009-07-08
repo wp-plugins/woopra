@@ -36,8 +36,8 @@ class WoopraFrontend extends Woopra {
 		//	Frontend Actions
 		add_action(	'template_redirect',		array(&$this, 'woopra_detect')					);
 		add_action( 'wp_footer', 				array(&$this, 'woopra_widget'), 			10	);
-		if ($this->get_option('woopra_track_admin'))
-			add_action( 'admin_footer',				array(&$this, 'woopra_widget'), 			10	);
+		if ($this->get_option('track_admin'))
+			add_action( 'admin_footer',			array(&$this, 'woopra_widget'),		 		10	);
 		
 		//	Process Events
 		$this->event = new WoopraEvents('frontend');
@@ -75,9 +75,6 @@ class WoopraFrontend extends Woopra {
 			echo "woopra_visitor['email'] = '" . js_escape($this->woopra_visitor['email']) . "';\r\n";
 			echo "woopra_visitor['avatar'] = 'http://www.gravatar.com/avatar.php?gravatar_id=" . md5(strtolower($this->woopra_visitor['email'])) . "&size=60&default=http%3A%2F%2Fstatic.woopra.com%2Fimages%2Favatar.png';\r\n";
 		}
-		
-		if ($this->debug)
-			echo print_r($this->event->current_event);
 			
 		//	Generate the Javascript for the event!
 		$this->event->print_javascript($this->event->current_event);
@@ -85,6 +82,7 @@ class WoopraFrontend extends Woopra {
 		echo "</script>\r\n";
 		echo "<script src=\"http://static.woopra.com/js/woopra.js\" type=\"text/javascript\"></script>";
 		echo "\n<!-- End of Woopra Analytics Code -->";
+		
 	}
 
 	/**
@@ -93,7 +91,7 @@ class WoopraFrontend extends Woopra {
 	 * @return none
 	 */
 	function woopra_detect() {
-		global $userdata, $current_user;	//	Needed if the user is logged in.
+		global $userdata, $current_user, $userdata;	//	Needed if the user is logged in.
 		
 		//	Check to see if the user has a cookie.. if so... get it!
 		$author = str_replace("\"","\\\"",$_COOKIE['comment_author_'.COOKIEHASH]);
