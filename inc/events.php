@@ -51,7 +51,7 @@ class WoopraEvents {
 		if ($area == 'admin')
 			$WoopraEvent_Global = new WoopraEvents_Admin();
 
-		add_action('template_redirect', 	array(&$this, 'session_start') );
+		add_action('wp', 	array(&$this, 'session_start') );
 		
 		return $WoopraEvent_Global;
 		
@@ -76,6 +76,16 @@ class WoopraEvents {
 				'value'		=>	'',
 				'action'	=>	'comment_post',
 			),
+			array(
+				'name'		=>	__('Login'),
+				'label'		=>	__('Show that the user has just logged in.'),
+				'function'	=>	'',
+				'object'	=>	'',
+				'value'		=>	__('Logged On'),
+				'action'	=>	'wp_login',
+				'adminonly'	=>	1,
+			),
+			
 		);
 		
 		return $default_events;
@@ -84,14 +94,14 @@ class WoopraEvents {
 	/**
 	 * Process the event.
 	 * @since 1.4.1
-	 * @return 
+	 * @return none
 	 * @param object $event
 	 * @param object $args
 	 */
 	function process_event($event, &$args) {
 		if (!isset($_SESSION))
 			session_start();
-		
+
 		$_SESSION['woopra']['events'][$event] = $args;		
 	}
 	
@@ -103,7 +113,7 @@ class WoopraEvents {
 	function session_start() {
 		if (!isset($_SESSION))
  			session_start();
-		
+
 		if (isset($_SESSION['woopra']['events']))
 			$this->current_event = $_SESSION['woopra']['events'];
 		
@@ -191,8 +201,7 @@ class WoopraEvents_Frontend extends WoopraEvents {
 		$Woopra = new Woopra;
 		$this->default_events = $this->register_events();
 		$all_events = $this->default_events;
-		foreach ($all_events as $event_name => $data) {
-			//	@todo It should be here to see if we should be processing the event.			
+		foreach ($all_events as $event_name => $data) {			
 			add_action( $data['action'], 			array(&$this, 'process_events') );
 		}
 		
@@ -235,11 +244,21 @@ class WoopraEvents_Admin extends WoopraEvents {
 		$Woopra = new Woopra;
 		$this->default_events = $this->register_events();
 		$all_events = $this->default_events;
-		foreach ($all_events as $event_name => $data) {
-			//	@todo It should be here to see if we should be processing the event.
-			//	Using $Woopra->get_option();		
-			add_action( $data['action'], 			array(&$this, 'process_events') );
+		foreach ($all_events as $event_name => $data) {	
+			add_action( $data['action'], 			array(&$this, 'admin_process_events') );
 		}
+	}
+	
+	/**
+	 * The handler for processing events.
+	 * @since 1.4.1
+	 * @return 
+	 * @param object $args
+	 */
+	function admin_process_events(&$args) {
+		$current_event = current_filter();
+		echo $current_event . ' / ' . $args;
+		return $this->process_event($current_event, $args);
 	}
 	
 }
