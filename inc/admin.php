@@ -178,6 +178,8 @@ class WoopraAdmin extends Woopra {
 			$tagging = (get_option('woopra_auto_tag_commentators' == 'YES')) ? 1 : 0;
 			$ignoreadmin = (get_option('woopra_ignore_admin' == 'YES')) ? 1 : 0;
 			$trackadmin = (get_option('woopra_track_admin' == 'YES')) ? 1 : 0;
+			$comment_event = (get_option('woopra_show_comments' == 'YES')) ? 1 : 0;
+			$search_event = (get_option('woopra_show_searches' == 'YES')) ? 1 : 0;
 						
 			$newopts = array (
 					'version'		=>	$this->version,
@@ -187,6 +189,10 @@ class WoopraAdmin extends Woopra {
 					'ignore_admin'	=>	$tagging,
 					'ignore_admin'	=>	$ignoreadmin,
 					'track_admin'	=>	$trackadmin,
+					'woopra_events'	=>	array(
+						'comment_post'		=>	$comment_event,
+						'search_queries'	=>	$search_event,
+					),
 			);
 			
 			/* Delete old options */
@@ -320,7 +326,8 @@ class WoopraAdmin extends Woopra {
 			<td>
 			<?php
 				foreach ( $this->_events as $event => $data) {
-					echo "\n\t<input type=\"checkbox\" value=\"1\"" . checked( '1', $event_status[$data['action']], false ) . " id=\"" . $data['action'] . "\" name=\"woopra[woopra_event][".$data['action']."]\"/> <label for=\"woopra[woopra_event][".$data['action']."]\">".$data['name']."</label><br />".$data['label'];
+					if (!$data['adminonly'])
+						echo "\n\t<input type=\"checkbox\" value=\"1\"" . checked( '1', $event_status[(isset($data['setting']) ? $data['setting'] : $data['action'])], false ) . " id=\"" . (isset($data['setting']) ? $data['setting'] : $data['action']) . "\" name=\"woopra[woopra_event][".(isset($data['setting']) ? $data['setting'] : $data['action'])."]\"/> <label for=\"woopra[woopra_event][".(isset($data['setting']) ? $data['setting'] : $data['action'])."]\">".$data['name']."</label> - ".$data['label']."<br/>";
 				}
 			?>				
 			</td>
@@ -331,7 +338,7 @@ class WoopraAdmin extends Woopra {
 			<?php
 				foreach ( $this->_events as $event => $data) {
 					if ($data['adminonly'])
-						echo "\n\t<input type=\"checkbox\" value=\"1\"" . checked( '1', $event_status[$data['action']], false ) . " id=\"" . $data['action'] . "\" name=\"woopra[woopra_event][".$data['action']."]\"/> <label for=\"woopra[woopra_event][".$data['action']."]\">".$data['name']."</label><br />".$data['label'];
+						echo "\n\t<input type=\"checkbox\" value=\"1\"" . checked( '1', $event_status[(isset($data['setting']) ? $data['setting'] : $data['action'])], false ) . " id=\"" . (isset($data['setting']) ? $data['setting'] : $data['action']) . "\" name=\"woopra[woopra_event][".(isset($data['setting']) ? $data['setting'] : $data['action'])."]\"/> <label for=\"woopra[woopra_event][".(isset($data['setting']) ? $data['setting'] : $data['action'])."]\">".$data['name']."</label> - ".$data['label']."<br/>";
 				}
 			?>
 			</td>
