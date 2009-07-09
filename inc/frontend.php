@@ -34,7 +34,7 @@ class WoopraFrontend extends Woopra {
 		Woopra::__construct();
 		
 		//	Frontend Actions
-		add_action(	'template_redirect',		array(&$this, 'woopra_detect')					);
+		add_action(	'wp'				,		array(&$this, 'woopra_detect')					);
 		add_action( 'wp_footer', 				array(&$this, 'woopra_widget'), 			10	);
 		if ($this->get_option('track_admin'))
 			add_action( 'admin_footer',			array(&$this, 'woopra_widget'),		 		10	);
@@ -64,24 +64,22 @@ class WoopraFrontend extends Woopra {
 		
 		if (!$this->woopra_status())
 			return;
-			
+		
+		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
 		echo "<!-- Woopra Analytics Code -->\n";
 		echo "<script type=\"text/javascript\">\r\n";
 		echo "var woopra_visitor = new Array();\r\n";
-		echo "var woopra_event = new Array();\r\n";
-
+		echo "var woopra_event = new Array();\r\n\n";
 		if ($this->get_option('auto_tagging') || !empty($this->woopra_visitor['name'])) {
 			echo "woopra_visitor['name'] = '" . js_escape($this->woopra_visitor['name']) . "';\r\n";
 			echo "woopra_visitor['email'] = '" . js_escape($this->woopra_visitor['email']) . "';\r\n";
-			echo "woopra_visitor['avatar'] = 'http://www.gravatar.com/avatar.php?gravatar_id=" . md5(strtolower($this->woopra_visitor['email'])) . "&size=60&default=http%3A%2F%2Fstatic.woopra.com%2Fimages%2Favatar.png';\r\n";
+			echo "woopra_visitor['avatar'] = 'http://www.gravatar.com/avatar.php?gravatar_id=" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http%3A%2F%2Fstatic.woopra.com%2Fimages%2Favatar.png';\r\n";
 		}
-			
-		//	Generate the Javascript for the event!
 		$this->event->print_javascript($this->event->current_event);
-		
 		echo "</script>\r\n";
 		echo "<script src=\"http://static.woopra.com/js/woopra.js\" type=\"text/javascript\"></script>";
 		echo "\n<!-- End of Woopra Analytics Code -->";
+		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
 		
 	}
 
@@ -91,19 +89,9 @@ class WoopraFrontend extends Woopra {
 	 * @return none
 	 */
 	function woopra_detect() {
-		global $userdata, $current_user, $userdata;	//	Needed if the user is logged in.
-		
-		//	Check to see if the user has a cookie.. if so... get it!
-		$author = str_replace("\"","\\\"",$_COOKIE['comment_author_'.COOKIEHASH]);
-		$email = str_replace("\"","\\\"",$_COOKIE['comment_author_email_'.COOKIEHASH]);
-		if (!empty($author)) {
-			$this->woopra_visitor['name'] = $author;
-			$this->woopra_visitor['email'] = $email;
-		}
-	
+		$current_user = wp_get_current_user();
 		// Wait? The user is logged in. Get that data instead.
 		if (is_user_logged_in()) {
-			get_currentuserinfo();
 			$this->woopra_visitor['name'] = $current_user->display_name;
 			$this->woopra_visitor['email'] = $current_user->user_email;
 		}
