@@ -211,7 +211,7 @@ class WoopraRender extends WoopraAdmin {
 	/**
 	 * Render the Overview
 	 * @since 1.4.1
-	 * @return 
+	 * @return none
 	 * @param object $entries
 	 */
 	function render_overview($entries) {	
