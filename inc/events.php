@@ -19,15 +19,15 @@ class WoopraEvents {
 	
 	/**
 	 * @since 1.4.1
-	 * @var object
-	 */
-	var $current_event;
-	
-	/**
-	 * @since 1.4.1
 	 * @var
 	 */
 	var $default_events;
+	
+	/**
+	 * @since 1.4.1
+	 * @var object
+	 */
+	var $current_event;
 	
 	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
@@ -51,7 +51,7 @@ class WoopraEvents {
 		if ($area == 'admin')
 			$WoopraEvent_Global = new WoopraEvents_Admin();
 
-		add_action('wp', 	array(&$this, 'session_start') );
+		add_action('wp', 			array(&$this, 'session_start') );
 		
 		return $WoopraEvent_Global;
 		
@@ -64,8 +64,8 @@ class WoopraEvents {
 	 */
 	function register_events() {
 		/*
-		 * These are all standard events that WordPress has that Woopra
-		 * built-in it's system.
+		 * These are all standard events that WordPress
+		 * has that Woopra built-in it's system.
 		 */
 		$default_events = array(
 			array(
@@ -77,22 +77,21 @@ class WoopraEvents {
 				'action'	=>	'comment_post',
 			),
 			array(
-				'name'		=>	__('Login'),
-				'label'		=>	__('Show that the user has just logged in.'),
+				'name'		=>	__('Search'),
+				'label'		=>	__('Show users search queries.'),
 				'function'	=>	'',
 				'object'	=>	'',
-				'value'		=>	__('Logged On'),
-				'action'	=>	'wp_login',
-				'adminonly'	=>	1,
+				'value'		=>	'',
+				'filter'	=>	'the_search_query',
+				'setting'	=>	'search_queries',
 			),
-			
 		);
 		
 		return $default_events;
 	}
 	
 	/**
-	 * Process the event.
+	 * Process Post Event
 	 * @since 1.4.1
 	 * @return none
 	 * @param object $event
@@ -101,77 +100,81 @@ class WoopraEvents {
 	function process_event($event, &$args) {
 		if (!isset($_SESSION))
 			session_start();
-
-		$_SESSION['woopra']['events'][$event] = $args;		
+		
+		$_SESSION['woopra']['events'][$event] = $args;
 	}
-	
+
 	/**
 	 * Start the session.
+	 * 
+	 * Only needed for 'post' events.
+	 * 
 	 * @since 1.4.1
 	 * @return 
 	 */
 	function session_start() {
 		if (!isset($_SESSION))
  			session_start();
-
-		if (isset($_SESSION['woopra']['events']))
-			$this->current_event = $_SESSION['woopra']['events'];
 		
+		$this->current_event = $_SESSION['woopra']['events'];
 	}
+
 	
 	/**
 	 * What is the javascript we needed to generate?
 	 * @return 
 	 * @param object $event
 	 */
-	function print_javascript($event) {
+	function print_javascript_events() {
 		$this->default_events = $this->register_events();
-		foreach ($event as $event_name => $event_value) {
-			echo "woopra_event['" . $this->event_display($event_name['action']) . "'] = '" . js_escape($this->event_value($event_name, $event_value)) . "';\r\n";
+		if (is_array($this->current_event)) {
+			echo "\n";
+			foreach ($this->current_event as $event_name => $event_value) {
+				echo "woopra_event['" . $this->event_display($event_name) . "'] = '" . js_escape($this->event_value($event_name, $event_value)) . "';\r\n";
+			}
+			unset($_SESSION['woopra']['events']);
 		}
-		unset($_SESSION['woopra']['events']);
 	}
 	
-	/**
-	 * 
-	 * @return 
-	 * @param object $data
-	 */
-	function event_display($data) {
-		foreach ($this->default_events as $event_name => $event_datablock) {
-			if ($event_name == $data)
+	function event_display($event_name) {
+		foreach ($this->default_events as $_event_name => $event_datablock) {
+			if ((isset($event_datablock['action']) ? $event_datablock['action'] : $event_datablock['filter']) == $event_name) {
 				return $event_datablock['name'];
+			}
+				
 		}
 	}
-		
-	/**
-	 * Process the event's value.
-	 * 
-	 * @return 
-	 * @param object $event
-	 * @param object $data
-	 */
-	function event_value($event, $args) {
-		foreach ($this->default_events as $event_name => $event_datablock) {
-			if ($event_name == $event) {
-				if ((isset($event_datablock['function'])) && (function_exists($event_datablock['function']))) {
-					$func_args = array(); 
-					if (! is_array($args)) {
-						$args_array = preg_split("%,%", $args); 
-						foreach ($args_array as $arg_array) 
-							array_push($func_args, $arg_array);
-					} else {
-						$func_args = $args;
-					}
-					$value = call_user_func_array($event_datablock['function'], $func_args);	//	 More Complex
-					if (is_object($value))
-						return $value->{$event_datablock['object']};
-					else
-						return $value;
-				} else {
-					return $event_datablock['value'];	// Simple Value Used
-				}
+	
+	function event_value($event_name, $event_value) {
+		foreach ($this->default_events as $_event_name => $event_datablock) {
+			$_type = (isset($event_datablock['action']) ? $event_datablock['action'] : $event_datablock['filter']);
+			if ($_type == $event_name) {
+				if (isset($event_datablock['function']) && $event_datablock['function'] != null)
+					return $this->event_function($event_datablock, $event_value);
+					
+				if (isset($event_datablock['value']) && $event_datablock['value'] != null)
+					return $event_datablock['value'];
+				
+				return $event_value;
 			}
+		}
+	}
+	
+	function event_function($func, $args) {
+		if (function_exists($func['function'])) {
+			$func_args = array(); 
+			if (!is_array($args)) {
+				$args_array = preg_split("%,%", $args); 
+				foreach ($args_array as $arg_array) 
+					array_push($func_args, $arg_array);
+			} else {
+				$func_args = $args;
+			}
+			$value = call_user_func_array($func['function'], $func_args);
+			if (is_object($value))
+				return $value->{$func['object']};
+			else
+				return $value;
 		}
 	}
 
@@ -186,16 +189,17 @@ class WoopraEvents {
 class WoopraEvents_Frontend extends WoopraEvents {
 	
 	/**
-	 * 
-	 * @return 
+	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
+	 * @return none
 	 */
 	function WoopraEvents_Frontend() {
 		$this->__construct();
 	}
 
 	/**
-	 * 
-	 * @return 
+	 * Frontend Class Constructer
+	 * @return none
+	 * @constructor
 	 */
 	function __construct() {
 		$Woopra = new Woopra;
@@ -204,22 +208,39 @@ class WoopraEvents_Frontend extends WoopraEvents {
 
 		$event_status = $Woopra->get_option('woopra_event');		
 
-		foreach ($all_events as $event_name => $data) {	
-			if ($event_status[$data['action']])
-				add_action( $data['action'], 			array(&$this, 'process_events') );
+		foreach ($all_events as $event_name => $data) {
+			if ($data['action']) {
+				if ($event_status[(isset($data['setting']) ? $data['setting'] : $data['action'])])
+					add_action( $data['action'], 			array(&$this, 'process_events') );
+			}
+			if ($data['filter']) {
+				if ($event_status[(isset($data['setting']) ? $data['setting'] : $data['filter'])])
+					add_filter( $data['filter'], 			array(&$this, 'process_filter_events') );
+			}
 		}
-		
 	}
 	
 	/**
 	 * The handler for processing events.
 	 * @since 1.4.1
-	 * @return 
+	 * @return boolean
 	 * @param object $args
 	 */
 	function process_events(&$args) {
 		$current_event = current_filter();
 		return $this->process_event($current_event, $args);
+	}
+	
+	/**
+	 * The handler for processing filter events.
+	 * @since 1.4.1
+	 * @return boolean
+	 * @param object $args
+	 */
+	function process_filter_events(&$args) {
+		$current_event = current_filter();
+		$this->process_event($current_event, $args);
+		return $args;	//	we have to return a filter...
 	}
 	
 }
@@ -242,7 +263,8 @@ class WoopraEvents_Admin extends WoopraEvents {
 
 	/**
 	 * 
-	 * @return 
+	 * @return none
+	 * @constructor
 	 */
 	function __construct() {
 		$Woopra = new Woopra;
@@ -251,22 +273,41 @@ class WoopraEvents_Admin extends WoopraEvents {
 
 		$event_status = $Woopra->get_option('woopra_event');		
 
-		foreach ($all_events as $event_name => $data) {	
-			if ($event_status[$data['action']])
-				add_action( $data['action'], 			array(&$this, 'admin_process_events') );
+		foreach ($all_events as $event_name => $data) {
+			if ($data['action']) {
+				if ($event_status[(isset($data['setting']) ? $data['setting'] : $data['action'])])
+					add_action( $data['action'], 			array(&$this, 'process_events') );
+			}
+			if ($data['filter']) {
+				if ($event_status[(isset($data['setting']) ? $data['setting'] : $data['filter'])])
+					add_filter( $data['filter'], 			array(&$this, 'process_filter_events') );
+			}
+
 		}
+		
 	}
 	
 	/**
 	 * The handler for processing events.
 	 * @since 1.4.1
-	 * @return 
+	 * @return boolean
 	 * @param object $args
 	 */
 	function admin_process_events(&$args) {
 		$current_event = current_filter();
-		echo $current_event . ' / ' . $args;
 		return $this->process_event($current_event, $args);
+	}
+	
+	/**
+	 * The handler for processing filter events.
+	 * @since 1.4.1
+	 * @return boolean
+	 * @param object $args
+	 */
+	function process_filter_events(&$args) {
+		$current_event = current_filter();
+		$this->process_event($current_event, $args);
+		return $args;	//	we have to return a filter...
 	}
 	
 }

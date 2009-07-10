@@ -75,7 +75,7 @@ class WoopraFrontend extends Woopra {
 			echo "woopra_visitor['email'] = '" . js_escape($this->woopra_visitor['email']) . "';\r\n";
 			echo "woopra_visitor['avatar'] = 'http://www.gravatar.com/avatar.php?gravatar_id=" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http%3A%2F%2Fstatic.woopra.com%2Fimages%2Favatar.png';\r\n";
 		}
-		$this->event->print_javascript($this->event->current_event);
+		$this->event->print_javascript_events();
 		echo "</script>\r\n";
 		echo "<script src=\"http://static.woopra.com/js/woopra.js\" type=\"text/javascript\"></script>";
 		echo "\n<!-- End of Woopra Analytics Code -->";
