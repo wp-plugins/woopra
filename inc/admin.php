@@ -182,7 +182,7 @@ class WoopraAdmin extends Woopra {
 			$search_event = (get_option('woopra_show_searches' == 'YES')) ? 1 : 0;
 						
 			$newopts = array (
-					'version'		=>	$this->version,
+					'version'		=>	'1.4.1',
 					'api_key'		=>	get_option('woopra_api_key'),
 					'analytics_tab'	=>	get_option('woopra_analytics_tab'),
 					'run_status'	=>	'on',
