@@ -159,7 +159,7 @@ class WoopraRender extends WoopraAdmin {
 			}
 		}
 		if ($xml->connection_error != null || $xml->error_msg != null || !$xml->init()) {
-			echo '<div class="error"><p>' . sprintf(__('The Woopra Plugin was not able to request your analytics data from the Woopra Engines<br/><small>Your hosting provider is not allowing the Woopra Plugin to fetch data from the Woopra Servers.<br/>%s<br/><a href="http://www.woopra.com/forums/">Report this error onto the forums!</a>'), $xml->connection_error . $xml->error_msg) . '</small></p></div>';
+			echo '<div class="error"><p>' . sprintf(__('The Woopra Plugin was not able to request your analytics data from the Woopra Engines<br/><small>Your hosting provider is not allowing the Woopra Plugin to fetch data from the Woopra Servers.<br/>%s<br/><a href="http://www.woopra.com/forums/">Report this error onto the forums!</a>', 'woopra'), $xml->connection_error . $xml->error_msg) . '</small></p></div>';
 			return false;
 		}
 		$xml->clear_data();
@@ -434,8 +434,8 @@ class WoopraRender extends WoopraAdmin {
 		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
 		<tr>
 			<th>&nbsp;</th>
-			<th><?php _e('Referrer'); ?></th>
-			<th class="center" width="100"><?php _e('Hits'); ?></th>
+			<th><?php _e('Referrer', 'woopra'); ?></th>
+			<th class="center" width="100"><?php _e('Hits', 'woopra'); ?></th>
 			<th width="400">&nbsp;</th>
 		</tr>
 		<?php
@@ -827,35 +827,35 @@ class WoopraRender extends WoopraAdmin {
 		if (is_null($name)) {
 			switch ($key) {
 				case 'GET_COUNTRIES':
-					return __('Country');
+					return __('Country', 'woopra');
 				case 'GET_VISITBOUNCES':
-					return __('Pageviews per Visit');
+					return __('Pageviews per Visit', 'woopra');
 				case 'GET_VISITDURATIONS':
-					return __('Durations');
+					return __('Durations', 'woopra');
 				case 'GET_BROWSERS':
-					return __('Browser');
+					return __('Browser', 'woopra');
 				case 'GET_PLATFORMS':
-					return __('Platform');
+					return __('Platform', 'woopra');
 				case 'GET_RESOLUTIONS':
-					return __('Resolution');
+					return __('Resolution', 'woopra');
 				case 'GET_LANGUAGES':
-					return __('Language');
+					return __('Language', 'woopra');
 				case 'GET_PAGEVIEWS':
-					return __('Pages');
+					return __('Pages', 'woopra');
 				case 'GET_PAGELANDINGS':
-					return __('Landing Pages');
+					return __('Landing Pages', 'woopra');
 				case 'GET_PAGEEXITS':
-					return __('Exit Pages');
+					return __('Exit Pages', 'woopra');
 				case 'GET_OUTGOINGLINKS':
-					return __('Outgoing Links');
+					return __('Outgoing Links', 'woopra');
 				case 'GET_DOWNLOADS':
-					return __('Downloads');
+					return __('Downloads', 'woopra');
 				case 'GET_QUERIES':
-					return __('Search Queries');
+					return __('Search Queries', 'woopra');
 				case 'GET_KEYWORDS':
-					return __('Keywords');
+					return __('Keywords', 'woopra');
 				default:
-					return __('Name');
+					return __('Name', 'woopra');
 			}
 		} else {
 			switch ($key) {

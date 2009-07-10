@@ -264,7 +264,7 @@ class WoopraAdmin extends Woopra {
 	<?php settings_fields('woopra'); ?>
 	<?php // @todo Add backwards compatability for 2.7.x and below... :( ?>
 		
-	<h3><? _e('Main Settings'); ?></h3>
+	<h3><? _e('Main Settings', 'woopra'); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
 			<th scope="row"><?php _e('API Key', 'woopra') ?><small><?php _e('(Optional)', 'woopra') ?></small></th>
@@ -287,7 +287,7 @@ class WoopraAdmin extends Woopra {
 		</tr>
 	</table>
 	<br/>
-	<h3><? _e('Tracking Settings'); ?></h3>
+	<h3><? _e('Tracking Settings', 'woopra'); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
 			<th scope="row"><?php _e('Status', 'woopra') ?></th>
@@ -304,24 +304,24 @@ class WoopraAdmin extends Woopra {
 		<tr valign="top">
 			<th scope="row"><?php _e('Auto Tagging', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('auto_tagging')); ?> id="auto_tagging" name="woopra[auto_tagging]"/> <label for="auto_tagging"><?php _e("Automatically Tag Members &amp; Commentators"); ?></label><br /><?php _e("Enable this check box if you want Woopra to auto-tag visitors."); ?>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('auto_tagging')); ?> id="auto_tagging" name="woopra[auto_tagging]"/> <label for="auto_tagging"><?php _e("Automatically Tag Members &amp; Commentators", 'woopra'); ?></label><br /><?php _e("Enable this check box if you want Woopra to auto-tag visitors.", 'woopra'); ?>
 			</td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><?php _e('Ignore Administrator', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('ignore_admin')); ?> id="ignore_admin" name="woopra[ignore_admin]"/> <label for="ignore_admin"><?php _e("Ignore Administrator Visits"); ?></label><br /><?php _e("Enable this check box if you want Woopra to ignore your or any other administrator visits."); ?>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('ignore_admin')); ?> id="ignore_admin" name="woopra[ignore_admin]"/> <label for="ignore_admin"><?php _e("Ignore Administrator Visits", 'woopra'); ?></label><br /><?php _e("Enable this check box if you want Woopra to ignore your or any other administrator visits.", 'woopra'); ?>
 			</td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><?php _e('Admin Area', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_admin')); ?> id="track_admin" name="woopra[track_admin]"/> <label for="track_admin"><?php _e("Track Admin Pages"); ?></label><br /><?php printf(__("Admin pages are all pages under %s"), $this->get_option('siteurl')."/wp-admin/" ); ?>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_admin')); ?> id="track_admin" name="woopra[track_admin]"/> <label for="track_admin"><?php _e("Track Admin Pages", 'woopra'); ?></label><br /><?php printf(__("Admin pages are all pages under %s", 'woopra'), $this->get_option('siteurl')."/wp-admin/" ); ?>
 			</td>
 		</tr>
 	</table>
 	<br/>
-	<h3><? _e('Event Settings'); ?></h3>
+	<h3><? _e('Event Settings', 'woopra'); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
 			<th scope="row"><?php _e('Main Area Events', 'woopra') ?></th>
@@ -334,7 +334,7 @@ class WoopraAdmin extends Woopra {
 					}
 				}
 				if ($event_reg < 1)
-					echo "<strong>" . __('No Main Events Regestiered.') . "</strong>";
+					echo "<strong>" . __('No Main Events Regestiered.', 'woopra') . "</strong>";
 			?>				
 			</td>
 		</tr>
@@ -349,7 +349,7 @@ class WoopraAdmin extends Woopra {
 					}
 				}
 				if ($event_admin < 1)
-					echo "<strong>" . __('No Admin Events Regestiered.') . "</strong>";
+					echo "<strong>" . __('No Admin Events Regestiered.', 'woopra') . "</strong>";
 			?>
 			</td>
 		</tr>
@@ -361,14 +361,14 @@ class WoopraAdmin extends Woopra {
 					echo "\n\t<input type=\"checkbox\" value=\"1\"" . checked( '1', $custom_event_status[$data['action']], false ) . " id=\"" . $data['action'] . "\" name=\"woopra[woopra_event][".$data['action']."]\"/> <label for=\"woopra[woopra_event][".$data['action']."]\">".$data['name']."</label><br />".$data['label'];
 				}
 				if (!count($this->custom_events))
-					echo "<strong>" . __('No Custom Events Regestiered.') . "</strong>";
+					echo "<strong>" . __('No Custom Events Regestiered.', 'woopra') . "</strong>";
 			?>
 			</td>
 		</tr>
 	</table>
 	
 	<p class="submit">
-		<input type="submit" name="woopra-submit" class="button-primary" value="<?php _e('Save Changes') ?>" />
+		<input type="submit" name="woopra-submit" class="button-primary" value="<?php _e('Save Changes', 'woopra') ?>" />
 	</p>
 	
 	</form>

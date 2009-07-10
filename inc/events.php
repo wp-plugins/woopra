@@ -85,16 +85,16 @@ class WoopraEvents {
 		 */
 		$default_events = array(
 			array(
-				'name'		=>	__('Comments'),
-				'label'		=>	__('Show comments as they are posted.'),
+				'name'		=>	__('Comments', 'woopra'),
+				'label'		=>	__('Show comments as they are posted.', 'woopra'),
 				'function'	=>	'get_comment',
 				'object'	=>	'comment_content',
 				'value'		=>	'',
 				'action'	=>	'comment_post',
 			),
 			array(
-				'name'		=>	__('Search'),
-				'label'		=>	__('Show users search queries.'),
+				'name'		=>	__('Search', 'woopra'),
+				'label'		=>	__('Show users search queries.', 'woopra'),
 				'function'	=>	'get_search_query',
 				'object'	=>	'',
 				'value'		=>	'',

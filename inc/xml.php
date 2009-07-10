@@ -137,13 +137,13 @@ class WoopraXML {
         xml_parser_set_option($this->parser, XML_OPTION_CASE_FOLDING, false);
 				
         if (!($fp = @fopen($this->url, 'rb'))) {
-            $this->connection_error = sprintf(__("%s: Cannot open {$this->url}"), 'WoopraXML::parse(148)');
+            $this->connection_error = sprintf(__("%s: Cannot open {$this->url}", 'woopra'), 'WoopraXML::parse(148)');
             return $this->error();
         }
 
         while (($data = fread($fp, 8192))) {
             if (!xml_parse($this->parser, $data, feof($fp))) {
-                $this->error_msg = sprintf(__('%s: XML error at line %d column %d'), 'WoopraXML::parse(154)', xml_get_current_line_number($this->parser), xml_get_current_column_number($this->parser));
+                $this->error_msg = sprintf(__('%s: XML error at line %d column %d', 'woopra'), 'WoopraXML::parse(154)', xml_get_current_line_number($this->parser), xml_get_current_column_number($this->parser));
                 return $this->error();
             }
         }
@@ -151,7 +151,7 @@ class WoopraXML {
         if ($this->founddata) {
         	return true;
         } else {
-        	$this->error_msg = sprintf(__("%s: No data entries."), 'WoopraXML::parse(162)');
+        	$this->error_msg = sprintf(__("%s: No data entries.", 'woopra'), 'WoopraXML::parse(162)');
         	return $this->error();
         }     
     }
