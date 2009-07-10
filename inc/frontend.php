@@ -56,6 +56,21 @@ class WoopraFrontend extends Woopra {
 	}
 	
 	/**
+	 * Should we be tracking admins?
+	 * @since 1.4.1
+	 * @return boolean
+	 */
+	function woopra_admin() {
+		if ($this->get_option('ignore_admin'))
+			if (is_admin())
+				return true;
+			else
+				return false;
+		else
+			return false;
+	}
+	
+	/**
 	 * Create the Javascript Code at the Bottom
 	 * @since 1.4.1
 	 * @return none
@@ -63,6 +78,9 @@ class WoopraFrontend extends Woopra {
 	function woopra_widget() {
 		
 		if (!$this->woopra_status())
+			return;
+		
+		if (!$this->woopra_admin())
 			return;
 		
 		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
