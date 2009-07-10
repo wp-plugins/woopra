@@ -136,6 +136,11 @@ class WoopraEvents {
 		}
 	}
 	
+	/**
+	 * Return the event name for the Woopra App.
+	 * @return 
+	 * @param object $event_name
+	 */
 	function event_display($event_name) {
 		foreach ($this->default_events as $_event_name => $event_datablock) {
 			if ((isset($event_datablock['action']) ? $event_datablock['action'] : $event_datablock['filter']) == $event_name) {
@@ -145,6 +150,12 @@ class WoopraEvents {
 		}
 	}
 	
+	/**
+	 * Return the event value to show in the even name.
+	 * @return 
+	 * @param object $event_name
+	 * @param object $event_value
+	 */
 	function event_value($event_name, $event_value) {
 		foreach ($this->default_events as $_event_name => $event_datablock) {
 			$_type = (isset($event_datablock['action']) ? $event_datablock['action'] : $event_datablock['filter']);
@@ -160,6 +171,15 @@ class WoopraEvents {
 		}
 	}
 	
+	/**
+	 * If the event requires a function, process it. 
+	 * 
+	 * Note: If the function returns an object, the $func['object'] var is used.
+	 * 
+	 * @return 
+	 * @param object $func
+	 * @param object $args
+	 */
 	function event_function($func, $args) {
 		if (function_exists($func['function'])) {
 			$func_args = array(); 
