@@ -95,7 +95,7 @@ class WoopraEvents {
 			array(
 				'name'		=>	__('Search'),
 				'label'		=>	__('Show users search queries.'),
-				'function'	=>	'',
+				'function'	=>	'get_search_query',
 				'object'	=>	'',
 				'value'		=>	'',
 				'filter'	=>	'the_search_query',
@@ -145,7 +145,8 @@ class WoopraEvents {
 		if (is_array($this->current_event)) {
 			echo "\n";
 			foreach ($this->current_event as $event_name => $event_value) {
-				echo "woopra_event['" . $this->event_display($event_name) . "'] = '" . js_escape($this->event_value($event_name, $event_value)) . "';\r\n";
+				if (!is_null($event_value) || is_object($event_value))
+					echo "woopra_event['" . $this->event_display($event_name) . "'] = '" . js_escape($this->event_value($event_name, $event_value)) . "';\r\n";
 			}
 			unset($_SESSION['woopra']['events']);
 		}
