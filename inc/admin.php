@@ -191,7 +191,7 @@ class WoopraAdmin extends Woopra {
 					'track_admin'	=>	$trackadmin,
 					'woopra_events'	=>	array(
 						'comment_post'		=>	$comment_event,
-						'search_queries'	=>	$search_event,
+						'the_search_query'	=>	$search_event,
 					),
 			);
 			

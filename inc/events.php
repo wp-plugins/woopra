@@ -64,8 +64,24 @@ class WoopraEvents {
 	 */
 	function register_events() {
 		/*
+		 * 
 		 * These are all standard events that WordPress
 		 * has that Woopra built-in it's system.
+		 * 
+		 * 
+		 * VAILD FIELDS:
+		 * 
+		 * name* - The name the Woopra App will see.
+		 * label* - What the description of the event in WordPress admin panel
+		 * function - If a function is required to get the event data.
+		 * object - Depending if the function returns an object, this would be the object name to get.
+		 * value - Simple value when processed.
+		 * 
+		 * action** - The action that this event triggers.
+		 * filter** - The filter that this event triggers.
+		 * 
+		 * setting*** - If the 'action' or 'filter' have duplicities, they must have unique setting names.
+		 * 
 		 */
 		$default_events = array(
 			array(
@@ -83,7 +99,6 @@ class WoopraEvents {
 				'object'	=>	'',
 				'value'		=>	'',
 				'filter'	=>	'the_search_query',
-				'setting'	=>	'search_queries',
 			),
 		);
 		
