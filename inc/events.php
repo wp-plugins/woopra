@@ -69,7 +69,7 @@ class WoopraEvents {
 		 * has that Woopra built-in it's system.
 		 * 
 		 * 
-		 * VAILD FIELDS:
+		 * VALID FIELDS:
 		 * 
 		 * name* - The name the Woopra App will see.
 		 * label* - What the description of the event in WordPress admin panel
