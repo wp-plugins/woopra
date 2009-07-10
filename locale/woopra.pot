@@ -1,6 +1,5 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR Elie El Khoury
-# This file is distributed under the same license as the PACKAGE package.
+# This file is put in the public domain.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
@@ -8,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/woopra\n"
-"POT-Creation-Date: 2008-10-26 02:53+0000\n"
+"POT-Creation-Date: 2009-07-10 13:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -16,302 +15,392 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: woopra.php:110 woopra.php:111 woopra.php:119 woopra.php:120
-msgid "Woopra Analytics"
-msgstr ""
-
-#: woopra.php:129 woopra.php:130
+#: inc/admin.php:104 inc/admin.php:260
 msgid "Woopra Settings"
 msgstr ""
 
-#: woopra.php:194
-msgid "Settings updated!"
+#: inc/admin.php:115 inc/admin.php:117 inc/analytics.php:62
+msgid "Woopra Analytics"
 msgstr ""
 
-#: woopra.php:199
+#: inc/admin.php:145
+msgid "An error has happened. Please try again later."
+msgstr ""
+
+#: inc/admin.php:261
 msgid ""
 "For more info about installation and customization, please visit <a href="
 "\"http://www.woopra.com/installation-guide\">the installation page in your "
-"member&#8217;s area"
+"member&#8217;s area</a>"
 msgstr ""
 
-#: woopra.php:204
+#: inc/admin.php:267
+msgid "Main Settings"
+msgstr ""
+
+#: inc/admin.php:270
 msgid "API Key"
 msgstr ""
 
-#: woopra.php:204
+#: inc/admin.php:270
 msgid "(Optional)"
 msgstr ""
 
-#: woopra.php:207
+#: inc/admin.php:273
 msgid ""
 "You can find the Website's API Key in <a href='http://www.woopra.com/"
 "members/'>your member&#8217;s area"
 msgstr ""
 
-#: woopra.php:211
-msgid "Show Analytics"
+#: inc/admin.php:277
+msgid "Analytics Link Location"
 msgstr ""
 
-#: woopra.php:214
+#: inc/admin.php:280
 msgid "At the dashboard menu"
 msgstr ""
 
-#: woopra.php:214
+#: inc/admin.php:280
 msgid "At the top level menu"
 msgstr ""
 
-#: woopra.php:223
-msgid "Ignore Administrator"
+#: inc/admin.php:290
+msgid "Tracking Settings"
 msgstr ""
 
-#: woopra.php:229
-msgid "Admin Area"
+#: inc/admin.php:293
+msgid "Status"
 msgstr ""
 
-#: woopra.php:235
+#: inc/admin.php:296
+msgid "On"
+msgstr ""
+
+#: inc/admin.php:296
+msgid "Off"
+msgstr ""
+
+#: inc/admin.php:305
 msgid "Auto Tagging"
 msgstr ""
 
-#: woopra.php:237
-msgid "Automatically tag members &amp; commentators"
+#: inc/admin.php:307
+msgid "Automatically Tag Members &amp; Commentators"
 msgstr ""
 
-#: woopra.php:241
-msgid "Show Comments"
+#: inc/admin.php:307
+msgid "Enable this check box if you want Woopra to auto-tag visitors."
 msgstr ""
 
-#: woopra.php:243
-msgid "Show comments as they are posted."
+#: inc/admin.php:311
+msgid "Ignore Administrator"
 msgstr ""
 
-#: woopra.php:243
-msgid "You will see an excerpt of the comment in the Woopra Live section"
+#: inc/admin.php:313
+msgid "Ignore Administrator Visits"
 msgstr ""
 
-#: woopra.php:247
-msgid "Show Searches"
+#: inc/admin.php:313
+msgid ""
+"Enable this check box if you want Woopra to ignore your or any other "
+"administrator visits."
 msgstr ""
 
-#: woopra.php:249
-msgid "Show search queries."
+#: inc/admin.php:317
+msgid "Admin Area"
 msgstr ""
 
-#: woopra.php:253
+#: inc/admin.php:319
+msgid "Track Admin Pages"
+msgstr ""
+
+#: inc/admin.php:319
+#, php-format
+msgid "Admin pages are all pages under %s"
+msgstr ""
+
+#: inc/admin.php:324
+msgid "Event Settings"
+msgstr ""
+
+#: inc/admin.php:327
+msgid "Main Area Events"
+msgstr ""
+
+#: inc/admin.php:337
+msgid "No Main Events Regestiered."
+msgstr ""
+
+#: inc/admin.php:342
+msgid "Admin Area Events"
+msgstr ""
+
+#: inc/admin.php:352
+msgid "No Admin Events Regestiered."
+msgstr ""
+
+#: inc/admin.php:357
+msgid "Third Party Events"
+msgstr ""
+
+#: inc/admin.php:364
+msgid "No Custom Events Regestiered."
+msgstr ""
+
+#: inc/admin.php:371
 msgid "Save Changes"
 msgstr ""
 
-#: woopra_analytics.php:25
+#: inc/analytics.php:50
+#, php-format
 msgid ""
-"Please provide your API Key & Woopra Site ID in order to show your analytics!"
+"You must fill in your API Key in order to view Analytics. Please fill it out "
+"on the <a href=\"%s\">settings page</a> in order for you to view your "
+"analytics."
 msgstr ""
 
-#: woopra_analytics.php:37
+#: inc/analytics.php:75
 msgid "Refresh"
 msgstr ""
 
-#: woopra_analytics.php:39
+#: inc/analytics.php:77
 msgid "Click here to change the date range"
 msgstr ""
 
-#: woopra_analytics.php:42
+#: inc/analytics.php:80
 msgid "From"
 msgstr ""
 
-#: woopra_analytics.php:43
+#: inc/analytics.php:81
 msgid "To"
 msgstr ""
 
-#: woopra_analytics.php:47
+#: inc/analytics.php:85
 msgid "Cancel"
 msgstr ""
 
-#: woopra_analytics.php:48
+#: inc/analytics.php:86
 msgid "Apply Date Range"
 msgstr ""
 
-#: woopra_analytics.php:65
+#: inc/analytics.php:99
 msgid "Visitors"
 msgstr ""
 
-#: woopra_analytics.php:66
+#: inc/analytics.php:100
 msgid "Systems"
 msgstr ""
 
-#: woopra_analytics.php:67
+#: inc/analytics.php:101 inc/render.php:844
 msgid "Pages"
 msgstr ""
 
-#: woopra_analytics.php:68
+#: inc/analytics.php:102
 msgid "Referrers"
 msgstr ""
 
-#: woopra_analytics.php:69
+#: inc/analytics.php:103
 msgid "Searches"
 msgstr ""
 
-#: woopra_analytics.php:71
+#: inc/analytics.php:105
 msgid "Overview"
 msgstr ""
 
-#: woopra_analytics.php:72
+#: inc/analytics.php:106
 msgid "Countries"
 msgstr ""
 
-#: woopra_analytics.php:73
+#: inc/analytics.php:107
 msgid "Tagged Visitors"
 msgstr ""
 
-#: woopra_analytics.php:74
+#: inc/analytics.php:108
 msgid "Bounce Rate"
 msgstr ""
 
-#: woopra_analytics.php:75
+#: inc/analytics.php:109
 msgid "Visit Durations"
 msgstr ""
 
-#: woopra_analytics.php:77
+#: inc/analytics.php:111
 msgid "Browsers"
 msgstr ""
 
-#: woopra_analytics.php:78
+#: inc/analytics.php:112
 msgid "Platforms"
 msgstr ""
 
-#: woopra_analytics.php:79
+#: inc/analytics.php:113
 msgid "Screen Resolutions"
 msgstr ""
 
-#: woopra_analytics.php:80
+#: inc/analytics.php:114
 msgid "Languages"
 msgstr ""
 
-#: woopra_analytics.php:82 woopra_renderer.php:226
+#: inc/analytics.php:116 inc/render.php:225
 msgid "Pageviews"
 msgstr ""
 
-#: woopra_analytics.php:83
+#: inc/analytics.php:117 inc/render.php:846
 msgid "Landing Pages"
 msgstr ""
 
-#: woopra_analytics.php:84
+#: inc/analytics.php:118 inc/render.php:848
 msgid "Exit Pages"
 msgstr ""
 
-#: woopra_analytics.php:85
+#: inc/analytics.php:119 inc/render.php:850
 msgid "Outgoing Links"
 msgstr ""
 
-#: woopra_analytics.php:86
+#: inc/analytics.php:120 inc/render.php:852
 msgid "Downloads"
 msgstr ""
 
-#: woopra_analytics.php:88
+#: inc/analytics.php:122
 msgid "Referrer Types"
 msgstr ""
 
-#: woopra_analytics.php:89
+#: inc/analytics.php:123
 msgid "Regular Referrers"
 msgstr ""
 
-#: woopra_analytics.php:90
+#: inc/analytics.php:124
 msgid "Search Engines"
 msgstr ""
 
-#: woopra_analytics.php:91
+#: inc/analytics.php:125
 msgid "Feed Readers"
 msgstr ""
 
-#: woopra_analytics.php:92
+#: inc/analytics.php:126
 msgid "Emails"
 msgstr ""
 
-#: woopra_analytics.php:93
+#: inc/analytics.php:127
 msgid "Social Bookmarks"
 msgstr ""
 
-#: woopra_analytics.php:94
+#: inc/analytics.php:128
 msgid "Social Networks"
 msgstr ""
 
-#: woopra_analytics.php:95
+#: inc/analytics.php:129
 msgid "Media"
 msgstr ""
 
-#: woopra_analytics.php:96
+#: inc/analytics.php:130
 msgid "News"
 msgstr ""
 
-#: woopra_analytics.php:98
+#: inc/analytics.php:132 inc/render.php:854
 msgid "Search Queries"
 msgstr ""
 
-#: woopra_analytics.php:99
+#: inc/analytics.php:133 inc/render.php:856
 msgid "Keywords"
 msgstr ""
 
-#: woopra_analytics.php:105
+#: inc/analytics.php:139
 #, php-format
 msgid "Powered by <a href=\"%1$s\">Woopra Analytics</a>"
 msgstr ""
 
-#: woopra_analytics.php:135
+#: inc/events.php:88
+msgid "Comments"
+msgstr ""
+
+#: inc/events.php:89
+msgid "Show comments as they are posted."
+msgstr ""
+
+#: inc/events.php:96
+msgid "Search"
+msgstr ""
+
+#: inc/events.php:97
+msgid "Show users search queries."
+msgstr ""
+
+#: inc/render.php:162
+#, php-format
 msgid ""
 "The Woopra Plugin was not able to request your analytics data from the "
-"Woopra Engines."
+"Woopra Engines<br/><small>Your hosting provider is not allowing the Woopra "
+"Plugin to fetch data from the Woopra Servers.<br/>%s<br/><a href=\"http://"
+"www.woopra.com/forums/\">Report this error onto the forums!</a>"
 msgstr ""
 
-#: woopra_analytics.php:135
+#: inc/render.php:178
 msgid ""
-"Your hosting provider is not allowing the Woopra Plugin to fetch data from "
-"the Woopra Servers."
+"Your query returned 0 results.<br/>Click <a href=\"#\" onclick="
+"\"refreshCurrent(); return false;\">here</a> to retry again!"
 msgstr ""
 
-#: woopra_renderer.php:8
-msgid "Your query returned 0 results."
+#: inc/render.php:221
+msgid "Day"
 msgstr ""
 
-#: woopra_renderer.php:8
-msgid ""
-"Click <a href=\"#\" onclick=\"refreshCurrent(); return false;\">here</a> to "
-"retry again!"
-msgstr ""
-
-#: woopra_renderer.php:86
-msgid "Hits"
-msgstr ""
-
-#: woopra_renderer.php:223
+#: inc/render.php:222
 msgid "Avg Time Spent"
 msgstr ""
 
-#: woopra_renderer.php:224
+#: inc/render.php:223
 msgid "New Visitors"
 msgstr ""
 
-#: woopra_renderer.php:225
+#: inc/render.php:224
 msgid "Visits"
 msgstr ""
 
-#. Plugin Name of an extension
-msgid "Woopra"
+#: inc/render.php:279 inc/render.php:438
+msgid "Hits"
 msgstr ""
 
-#. Plugin URI of an extension
-msgid "http://www.woopra.com"
+#: inc/render.php:437
+msgid "Referrer"
 msgstr ""
 
-#. Description of an extension
-msgid ""
-"This plugin adds Woopra's real-time analytics to any WordPress installation.  "
-"Simply sign up at Woopra.com, then activate the plugin and configure your "
-"site ID in the Woopra settings."
+#: inc/render.php:830
+msgid "Country"
 msgstr ""
 
-#. Author of an extension
-msgid "Elie El Khoury"
+#: inc/render.php:832
+msgid "Pageviews per Visit"
 msgstr ""
 
-#. Author URI of an extension
-msgid "http://www.ekhoury.com"
+#: inc/render.php:834
+msgid "Durations"
+msgstr ""
+
+#: inc/render.php:836
+msgid "Browser"
+msgstr ""
+
+#: inc/render.php:838
+msgid "Platform"
+msgstr ""
+
+#: inc/render.php:840
+msgid "Resolution"
+msgstr ""
+
+#: inc/render.php:842
+msgid "Language"
+msgstr ""
+
+#: inc/render.php:858
+msgid "Name"
+msgstr ""
+
+#: inc/xml.php:146
+#, php-format
+msgid "%s: XML error at line %d column %d"
+msgstr ""
+
+#: inc/xml.php:154
+#, php-format
+msgid "%s: No data entries."
 msgstr ""
