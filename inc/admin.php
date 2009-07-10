@@ -201,6 +201,8 @@ class WoopraAdmin extends Woopra {
 			delete_option('woopra_track_admin');
 			delete_option('woopra_api_key');
 			delete_option('woopra_analytics_tab');
+			delete_option('woopra_show_comments');
+			delete_option('woopra_show_searches');
 			
 			update_option( 'woopra', array_merge($woopra, $newopts) );
 		}
@@ -326,9 +328,13 @@ class WoopraAdmin extends Woopra {
 			<td>
 			<?php
 				foreach ( $this->_events as $event => $data) {
-					if (!$data['adminonly'])
-						echo "\n\t<input type=\"checkbox\" value=\"1\"" . checked( '1', $event_status[(isset($data['setting']) ? $data['setting'] : $data['action'])], false ) . " id=\"" . (isset($data['setting']) ? $data['setting'] : $data['action']) . "\" name=\"woopra[woopra_event][".(isset($data['setting']) ? $data['setting'] : $data['action'])."]\"/> <label for=\"woopra[woopra_event][".(isset($data['setting']) ? $data['setting'] : $data['action'])."]\">".$data['name']."</label> - ".$data['label']."<br/>";
+					if (!$data['adminonly']) {
+						$event_reg++;
+						echo "\n\t<input type=\"checkbox\" value=\"1\"" . checked( '1', $event_status[(isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter']))], false ) . " id=\"" . ((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter']))) . "\" name=\"woopra[woopra_event][".((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter'])))."]\"/> <label for=\"woopra[woopra_event][".((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter'])))."]\">".$data['name']."</label> - ".$data['label']."<br/>";
+					}
 				}
+				if ($event_reg < 1)
+					echo "<strong>" . __('No Main Events Regestiered.') . "</strong>";
 			?>				
 			</td>
 		</tr>
@@ -337,9 +343,13 @@ class WoopraAdmin extends Woopra {
 			<td>
 			<?php
 				foreach ( $this->_events as $event => $data) {
-					if ($data['adminonly'])
-						echo "\n\t<input type=\"checkbox\" value=\"1\"" . checked( '1', $event_status[(isset($data['setting']) ? $data['setting'] : $data['action'])], false ) . " id=\"" . (isset($data['setting']) ? $data['setting'] : $data['action']) . "\" name=\"woopra[woopra_event][".(isset($data['setting']) ? $data['setting'] : $data['action'])."]\"/> <label for=\"woopra[woopra_event][".(isset($data['setting']) ? $data['setting'] : $data['action'])."]\">".$data['name']."</label> - ".$data['label']."<br/>";
+					if ($data['adminonly']) {
+						$event_admin++;
+						echo "\n\t<input type=\"checkbox\" value=\"1\"" . checked( '1', $event_status[(isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter']))], false ) . " id=\"" . ((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter']))) . "\" name=\"woopra[woopra_event][".((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter'])))."]\"/> <label for=\"woopra[woopra_event][".((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter'])))."]\">".$data['name']."</label> - ".$data['label']."<br/>";
+					}
 				}
+				if ($event_admin < 1)
+					echo "<strong>" . __('No Admin Events Regestiered.') . "</strong>";
 			?>
 			</td>
 		</tr>
