@@ -11,6 +11,7 @@
 class WoopraFrontend extends Woopra {
 
 	/**
+	 * @since 1.4.1
 	 * @var object
 	 */
 	var $event;
@@ -80,7 +81,7 @@ class WoopraFrontend extends Woopra {
 		if (!$this->woopra_status())
 			return;
 		
-		if (!$this->woopra_admin())
+		if ($this->woopra_admin())
 			return;
 		
 		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
