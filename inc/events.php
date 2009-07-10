@@ -311,11 +311,11 @@ class WoopraEvents_Admin extends WoopraEvents {
 		foreach ($all_events as $event_name => $data) {
 			if ($data['action']) {
 				if ($event_status[(isset($data['setting']) ? $data['setting'] : $data['action'])])
-					add_action( $data['action'], 			array(&$this, 'process_events') );
+					add_action( $data['action'], 			array(&$this, 'admin_process_events') );
 			}
 			if ($data['filter']) {
 				if ($event_status[(isset($data['setting']) ? $data['setting'] : $data['filter'])])
-					add_filter( $data['filter'], 			array(&$this, 'process_filter_events') );
+					add_filter( $data['filter'], 			array(&$this, 'admin_process_filter_events') );
 			}
 
 		}
@@ -339,7 +339,7 @@ class WoopraEvents_Admin extends WoopraEvents {
 	 * @return boolean
 	 * @param object $args
 	 */
-	function process_filter_events(&$args) {
+	function admin_process_filter_events(&$args) {
 		$current_event = current_filter();
 		$this->process_event($current_event, $args);
 		return $args;	//	we have to return a filter...
