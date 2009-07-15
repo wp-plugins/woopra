@@ -11,60 +11,70 @@
 class WoopraXML {
 
 	/**
+	 * Parser object for XML-PHP
 	 * @since 1.4.1
 	 * @var object
 	 */
 	var $parser = null;
 
 	/**
+	 * URL
 	 * @since 1.4.1
 	 * @var string
 	 */
 	var $url = null;
 
 	/**
+	 * Data from XML
 	 * @since 1.4.1
 	 * @var array
 	 */
 	var $data = null;
 	
 	/**
+	 * Counter at which tag.
 	 * @since 1.4.1
 	 * @var int
 	 */
-	var $counter = null;
+	var $counter = 0;
 	
 	/**
+	 * Current TAG.
 	 * @since 1.4.1
 	 * @var string
 	 */
 	var $current_tag = null;
 	
 	/**
+	 * What is the connection error?
 	 * @since 1.4.1
 	 * @var string
 	 */
 	var $connection_error = null;
 	
 	/**
+	 * Any error messages?
 	 * @since 1.4.1
 	 * @var string
 	 */
 	var $error_msg = null;
 	
 	/**
+	 * Has data been found?
 	 * @since 1.4.1
 	 * @var string
 	 */
 	var $founddata = false;
 	
 	/**
+	 * Hostname of our site.
 	 * @since 1.4.1
 	 * @var string
 	 */
 	var $hostname = null;
 	
 	/**
+	 * API Key
 	 * @since 1.4.1
 	 * @var string
 	 */
@@ -104,13 +114,15 @@ class WoopraXML {
 	 * Set the XML File Location
 	 * @return boolean
 	 * @param object $key
+	 * @param object $date_format
 	 * @param object $start_date
 	 * @param object $end_date
 	 * @param object $limit
 	 * @param object $offset
 	 */
-	function set_xml($key, $start_date, $end_date, $limit, $offset) {
-		$this->url = "http://".$this->hostname.".woopra-ns.com/api/output_format=xml&website=".$this->hostname."&api_key=".$this->api_key."&query=".$key."&start_day=".$start_date."&end_day=".$end_date."&limit=".$limit."&offset=".$offset;
+	function set_xml($key, $date_format, $start_date, $end_date, $limit, $offset) {
+		// This is now set to the temp. location of version two of the API.
+		$this->url = "http://".$this->hostname.".woopra-ns.com/apiv2/website=".$this->hostname."&api_key=".$this->api_key."&key=".$key."&date_format=".$date_format."&start_day=".$start_date."&end_day=".$end_date."&limit=".$limit."&offset=".$offset;
 		return true;
 	}
 	
@@ -147,7 +159,7 @@ class WoopraXML {
                 return $this->error();
             }
         }
-        
+		
         if ($this->founddata) {
         	return true;
         } else {
@@ -165,23 +177,55 @@ class WoopraXML {
 		return false;
 	}
 	
-	/** PRIVATE FUNCTIONS - NOT DOCUMENTED **/
+	/** PRIVATE FUNCTIONS - Version 2.1 of the API **/
 	
+	/**
+	 * Set the START Element Header
+	 * @return  none
+	 * @param object $parser
+	 * @param object $name
+	 * @param object $attribs
+	 * @uses xml_set_element_handler
+	 */
 	function start_xml($parser, $name, $attribs) {
-		if (($name == "entry") && (!$this->founddata))
-			$this->founddata = true;
-			
+		//	Response Check
+		if (($name == "response") && (!$this->founddata))
+			if ($attribs['success'] == "true") 
+				$this->founddata = true;
+		
+		//	By Day
+		if (($name == "day") && (isset($attribs['0'])))
+			$this->data[$this->counter]['days'][] = $attribs;
+		
+		//	Hours
+		if ($name == "hour")
+			$this->data[$this->counter]['hours'][] = $attribs;
+		
 		$this->current_tag = $name;
     }
 	
+	/**
+	 * Set the END Element Header
+	 * @return 
+	 * @param object $parser
+	 * @param object $name
+	 * @uses xml_set_element_handler
+	 */
     function end_xml($parser, $name) {
-		if ($name == "entry")
+		if ($name == "item")
 			$this->counter++;
     }
 	
+	/**
+	 * Process the XML element
+	 * @return 
+	 * @param object $parser
+	 * @param object $data
+	 * @uses xml_set_character_data_handler
+	 */
     function char_xml($parser, $data) {
 		if ($this->founddata)
-			$this->data[$this->counter][$this->current_tag] = $data;
+			$this->data[$this->counter][$this->current_tag] = $data;			
 	}
 }
 

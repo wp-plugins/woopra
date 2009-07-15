@@ -18,12 +18,14 @@
 class WoopraEvents {
 	
 	/**
+	 * Woopra's Built in Events.
 	 * @since 1.4.1
 	 * @var
 	 */
 	var $default_events;
 	
 	/**
+	 * What are the current event's going on?
 	 * @since 1.4.1
 	 * @var object
 	 */
@@ -115,7 +117,7 @@ class WoopraEvents {
 	function process_event($event, &$args) {
 		if (!isset($_SESSION))
 			session_start();
-		
+			
 		$_SESSION['woopra']['events'][$event] = $args;
 	}
 
@@ -125,7 +127,7 @@ class WoopraEvents {
 	 * Only needed for 'post' events.
 	 * 
 	 * @since 1.4.1
-	 * @return 
+	 * @return none
 	 */
 	function session_start() {
 		if (!isset($_SESSION))
@@ -137,7 +139,8 @@ class WoopraEvents {
 	
 	/**
 	 * What is the javascript we needed to generate?
-	 * @return 
+	 * @since 1.4.1
+	 * @return none
 	 * @param object $event
 	 */
 	function print_javascript_events() {
@@ -145,7 +148,7 @@ class WoopraEvents {
 		if (is_array($this->current_event)) {
 			echo "\n";
 			foreach ($this->current_event as $event_name => $event_value) {
-				if (!is_null($event_value) || is_object($event_value))
+				if (!is_null($event_value) || is_object($event_value) || !empty($event_value))
 					echo "woopra_event['" . $this->event_display($event_name) . "'] = '" . js_escape($this->event_value($event_name, $event_value)) . "';\r\n";
 			}
 			unset($_SESSION['woopra']['events']);
@@ -154,7 +157,8 @@ class WoopraEvents {
 	
 	/**
 	 * Return the event name for the Woopra App.
-	 * @return 
+	 * @since 1.4.1
+	 * @return none
 	 * @param object $event_name
 	 */
 	function event_display($event_name) {
@@ -168,7 +172,8 @@ class WoopraEvents {
 	
 	/**
 	 * Return the event value to show in the even name.
-	 * @return 
+	 * @since 1.4.1
+	 * @return mixed
 	 * @param object $event_name
 	 * @param object $event_value
 	 */
@@ -192,7 +197,8 @@ class WoopraEvents {
 	 * 
 	 * Note: If the function returns an object, the $func['object'] var is used.
 	 * 
-	 * @return 
+	 * @since 1.4.1
+	 * @return mixed
 	 * @param object $func
 	 * @param object $args
 	 */
@@ -226,6 +232,7 @@ class WoopraEvents_Frontend extends WoopraEvents {
 	
 	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
+	 * @since 1.4.1
 	 * @return none
 	 */
 	function WoopraEvents_Frontend() {
@@ -290,15 +297,16 @@ class WoopraEvents_Frontend extends WoopraEvents {
 class WoopraEvents_Admin extends WoopraEvents {
 	
 	/**
-	 * 
-	 * @return 
+	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
+	 * @since 1.4.1
+	 * @return none
 	 */
 	function WoopraEvents_Admin() {
 		$this->__construct();
 	}
 
 	/**
-	 * 
+	 * Admin Class Constructer
 	 * @return none
 	 * @constructor
 	 */

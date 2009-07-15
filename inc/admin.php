@@ -12,24 +12,28 @@
 class WoopraAdmin extends Woopra {
 
 	/**
+	 * Current Event
 	 * @since 1.4.1
-	 * @var
+	 * @var array
 	 */
 	var $event;
 	
 	/**
+	 * All the events.
 	 * @since 1.4.1
-	 * @var
+	 * @var array
 	 */
 	var $_events;
 
 	/**
+	 * The plugin file.
 	 * @since 1.4.1
 	 * @var string
 	 */
 	var $plugin_file;
 	
 	/**
+	 * The plugin basename.
 	 * @since 1.4.1
 	 * @var string
 	 */
@@ -68,13 +72,13 @@ class WoopraAdmin extends Woopra {
 		register_activation_hook( $this->plugin_file , array(&$this, 'init') );
 		
 		//	Admin Actions
-		add_action( 'admin_menu',				array(&$this, 'register_settings_page') 			);
-		add_action(	'admin_menu', 				array(&$this, 'woopra_add_menu') 					);
-		add_action( 'admin_init',				array(&$this, 'admin_init' ) 						);
-		add_action( 'admin_enqueue_scripts', 	array(&$this, 'enqueue' ) 							);
+		add_action( 'admin_menu',					array(&$this, 'register_settings_page') 			);
+		add_action(	'admin_menu', 					array(&$this, 'woopra_add_menu') 					);
+		add_action( 'admin_init',					array(&$this, 'admin_init' ) 						);
+		add_action( 'admin_enqueue_scripts', 		array(&$this, 'enqueue' ) 							);
 		
 		//	AJAX Render
-		add_action(	'wp_ajax_woopra',			array(&$this, 'render_page' ) 						);
+		add_action(	'wp_ajax_woopra',				array(&$this, 'render_page' ) 						);
 		
 		//	Process Events
 		$this->event = new WoopraEvents('admin');
@@ -101,7 +105,7 @@ class WoopraAdmin extends Woopra {
 	 * @return none
 	 */
 	function register_settings_page() {
-		add_options_page( __('Woopra Settings', 'woopra'), __("Woopra Settings", 'woopra'), 'manage_options', 'woopra', array(&$this, 'settings_page') );
+		add_options_page( __('Woopra', 'woopra'), __("Woopra", 'woopra'), 'manage_options', 'woopra', array(&$this, 'settings_page') );
 	}
 
 	/**
@@ -139,17 +143,23 @@ class WoopraAdmin extends Woopra {
 		if ('dashboard_page_woopra-analytics' == $hook_action) {
 			wp_enqueue_script( 'woopra-analytics',	$plugin_url. '/js/analytics.js'	);
 			wp_localize_script( 'woopra-analytics', 'woopradefaultL10n', array(
-									'apikey'	=>	$this->get_option('api_key'),
-									'siteurl'	=>	get_option('siteurl'),
-									'baseurl'	=>	$plugin_url,
-									'error'		=>	__('An error has happened. Please try again later.', 'woopra'),
+									'apikey'		=>	$this->get_option('api_key'),
+									'siteurl'		=>	get_option('siteurl'),
+									'baseurl'		=>	$plugin_url,
+									'dateformat'	=>	$this->get_option('date_format'),
+									'error'			=>	__('An error has happened. Please try again later.', 'woopra'),
 				)
 			);
 			wp_enqueue_script( 'woopra-swfobject',	$plugin_url . '/js/swfobject.js'	);
-			wp_enqueue_script( 'woopra-datepicker',	$plugin_url . '/js/datepicker.js'	);
+			// ** jQuery Datepicker **/
+			wp_enqueue_script( 'woopra-datepicker',			$plugin_url . '/js/datepicker.js',		array('jquery')				);
+			wp_enqueue_script( 'woopra-datepicker-eye',		$plugin_url . '/js/eye.js',				array('woopra-datepicker')	);
+			wp_enqueue_script( 'woopra-datepicker-utils',	$plugin_url . '/js/utils.js',			array('woopra-datepicker-eye')	);
+			wp_enqueue_script( 'woopra-datepicker-layout',	$plugin_url . '/js/layout.js',			array('woopra-datepicker-utils')	);
 			
 			wp_enqueue_style( 'woopra-analytics',	$plugin_url . '/css/analytics.css'	);
-			wp_enqueue_style( 'woopra-datepicker',	$plugin_url . '/css/datepicker.css'	);			
+			wp_enqueue_style( 'woopra-datepicker',	$plugin_url . '/css/datepicker.css'	);
+			$this->analytics_js();
 		}
 	}
 	
@@ -196,11 +206,11 @@ class WoopraAdmin extends Woopra {
 			);
 			
 			/* Delete old options */
+			delete_option('woopra_api_key');
+			delete_option('woopra_analytics_tab');
 			delete_option('woopra_auto_tag_commentators');
 			delete_option('woopra_ignore_admin');
 			delete_option('woopra_track_admin');
-			delete_option('woopra_api_key');
-			delete_option('woopra_analytics_tab');
 			delete_option('woopra_show_comments');
 			delete_option('woopra_show_searches');
 			
@@ -219,6 +229,8 @@ class WoopraAdmin extends Woopra {
 			'api_key'		=> '',
 			'analytics_tab'	=> 'dashboard',
 			'run_status'	=> 'on',
+			'date_format'	=> 'yyyy-MM-dd',
+			'limit'			=> 50,
 			'auto_tagging'	=> 1,
 			'ignore_admin'	=> 0,
 			'track_admin'	=> 0,
@@ -243,6 +255,58 @@ class WoopraAdmin extends Woopra {
 	}
 
 	/**
+	 * Print the JS for the Anaylitics Page
+	 * @since 1.4.1
+	 * @return none
+	 */
+	function analytics_js() {
+	?>
+<script type="text/javascript">
+//<![CDATA[
+	jQuery(document).ready(function($) {
+		//	Show Date Picker
+		jQuery("a#daterange").click(function() {
+			jQuery("#datepickerdiv").toggle();
+		});
+		
+		//	Woopra From Date
+		jQuery('#woopra_from').DatePicker({
+			format: 'Y-m-d',
+			date: $('#woopra_from').val(),
+			current: $('#woopra_from').val(),
+			starts: 1,
+			position: 'r',
+			onBeforeShow: function(){
+				$('#woopra_from').DatePickerSetDate($('#woopra_from').val(), true);
+			},
+			onChange: function(formated, dates){
+				$('#woopra_from').val(formated);
+				$('#woopra_from').DatePickerHide();
+			}
+		});
+		
+		//	Woopra To Date
+		jQuery('#woopra_to').DatePicker({
+			format: 'Y-m-d',
+			date: $('#woopra_to').val(),
+			current: $('#woopra_to').val(),
+			starts: 1,
+			position: 'r',
+			onBeforeShow: function(){
+				$('#woopra_to').DatePickerSetDate($('#woopra_to').val(), true);
+			},
+			onChange: function(formated, dates){
+				$('#woopra_to').val(formated);
+				$('#woopra_to').DatePickerHide();
+			}
+		});			
+	});
+//]]>
+</script>
+	<?php
+	}
+
+	/**
 	 * The setting page itself.
 	 * @since 1.4.1
 	 * @return none
@@ -252,7 +316,6 @@ class WoopraAdmin extends Woopra {
 	$this->_events = $this->event->register_events();
 	$event_status = $this->get_option('woopra_event');
 
-	
 	?>
 	
 <div class="wrap">
@@ -262,8 +325,10 @@ class WoopraAdmin extends Woopra {
 	
 	<form method="post" action="options.php">
 	<?php settings_fields('woopra'); ?>
-	<?php // @todo Add backwards compatability for 2.7.x and below... :( ?>
-		
+	
+	<!-- This is harded coded for now.. -->
+	<input type="hidden" name="woopra[date_format]" value="yyyy-MM-dd" />
+	
 	<h3><? _e('Main Settings', 'woopra'); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
@@ -285,6 +350,7 @@ class WoopraAdmin extends Woopra {
 			?>
 			</td>
 		</tr>
+		<!-- Add Limit Option Here - Max 100. -->
 	</table>
 	<br/>
 	<h3><? _e('Tracking Settings', 'woopra'); ?></h3>

@@ -11,6 +11,7 @@
 class WoopraFrontend extends Woopra {
 
 	/**
+	 * Holder for the event class.
 	 * @since 1.4.1
 	 * @var object
 	 */
