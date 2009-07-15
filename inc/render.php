@@ -436,7 +436,6 @@ class WoopraRender extends WoopraAdmin {
 		exit;
 	}
 	
-	
 	/** PRIVATE FUNCTIONS **/
 
 	/**
