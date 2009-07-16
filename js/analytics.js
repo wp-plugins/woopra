@@ -135,7 +135,7 @@ function initDatePicker() {
 	document.getElementById('dp-to').value = date_to;
 }
 
-function expandByDay(key, hashid, id) {
+function expandByDay(key, hashid, id, index) {
 	var row = document.getElementById('wlc-' + hashid + '-' + id);
 	if (row.style.display == 'table-row') {
 		row.style.display = 'none';
@@ -149,7 +149,7 @@ function expandByDay(key, hashid, id) {
 	}
 	row.className = 'loaded';
 	
-	var phpfile = escape(woopradefaultL10n.siteurl + '/wp-admin/admin-ajax.php?action=woopra&datatype=flash&apikey=' + woopradefaultL10n.apikey + '&wkey=' + key + '&date_format=' + date_format + '&from=' + date_from + '&to=' + date_to);
+	var phpfile = escape(woopradefaultL10n.siteurl + '/wp-admin/admin-ajax.php?action=woopra&datatype=flash&apikey=' + woopradefaultL10n.apikey + '&id=' + index + '&wkey=' + key + '&date_format=' + date_format + '&from=' + date_from + '&to=' + date_to);
 	var so = new SWFObject(woopradefaultL10n.baseurl + "/flash/open-flash-chart.swf", hashid, "968", "110", "9");
 	so.addVariable("data-file", phpfile);
 	so.addParam("allowScriptAccess", "sameDomain");
