@@ -210,12 +210,10 @@ class WoopraRender extends WoopraAdmin {
 			$this->sort_analytics_response();
 			
 			// @todo This code to be worked on!
-			/*
 			if ($this->data_type != "regular") {
 				$this->render_chart_data($this->entries, $this->key);
 				exit;
 			}
-			*/
 			
 			if ($this->woopra_contains($this->key, 'REFERRERS&')) {
 				if ($this->woopra_contains($this->key, '&id=')) {
@@ -432,7 +430,62 @@ class WoopraRender extends WoopraAdmin {
 	
 	//	@todo This is to be updated with the new version for open-flash-chart version 2!
 	function render_chart_data($entries, $key) {
-		$this->debug("<pre>" . print_r($entries) . "</pre>");
+		?>
+		
+{
+  "title":{
+    "text":  "Many data lines",
+    "style": "{font-size: 20px; color:#0000ff; font-family: Verdana; text-align: center;}"
+  },
+
+  "y_legend":{
+    "text": "Open Flash Chart",
+    "style": "{color: #736AFF; font-size: 12px;}"
+  },
+
+  "elements":[
+    {
+      "type":      "bar",
+      "alpha":     0.5,
+      "colour":    "#9933CC",
+      "text":      "Page views",
+      "font-size": 10,
+      "values" :   [9,6,7,9,5,7,6,9,7]
+    },
+    {
+      "type":      "bar",
+      "alpha":     0.5,
+      "colour":    "#CC9933",
+      "text":      "Page views 2",
+      "font-size": 10,
+      "values" :   [4,9,6,7,9,5,7,6,9]
+    }
+  ],
+
+  "x_axis":{
+    "stroke":1,
+    "tick_height":10,
+    "colour":"#d000d0",
+    "grid_colour":"#00ff00",
+    "labels": ["January","February","March","April","May","June","July","August","Spetember"]
+   },
+
+  "y_axis":{
+    "stroke":      4,
+    "tick_length": 3,
+    "colour":      "#d000d0",
+    "grid_colour": "#00ff00",
+    "offset":      0,
+    "max":         20
+  }
+
+/* &x_axis_steps=2& */
+
+}
+
+
+		
+		<?php
 		exit;
 	}
 	

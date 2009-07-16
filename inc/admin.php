@@ -302,8 +302,7 @@ class WoopraAdmin extends Woopra {
 		});			
 	});
 //]]>
-</script>
-	<?php
+</script><?php
 	}
 
 	/**

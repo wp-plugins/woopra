@@ -148,8 +148,10 @@ function expandByDay(key, hashid, id) {
 		return false;
 	}
 	row.className = 'loaded';
-	var so = new SWFObject(woopradefaultL10n.baseurl + "/flash/open-flash-chart.swf", hashid, "968", "110", "9", "#ff0000");
-	so.addVariable("data", escape(woopradefaultL10n.siteurl + '/wp-admin/admin-ajax.php?action=woopra&datatype=flash&apikey=' + woopradefaultL10n.apikey + '&wkey=' + escape(key) + '&from=' + date_from + '&to=' + date_to));
+	
+	var phpfile = escape(woopradefaultL10n.siteurl + '/wp-admin/admin-ajax.php?action=woopra&datatype=flash&apikey=' + woopradefaultL10n.apikey + '&wkey=' + key + '&date_format=' + date_format + '&from=' + date_from + '&to=' + date_to);
+	var so = new SWFObject(woopradefaultL10n.baseurl + "/flash/open-flash-chart.swf", hashid, "968", "110", "9");
+	so.addVariable("data-file", phpfile);
 	so.addParam("allowScriptAccess", "sameDomain");
 	so.addParam("wmode", "transparent");
 	so.addParam("bgcolor", "#FFFFFF");
