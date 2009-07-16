@@ -26,6 +26,13 @@ class WoopraChart {
 	var $type = null;
 	
 	/**
+	 * Hold the data needed.
+	 * @since 1.4.1
+	 * @var array
+	 */
+	var $data = array();
+	
+	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
 	 * @since 1.4.1
 	 * @return none

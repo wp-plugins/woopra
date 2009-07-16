@@ -182,15 +182,23 @@ class WoopraRender extends WoopraAdmin {
 			}
 		}
 		
-		/** NOTE: If we are going to look at the Ajax page and we want to see the raw results, we need to set echo to 'true' **/
+		/** DEBUG CODE **/
 		if ($_GET['echo']) {
 			$this->debug("<pre>" . print_r($this->entries, true) . "</pre>");
 		}
 		
 		if ($xml->connection_error != null || $xml->error_msg != null || !$xml->init()) {
-			echo '<div class="error"><p>' . sprintf(__('The Woopra Plugin was not able to request your analytics data from the Woopra Engines<br/><small>Your hosting provider is not allowing the Woopra Plugin to fetch data from the Woopra Servers.<br/>%s<br/><a href="http://www.woopra.com/forums/">Report this error onto the forums!</a>', 'woopra'), $xml->connection_error . $xml->error_msg) . '</small></p></div>';
+			echo '<div class="error"><p>' . sprintf(__('The Woopra Plugin was not able to request your analytics data from the Woopra Engines<br/><small>Your hosting provider is not allowing the Woopra Plugin to fetch data from the Woopra Servers.<br/>%s<br/><a href="http://www.woopra.com/forums/">Report this error onto the forums!</a><br/>URL Processed: %s', 'woopra'), $xml->connection_error . $xml->error_msg, $xml->url) . '</small></p></div>';
 			return false;
 		}
+		
+		/** DEBUG CODE **/
+		if ($this->debug_var) {
+			if (!$_GET['echo'])
+				if ($_GET['datatype'] != "flash")
+					echo '<div class="error"><p>XML URL: '.$xml->url.'<br/><br/>JS URL: ' . get_option('siteurl') . '/wp-admin/admin-ajax.php?action=woopra&datatype=regular&apikey=' . $this->get_option('api_key') . '&wkey=' . $key . '&date_format=' . $date_format . '&from=' . $start_date . '&to=' . $end_date . '</p></div>';
+		}
+		
 		$xml->clear_data();
 		unset($xml);
 		return true;
@@ -209,7 +217,6 @@ class WoopraRender extends WoopraAdmin {
 			
 			$this->sort_analytics_response();
 			
-			// @todo This code to be worked on!
 			if ($this->data_type != "regular") {
 				$this->render_chart_data($this->entries, $this->key);
 				exit;
@@ -312,7 +319,7 @@ class WoopraRender extends WoopraAdmin {
 			$counter = 0;
 			$sum = $this->woopra_sum($entries, 'vts');
 			
-			foreach($entries as $entry) {
+			foreach($entries as $index => $entry) {
 				$name = urldecode($entry['name']);
 				$hits = (int) $entry['vts'];
 				$meta = urldecode($entry['meta']);
@@ -325,7 +332,7 @@ class WoopraRender extends WoopraAdmin {
 				<tr<?php echo (($counter++%2==0) ? " class=\"even_row\"" : ""); ?>>
 					<td class="wrank"><?php echo $counter; ?></td>
 					<td><span class="ellipsis"><?php echo $this->woopra_render_name($key, $name, $meta); ?></span></td>
-					<td width="100" class="center highlight"><a href="#" onclick="return expandByDay('<?php echo $key; ?>', '<?php echo $hashid; ?>',<?php echo $counter; ?>)"><?php echo $hits; ?></a></td>
+					<td width="100" class="center highlight"><a href="#" onclick="return expandByDay('<?php echo $key; ?>', '<?php echo $hashid; ?>', <?php echo $counter; ?>, <?php echo $entry['index']; ?>)"><?php echo $hits; ?></a></td>
 					<td class="wbar"><?php echo $this->woopra_bar($percent); ?></td>
 				</tr>
 				<tr id="wlc-<?php echo $hashid; ?>-<?php echo $counter; ?>" style=" height: 120px; display: none;">
@@ -361,7 +368,7 @@ class WoopraRender extends WoopraAdmin {
 		$counter = 0;
 		$sum = $this->woopra_sum($entries, 'vts');
 		
-		foreach($entries as $entry) {
+		foreach($entries as $index => $entry) {
 			$name = urldecode($entry['name']);
 			$hits = (int) $entry['vts'];
 			$meta = urldecode($entry['meta']);
@@ -400,7 +407,7 @@ class WoopraRender extends WoopraAdmin {
 		
 		$counter = 0;
 		$sum = $this->woopra_sum($entries, 'hits');
-		foreach ($entries as $entry) {
+		foreach ($entries as $index => $entry) {
 		
 			$id = (int) $entry['id'];
 			$name = urldecode($entry['name']);
@@ -430,6 +437,30 @@ class WoopraRender extends WoopraAdmin {
 	
 	//	@todo This is to be updated with the new version for open-flash-chart version 2!
 	function render_chart_data($entries, $key) {
+	
+		$chart = new WoopraChart;
+
+		if ((!isset($_GET['id'])) || (!is_numeric($_GET['id']))) {
+			unset($chart);
+			exit;
+		}
+		
+		switch ($key) {
+			case 'GLOBALS': {
+				$chart->title = __("Visits By Hour");
+				$chart->type = "bar";
+				break;
+			}
+			default: {
+				$chart->type = "line";
+			}
+		}
+		
+		foreach ($entries as $index => $entry) {
+			if ($entry['index'] == $_GET['id'])
+				$chart->data = $entry;
+		}
+		
 		?>
 		
 {
@@ -451,14 +482,6 @@ class WoopraRender extends WoopraAdmin {
       "text":      "Page views",
       "font-size": 10,
       "values" :   [9,6,7,9,5,7,6,9,7]
-    },
-    {
-      "type":      "bar",
-      "alpha":     0.5,
-      "colour":    "#CC9933",
-      "text":      "Page views 2",
-      "font-size": 10,
-      "values" :   [4,9,6,7,9,5,7,6,9]
     }
   ],
 
@@ -479,13 +502,10 @@ class WoopraRender extends WoopraAdmin {
     "max":         20
   }
 
-/* &x_axis_steps=2& */
-
 }
 
-
-		
 		<?php
+		unset($chart);
 		exit;
 	}
 	

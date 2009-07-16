@@ -60,6 +60,20 @@ class WoopraXML {
 	var $error_msg = null;
 	
 	/**
+	 * Bydays Found
+	 * @since 1.4.1
+	 * @var boolean
+	 */
+	var $byday_found = false;
+	
+	/**
+	 * Hours Found
+	 * @since 1.4.1
+	 * @var boolean
+	 */
+	var $byhours_found = false;
+	
+	/**
 	 * Has data been found?
 	 * @since 1.4.1
 	 * @var string
@@ -194,12 +208,21 @@ class WoopraXML {
 				$this->founddata = true;
 		
 		//	By Day
-		if (($name == "day") && (isset($attribs['0'])))
+		if ($name == "byday")
+			$this->byday_found = true;
+	
+		if (($name == "day") && ($this->byday_found))
 			$this->data[$this->counter]['days'][] = $attribs;
 		
 		//	Hours
-		if ($name == "hour")
+		if ($name == "hours")
+			$this->byhours_found = true;
+		
+		if (($name == "hour") && ($this->byhours_found))
 			$this->data[$this->counter]['hours'][] = $attribs;
+		
+		//	Create Index ID
+		$this->data[$this->counter]['index'] = $this->counter;
 		
 		$this->current_tag = $name;
     }
