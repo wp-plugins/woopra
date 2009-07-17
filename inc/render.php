@@ -280,15 +280,21 @@ class WoopraRender extends WoopraAdmin {
 				$pageviews = (int) $entry['pvs'];
 				//	Percent Code
 				$percent = round($pageviews*100/$max);
-	
+				
+				
+				$hashid = $this->woopra_friendly_hash('GLOBALS');
+				
 				?>
 				<tr<?php echo (($counter++%2==0)?" class=\"even_row\"":""); ?>>
 					<td class="whighlight"><?php echo $entry['day']; ?></td>
 					<td class="center"><?php echo $timespentstring; ?></td>
 					<td class="center"><?php echo $visitorsstring; ?></td>
 					<td class="center"><?php echo number_format($visitors); ?></td>
-					<td class="center highlight"><?php echo number_format($pageviews); ?></td>
+					<td class="center highlight"><a href="#" onclick="return expandByDay('GLOBALS', '<?php echo $hashid; ?>', <?php echo $counter; ?>, <?php echo $entry['index']; ?>)"><?php echo number_format($pageviews); ?></a></td>
 					<td class="wbar"><?php echo $this->woopra_bar($percent); ?></td>
+				</tr>
+				<tr id="wlc-<?php echo $hashid; ?>-<?php echo $counter; ?>" style=" height: 120px; display: none;">
+					<td class="wlinechart" id="linecharttd-<?php echo $hashid; ?>-<?php echo $counter ?>" colspan="6"></td>
 				</tr>
 			<?php
 			}
@@ -461,50 +467,8 @@ class WoopraRender extends WoopraAdmin {
 				$chart->data = $entry;
 		}
 		
-		?>
-		
-{
-  "title":{
-    "text":  "Many data lines",
-    "style": "{font-size: 20px; color:#0000ff; font-family: Verdana; text-align: center;}"
-  },
+		$chart->render();
 
-  "y_legend":{
-    "text": "Open Flash Chart",
-    "style": "{color: #736AFF; font-size: 12px;}"
-  },
-
-  "elements":[
-    {
-      "type":      "bar",
-      "alpha":     0.5,
-      "colour":    "#9933CC",
-      "text":      "Page views",
-      "font-size": 10,
-      "values" :   [9,6,7,9,5,7,6,9,7]
-    }
-  ],
-
-  "x_axis":{
-    "stroke":1,
-    "tick_height":10,
-    "colour":"#d000d0",
-    "grid_colour":"#00ff00",
-    "labels": ["January","February","March","April","May","June","July","August","Spetember"]
-   },
-
-  "y_axis":{
-    "stroke":      4,
-    "tick_length": 3,
-    "colour":      "#d000d0",
-    "grid_colour": "#00ff00",
-    "offset":      0,
-    "max":         20
-  }
-
-}
-
-		<?php
 		unset($chart);
 		exit;
 	}
