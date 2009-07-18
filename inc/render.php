@@ -218,7 +218,7 @@ class WoopraRender extends WoopraAdmin {
 			$this->sort_analytics_response();
 			
 			if ($this->data_type != "regular") {
-				$this->render_chart_data($this->entries, $this->key);
+				$this->render_chart_data($this->entries);
 				exit;
 			}
 			
@@ -286,7 +286,7 @@ class WoopraRender extends WoopraAdmin {
 				
 				?>
 				<tr<?php echo (($counter++%2==0)?" class=\"even_row\"":""); ?>>
-					<td class="whighlight"><?php echo $entry['day']; ?></td>
+					<td class="wrank"><?php echo $entry['day']; ?></td>
 					<td class="center"><?php echo $timespentstring; ?></td>
 					<td class="center"><?php echo $visitorsstring; ?></td>
 					<td class="center"><?php echo number_format($visitors); ?></td>
@@ -441,8 +441,12 @@ class WoopraRender extends WoopraAdmin {
 		<?php
 	}
 	
-	//	@todo This is to be updated with the new version for open-flash-chart version 2!
-	function render_chart_data($entries, $key) {
+	/**
+	 * Render the chart data format. Using Open-Flash-2 PHP Librarys
+	 * @param object $entries
+	 * @return 
+	 */
+	function render_chart_data($entries) {
 	
 		$chart = new WoopraChart;
 
@@ -451,23 +455,12 @@ class WoopraRender extends WoopraAdmin {
 			exit;
 		}
 		
-		switch ($key) {
-			case 'GLOBALS': {
-				$chart->title = __("Visits By Hour");
-				$chart->type = "bar";
-				break;
-			}
-			default: {
-				$chart->type = "line";
-			}
-		}
-		
 		foreach ($entries as $index => $entry) {
 			if ($entry['index'] == $_GET['id'])
 				$chart->data = $entry;
 		}
 		
-		$chart->render();
+		echo $chart->render();
 
 		unset($chart);
 		exit;
