@@ -67,9 +67,6 @@ class Woopra {
 	 */
 	var $woopra_vistor;
 
-	/** DEBUG VAR **/
-	var $debug = false;
-
 	/**
 	 * Compatability for PHP 4.
 	 * @since 1.4.1
@@ -113,19 +110,6 @@ class Woopra {
 			return false;
 	}
 
-	/** THIS IS CUSTOM CODE THAT CAN BE DELETED LATER ON **/
-
-	/**
-	 * Debug code. Has to be turned on for it to work.
-	 * @return none
-	 * @see $this->debug
-	 */
-	function debug($string, $exit = false) {
-		if ($this->debug)
-			echo $string . "<br/>";
-		if ($exit)
-			exit;
-	}
 }
 
 /**

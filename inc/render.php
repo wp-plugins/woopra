@@ -109,22 +109,6 @@ class WoopraRender extends WoopraAdmin {
 	}
 
 	/** THIS IS CUSTOM CODE THAT CAN BE DELETED LATER ON **/
-	/** DEBUG VAR **/
-	var $debug_var = false;
-	/**
-	 * Debug code. Has to be turned on for it to work.
-	 * @since 1.4.1
-	 * @return none
-	 * @see $this->debug_var
-	 */
-	function debug($string, $exit = false) {
-		if ($this->debug_var)
-			echo $string . "<br/>";
-		if ($exit)
-			exit;
-	}
-	
-	/** THIS IS CUSTOM CODE THAT CAN BE DELETED LATER ON **/
 
 	/**
 	 * Generate the data.
@@ -136,12 +120,7 @@ class WoopraRender extends WoopraAdmin {
 			$this->data_type = $_GET['datatype'];
 			$this->api_key = $_GET['apikey'];
 			$this->key = str_replace("&amp;", "&", $_GET['wkey']);
-			
-			if ($this->debug_var) {
-				$this->hostname = "http://woopra.com";	// when we are doing debuging make sure that Woopra.com is our host.
-			} else {
-				$this->hostname = get_option('siteurl');
-			}
+			$this->hostname = get_option('siteurl');
 			
 			$date_format = $_GET['date_format'];
 			$start_date = $_GET['from'];
@@ -182,21 +161,14 @@ class WoopraRender extends WoopraAdmin {
 			}
 		}
 		
-		/** DEBUG CODE **/
-		if ($_GET['echo']) {
-			$this->debug("<pre>" . print_r($this->entries, true) . "</pre>");
-		}
-		
 		if ($xml->connection_error != null || $xml->error_msg != null || !$xml->init()) {
 			echo '<div class="error"><p>' . sprintf(__('The Woopra Plugin was not able to request your analytics data from the Woopra Engines<br/><small>Your hosting provider is not allowing the Woopra Plugin to fetch data from the Woopra Servers.<br/>%s<br/><a href="http://www.woopra.com/forums/">Report this error onto the forums!</a><br/>URL Processed: %s', 'woopra'), $xml->connection_error . $xml->error_msg, $xml->url) . '</small></p></div>';
 			return false;
 		}
 		
-		/** DEBUG CODE **/
-		if ($this->debug_var) {
-			if (!$_GET['echo'])
-				if ($_GET['datatype'] != "flash")
-					echo '<div class="error"><p>XML URL: '.$xml->url.'<br/><br/>JS URL: ' . get_option('siteurl') . '/wp-admin/admin-ajax.php?action=woopra&datatype=regular&apikey=' . $this->get_option('api_key') . '&wkey=' . $key . '&date_format=' . $date_format . '&from=' . $start_date . '&to=' . $end_date . '</p></div>';
+		if (($this->entries == null) || (count($this->entries) == 0)) {
+			echo '<p align="center">' . _('Your query returned 0 results.<br/>Click <a href="#" onclick="refreshCurrent(); return false;">here</a> to retry again!') . '</p>';
+			return;
 		}
 		
 		$xml->clear_data();
@@ -210,39 +182,34 @@ class WoopraRender extends WoopraAdmin {
 	 * @return none
 	 */
 	function render_results() {
-		if ($this->entries == null || sizeof($this->entries) == 0) {
-			echo '<p align="center">' . _('Your query returned 0 results.<br/>Click <a href="#" onclick="refreshCurrent(); return false;">here</a> to retry again!') . '</p>';
-			return;
-		} else {
-			
-			$this->sort_analytics_response();
-			
-			if ($this->data_type != "regular") {
-				$this->render_chart_data($this->entries);
-				exit;
+
+		$this->sort_analytics_response();
+		
+		if ($this->data_type != "regular") {
+			$this->render_chart_data($this->entries);
+			exit;
+		}
+		
+		if ($this->woopra_contains($this->key, 'REFERRERS&')) {
+			if ($this->woopra_contains($this->key, '&id=')) {
+				// @todo This code to be worked on!
+				// $this->render_expanded_referrers($this->entries, $this->key);
+			} else {
+				$this->render_referrers($this->entries, $this->key);
 			}
-			
-			if ($this->woopra_contains($this->key, 'REFERRERS&')) {
-				if ($this->woopra_contains($this->key, '&id=')) {
-					// @todo This code to be worked on!
-					// $this->render_expanded_referrers($this->entries, $this->key);
-				} else {
-					$this->render_referrers($this->entries, $this->key);
-				}
-				exit;
-			}
-			
-			switch ($this->key) {
-				case 'GLOBALS':
-					$this->render_overview($this->entries);
-					break;
-				case 'COUNTRIES':
-					$this->render_default_model($this->entries, 'COUNTRIES');
-					break;
-				default:
-					$this->render_default_model($this->entries, $this->key);
-					break;
-			}
+			exit;
+		}
+		
+		switch ($this->key) {
+			case 'GLOBALS':
+				$this->render_overview($this->entries);
+				break;
+			case 'COUNTRIES':
+				$this->render_default_model($this->entries, 'COUNTRIES');
+				break;
+			default:
+				$this->render_default_model($this->entries, $this->key);
+				break;
 		}
 	}
 	
@@ -613,23 +580,7 @@ class WoopraRender extends WoopraAdmin {
 		return $max;
 	}
 	
-	/**
-	 * What is the MAX Y value we should use.
-	 * @since 1.4.1
-	 * @return int
-	 * @param object $max
-	 */
-	private function woopra_rounded_max($max) {
-		$values = array(10,20,30,40,50,60,70,80,90,100,120,150,200,250,300,400,500,600,700,800,900,1000,1200,1500,2000,2500,5000,10000,20000,50000,100000,200000,500000,1000000,2000000,5000000,10000000,50000000);
-		$result = 10;
-		foreach ($values as $value) {
-			if ($value > $max)
-				return $value;
-		}
-		return $max;
-	}
-	
-	// @todo Expabsible Key 
+	// @todo Expandable Key 
 	/**
 	 * 
 	 * @return 

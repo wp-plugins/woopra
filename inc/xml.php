@@ -74,6 +74,13 @@ class WoopraXML {
 	var $byhours_found = false;
 	
 	/**
+	 * Index created
+	 * @since 1.4.1
+	 * @var boolean
+	 */
+	var $index_created = false;
+	
+	/**
 	 * Has data been found?
 	 * @since 1.4.1
 	 * @var string
@@ -110,7 +117,7 @@ class WoopraXML {
 	 * @constructor
 	 */
 	function __construct() {
-	
+		//	Nothing to do here...
 	}
 	
 	/**
@@ -135,7 +142,6 @@ class WoopraXML {
 	 * @param object $offset
 	 */
 	function set_xml($key, $date_format, $start_date, $end_date, $limit, $offset) {
-		// This is now set to the temp. location of version two of the API.
 		$this->url = "http://".$this->hostname.".woopra-ns.com/apiv2/website=".$this->hostname."&api_key=".$this->api_key."&key=".$key."&date_format=".$date_format."&start_day=".$start_date."&end_day=".$end_date."&limit=".$limit."&offset=".$offset;
 		return true;
 	}
@@ -204,9 +210,11 @@ class WoopraXML {
 	function start_xml($parser, $name, $attribs) {
 		//	Response Check
 		if (($name == "response") && (!$this->founddata))
-			if ($attribs['success'] == "true") 
+			if ($attribs['success'] == "true") {
 				$this->founddata = true;
-		
+				return;
+			}
+
 		//	By Day
 		if ($name == "byday")
 			$this->byday_found = true;
@@ -221,9 +229,6 @@ class WoopraXML {
 		if (($name == "hour") && ($this->byhours_found))
 			$this->data[$this->counter]['hours'][] = $attribs;
 		
-		//	Create Index ID
-		$this->data[$this->counter]['index'] = $this->counter;
-		
 		$this->current_tag = $name;
     }
 	
@@ -235,8 +240,10 @@ class WoopraXML {
 	 * @uses xml_set_element_handler
 	 */
     function end_xml($parser, $name) {
-		if ($name == "item")
+		if ($name == "item") {
 			$this->counter++;
+			$this->index_created = false;
+		}	
     }
 	
 	/**
@@ -247,6 +254,13 @@ class WoopraXML {
 	 * @uses xml_set_character_data_handler
 	 */
     function char_xml($parser, $data) {
+    	
+		//	Create Index ID
+		if (!$this->index_created) {
+			$this->data[$this->counter]['index'] = $this->counter;
+			$this->index_created = true;
+		}
+		
 		if ($this->founddata)
 			$this->data[$this->counter][$this->current_tag] = $data;			
 	}

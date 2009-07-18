@@ -66,8 +66,9 @@ class WoopraChart {
 			}
 			if ($this->chart == "line") {
 				if ( ((int) $value['pvs'] != 0) && ((int) $value['vts'] != 0) ) {
-					$b['pvs'][] = ((int) $value['pvs'] == 0 ? null : (int) $value['pvs']);
-					$b['vts'][] = ((int) $value['vts'] == 0 ? null : (int) $value['vts']);
+					$b['pvs'][] = (int) $value['pvs'];
+					$b['vts'][] = (int) $value['vts'];
+					$b['vtrs'][] = (int) $value['vtrs'];
 					$b['info']['x_labels'][] = $value['date'];
 				}
 
@@ -75,8 +76,13 @@ class WoopraChart {
 		}
 		
 		// Find Max & Min
-		$b['info']['max'] = $this->rounded_max(max( array_merge($b['pvs'], $b['vts']) ));
-		$b['info']['min'] = $this->rounded_min(min( array_merge($b['pvs'], $b['vts']) ));
+		if ($this->chart == "bar") {
+			$b['info']['max'] = $this->rounded_max(max( array_merge($b['pvs'], $b['vts']) ));
+			$b['info']['min'] = $this->rounded_min(min( array_merge($b['pvs'], $b['vts']) ));
+		} else {
+			$b['info']['max'] = $this->rounded_max(max( array_merge($b['pvs'], $b['vts'], $b['vtrs']) ));
+			$b['info']['min'] = $this->rounded_min(min( array_merge($b['pvs'], $b['vts'], $b['vtrs']) ));
+		}
 
 		include_once('php-ofc-library/open-flash-chart.php');
 		
@@ -121,7 +127,7 @@ class WoopraChart {
 				
 				// @todo Format line dot.
 				$default_dot = new dot();
-				$default_dot->size(5)->colour('#3CB7FF')->tooltip ( '#x_label#: #val#' );
+				$default_dot->size(5)->colour('#3CB7FF')->tooltip ( '#x_label#: #val# #key#' );
 				
 				$line_dot = new line();
 				$line_dot->set_default_dot_style($default_dot);
@@ -132,10 +138,17 @@ class WoopraChart {
 
 				$line_dot_2 = new line();
 				$line_dot_2->set_default_dot_style($default_dot);
-				$line_dot_2->set_width( 4 );
+				$line_dot_2->set_width( 3 );
 				$line_dot_2->set_colour( '#D00329' );
 				$line_dot_2->set_values( $b['vts'] );
 				$line_dot_2->set_key( __("Visits"), 10 );
+				
+				$line_dot_3 = new line();
+				$line_dot_3->set_default_dot_style($default_dot);
+				$line_dot_3->set_width( 2 );
+				$line_dot_3->set_colour( '#505050' );
+				$line_dot_3->set_values( $b['vtrs'] );
+				$line_dot_3->set_key( __("Visitors"), 10 );
 
 				$y = new y_axis();
 				$y->set_range( $b['info']['min'], $b['info']['max'] );
@@ -154,6 +167,7 @@ class WoopraChart {
 				$chart->set_x_axis( $x );
 				$chart->add_element( $line_dot );
 				$chart->add_element( $line_dot_2 );
+				$chart->add_element( $line_dot_3 );
 				break;
 			}
 			
