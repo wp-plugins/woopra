@@ -11,7 +11,10 @@
  * plugin capability, and a wide range of additional feature / functionality currently being
  * readied for deployment. We invite you to sign up and experience the power of Woopra first hand!
  * 
+ * Other credits:
  * 
+ * ViperBond007, DD32, and sivel are to credit by helping this plugin envole into a very
+ * pretty PHP class format. 
  * 
  * Open Flash Charts 2 is copyrighted and created by John Glazebrook <http://teethgrinder.co.uk>
  * It is licenced as LGPL. You can view the terms of the object helper files and the flash file
