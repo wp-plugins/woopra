@@ -10,6 +10,13 @@
  * Our client application is built as a framework for expansion, complete with an open API,
  * plugin capability, and a wide range of additional feature / functionality currently being
  * readied for deployment. We invite you to sign up and experience the power of Woopra first hand!
+ * 
+ * 
+ * 
+ * Open Flash Charts 2 is copyrighted and created by John Glazebrook <http://teethgrinder.co.uk>
+ * It is licenced as LGPL. You can view the terms of the object helper files and the flash file
+ * itself here: http://teethgrinder.co.uk/open-flash-chart-2/
+ * 
  *
  * @author Elie El Khoury <elie@woopra.com> and Shane Froebel <shane@bugssite.org>
  * @version 1.4.1
