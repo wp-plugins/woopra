@@ -104,7 +104,7 @@ class WoopraChart {
 				$bar_2->set_values( $b['vts'] );
 				
 				$y = new y_axis();
-				$y->set_range( $b['info']['min'], $b['info']['max'] );
+				$y->set_range( $b['info']['min'], $b['info']['max'], (($b['info']['max']/($b['info']['min']+1))/2) );
 				
 				$x_labels = new x_axis_labels();
 				$x_labels->set_size( 8 );
@@ -151,7 +151,7 @@ class WoopraChart {
 				$line_dot_3->set_key( __("Visitors"), 10 );
 
 				$y = new y_axis();
-				$y->set_range( $b['info']['min'], $b['info']['max'] );
+				$y->set_range( $b['info']['min'], $b['info']['max'], (($b['info']['max']/($b['info']['min']+1))/2) );
 				
 				$x_labels = new x_axis_labels();
 				$x_labels->set_size( 8 );
@@ -184,7 +184,7 @@ class WoopraChart {
 	 * @return int
 	 */
 	private function rounded_max($max) {
-		$values = array(10,20,30,40,50,60,70,80,90,100,120,150,200,250,300,400,500,600,700,800,900,1000,1200,1500,2000,2500,3000,3500,4000,4500,5000,10000,20000,50000,100000,200000,500000,1000000,2000000,5000000,10000000,50000000);
+		$values = array(5,10,20,30,40,50,60,70,80,90,100,120,150,200,250,300,400,500,600,700,800,900,1000,1200,1500,2000,2500,3000,3500,4000,4500,5000,10000,20000,50000,100000,200000,500000,1000000,2000000,5000000,10000000,50000000);
 		foreach ($values as $value) {
 			if ($value > $max) {
 				return $value;
@@ -200,7 +200,7 @@ class WoopraChart {
 	 * @return int
 	 */
 	private function rounded_min($min) {
-		$values = array(10,20,30,40,50,60,70,80,90,100,120,150,200,250,300,400,500,600,700,800,900,1000,1200,1500,2000,2500,3000,3500,4000,4500,5000,10000,20000,50000,100000,200000,500000,1000000,2000000,5000000,10000000,50000000);
+		$values = array(5,10,20,30,40,50,60,70,80,90,100,120,150,200,250,300,400,500,600,700,800,900,1000,1200,1500,2000,2500,3000,3500,4000,4500,5000,10000,20000,50000,100000,200000,500000,1000000,2000000,5000000,10000000,50000000);
 		$rounded_min = 0;
 		foreach ($values as $value) {
 			if ($value < $min) {
