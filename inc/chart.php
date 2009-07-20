@@ -153,7 +153,7 @@ class WoopraChart {
 				$y = new y_axis();
 				$y->set_tick_length(3);
 				$y->set_colours( '#000000', '#DDDDDD' );
-				$y->set_range( $b['info']['min'], $b['info']['max'], ($b['info']['max']/$b['info']['min']) );
+				$y->set_range( $b['info']['min'], $b['info']['max'], $this->rounded_max(($b['info']['max']/($b['info']['min']+2))) );
 				
 				$y_labels = new y_axis_labels();
 				$y_labels->set_labels();
@@ -208,7 +208,7 @@ class WoopraChart {
 	 * @return int
 	 */
 	private function rounded_min($min) {
-		$values = array(5,10,20,30,40,50,60,70,80,90,100,120,150,200,250,300,400,500,600,700,800,900,1000,1200,1500,2000,2500,3000,3500,4000,4500,5000,10000,20000,50000,100000,200000,500000,1000000,2000000,5000000,10000000,50000000);
+		$values = array(5,10,15,20,30,40,50,60,70,80,90,100,120,150,200,250,300,400,500,600,700,800,900,1000,1200,1500,2000,2500,3000,3500,4000,4500,5000,10000,20000,50000,100000,200000,500000,1000000,2000000,5000000,10000000,50000000);
 		$rounded_min = 0;
 		foreach ($values as $value) {
 			if ($value < $min) {
@@ -219,6 +219,14 @@ class WoopraChart {
 		}
 	}
 	
+	/**
+	 * Create the array for rounded_max and rounded_min
+	 * 
+	 * Note: Not currently in use in Version 1.4.1
+	 * 
+	 * @since 1.4.2
+	 * @return array
+	 */
 	private function max_array() {
 		for ($i = 1; $i++; $i <= 500000)
 			$step[] = $i*10;
