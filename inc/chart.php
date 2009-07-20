@@ -127,7 +127,7 @@ class WoopraChart {
 			case 'line': {
 				
 				$default_dot = new dot();
-				$default_dot->size(5)->colour('#3CB7FF')->tooltip ( '#x_label#: #val# #key#' );
+				$default_dot->tooltip('#x_label#: #val# #key#');
 				
 				$line_dot = new line();
 				$line_dot->set_default_dot_style($default_dot);
@@ -156,7 +156,6 @@ class WoopraChart {
 				$y->set_range( $b['info']['min'], $b['info']['max'], $this->rounded_max(($b['info']['max']/($b['info']['min']+2))) );
 				
 				$y_labels = new y_axis_labels();
-				$y_labels->set_labels();
 				$y_labels->set_steps(6);
 				$y->set_labels($y_labels);
 				

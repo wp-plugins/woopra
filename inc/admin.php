@@ -150,7 +150,7 @@ class WoopraAdmin extends Woopra {
 	function woopra_add_menu() {
 		if (function_exists('add_menu_page')) {
 			if ($this->get_option('analytics_tab') && $this->get_option('analytics_tab') ==	'toplevel') {
-				add_menu_page(__("Woopra Analytics", 'woopra'), __("Woopra Analytics", 'woopra'), "manage_options", "woopra-analytics.php", array(&$this, 'content_page') ); 
+				add_menu_page(__("Woopra Analytics", 'woopra'), __("Woopra Analytics", 'woopra'), "manage_options", "woopra.php", array(&$this, 'content_page') ); 
 			} else {
 				add_submenu_page('index.php', __("Woopra Analytics", 'woopra'), __("Woopra Analytics", 'woopra'), 'manage_options', "woopra-analytics", array(&$this, 'content_page') );
 			}
@@ -174,7 +174,7 @@ class WoopraAdmin extends Woopra {
 	 */
 	function enqueue($hook_action) {
 		$plugin_url = $this->plugin_url();
-		if ('dashboard_page_woopra-analytics' == $hook_action) {
+		if (('dashboard_page_woopra-analytics' == $hook_action) || ('toplevel_page_woopra' == $hook_action)) {
 			wp_enqueue_script( 'woopra-analytics',	$plugin_url. '/js/analytics.js'	);
 			wp_localize_script( 'woopra-analytics', 'woopradefaultL10n', array(
 									'apikey'		=>	$this->get_option('api_key'),
@@ -411,9 +411,11 @@ class WoopraAdmin extends Woopra {
 			<th scope="row"><?php _e('Third Party Events', 'woopra') ?></th>
 			<td>
 			<?php
-				foreach ( $this->custom_events_events as $event => $data) {
+				/*
+				foreach ( $this->custom_events as $event => $data) {
 					echo "\n\t<input type=\"checkbox\" value=\"1\"" . checked( '1', $custom_event_status[$data['action']], false ) . " id=\"" . $data['action'] . "\" name=\"woopra[woopra_event][".$data['action']."]\"/> <label for=\"woopra[woopra_event][".$data['action']."]\">".$data['name']."</label><br />".$data['label'];
 				}
+				*/
 				if (!count($this->custom_events))
 					echo "<strong>" . __('No Custom Events Regestiered.', 'woopra') . "</strong>";
 			?>
