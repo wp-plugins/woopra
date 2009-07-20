@@ -444,7 +444,7 @@ class WoopraRender extends WoopraAdmin {
 	private function woopra_ms_to_string($milli) {
 		$minutes = (($milli % (1000*60*60)) / (1000*60));
 		$seconds = ((($milli % (1000*60*60)) % (1000*60)) / 1000);
-		return sprintf(__("%dm, %ds"), $minutes, $seconds);
+		return sprintf(__("%dm, %ds", 'woopra'), $minutes, $seconds);
 	}
 	
 	/**

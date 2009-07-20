@@ -62,7 +62,7 @@ class WoopraChart {
 			if ($this->chart == "bar") {
 				$b['pvs'][] = ((int) $value['pvs'] == 0 ? null : (int) $value['pvs']);
 				$b['vts'][] = ((int) $value['vts'] == 0 ? null : (int) $value['vts']);
-				$b['info']['x_labels'][] = sprintf(__("Hour %d"), $value['h']+1);
+				$b['info']['x_labels'][] = sprintf(__("Hour %d", 'woopra'), $value['h']+1);
 			}
 			if ($this->chart == "line") {
 				if ( ((int) $value['pvs'] != 0) && ((int) $value['vts'] != 0) ) {
@@ -92,13 +92,13 @@ class WoopraChart {
 				
 				$bar = new bar_glass();
 				$bar->colour( '#3B5998' );
-				$bar->key(__("Page Views"), 12);
+				$bar->key(__("Page Views", 'woopra'), 12);
 				$bar->set_values( $b['pvs'] );
 				$bar->set_tooltip( "#val# #key#" );
 				
 				$bar_2 = new bar_glass();
 				$bar_2->colour( '#6D84B4' );
-				$bar_2->key(__("Visits"), 12);
+				$bar_2->key(__("Visits", 'woopra'), 12);
 				$bar_2->set_values( $b['vts'] );
 				$bar_2->set_tooltip( "#val# #key#" );
 				
@@ -134,21 +134,21 @@ class WoopraChart {
 				$line_dot->set_width( 4 );
 				$line_dot->set_colour( '#3B5998' );
 				$line_dot->set_values( $b['pvs'] );
-				$line_dot->set_key( __("Page Views"), 10 );
+				$line_dot->set_key( __("Page Views", 'woopra'), 10 );
 
 				$line_dot_2 = new line();
 				$line_dot_2->set_default_dot_style($default_dot);
 				$line_dot_2->set_width( 3 );
 				$line_dot_2->set_colour( '#6D84B4' );
 				$line_dot_2->set_values( $b['vts'] );
-				$line_dot_2->set_key( __("Visits"), 10 );
+				$line_dot_2->set_key( __("Visits", 'woopra'), 10 );
 				
 				$line_dot_3 = new line();
 				$line_dot_3->set_default_dot_style($default_dot);
 				$line_dot_3->set_width( 2 );
 				$line_dot_3->set_colour( '#4169E1' );
 				$line_dot_3->set_values( $b['vtrs'] );
-				$line_dot_3->set_key( __("Visitors"), 10 );
+				$line_dot_3->set_key( __("Visitors", 'woopra'), 10 );
 				
 				$y = new y_axis();
 				$y->set_tick_length(3);
