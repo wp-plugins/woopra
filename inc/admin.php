@@ -200,9 +200,28 @@ class WoopraAdmin extends Woopra {
 	 * @since 1.4.1
 	 * @return none
 	 */
-	function check_upgrade () {
-		if ( version_compare($this->get_option('version'), WOOPRA_VERSION, '<') )
-			$this->upgrade(WOOPRA_VERSION);
+	function check_upgrade() {
+		if ($this->version_compare(array( '1.4.1' => '<')))
+			$this->upgrade('1.4.1');
+		else if ($this->version_compare(array( '1.4.1' => '>' , '1.4.1.1' => '<' )))
+			$this->upgrade('1.4.1.1');
+	}
+
+	/**
+	 * Compare Versions
+	 *
+	 * @param array Array of the version you want to compare to the version stored in the database as the key and the operator as the value
+	 * @since 1.4.1.1
+	 * @return boolean
+	 */
+	function version_compare($versions) {
+		foreach ($versions as $version => $operator) {
+			if (version_compare($this->get_option('version'), $version, $operator))
+				$response = true;
+			else
+				$response = false; 
+		}
+		return $response;
 	}
 
 	/**
@@ -250,6 +269,15 @@ class WoopraAdmin extends Woopra {
 			delete_option('woopra_track_admin');
 			delete_option('woopra_show_comments');
 			delete_option('woopra_show_searches');
+			
+			update_option( 'woopra', array_merge($woopra, $newopts) );
+		}
+		if ( $ver == '1.4.1' ) {
+			$woopra = get_option('woopra');
+			
+			$newopts = array (
+					'version'		=>	'1.4.1.1'
+			);
 			
 			update_option( 'woopra', array_merge($woopra, $newopts) );
 		}
