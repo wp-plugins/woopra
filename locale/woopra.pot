@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/woopra\n"
-"POT-Creation-Date: 2009-07-10 13:57+0000\n"
+"POT-Creation-Date: 2009-07-20 03:54+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,143 +15,147 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inc/admin.php:104 inc/admin.php:260
-msgid "Woopra Settings"
+#: inc/admin.php:108
+msgid "Woopra"
 msgstr ""
 
-#: inc/admin.php:115 inc/admin.php:117 inc/analytics.php:62
+#: inc/admin.php:119 inc/admin.php:121 inc/analytics.php:63
 msgid "Woopra Analytics"
 msgstr ""
 
-#: inc/admin.php:145
+#: inc/admin.php:150
 msgid "An error has happened. Please try again later."
 msgstr ""
 
-#: inc/admin.php:261
+#: inc/admin.php:267
+msgid "Woopra Settings"
+msgstr ""
+
+#: inc/admin.php:268
 msgid ""
 "For more info about installation and customization, please visit <a href="
 "\"http://www.woopra.com/installation-guide\">the installation page in your "
 "member&#8217;s area</a>"
 msgstr ""
 
-#: inc/admin.php:267
+#: inc/admin.php:276
 msgid "Main Settings"
 msgstr ""
 
-#: inc/admin.php:270
+#: inc/admin.php:279
 msgid "API Key"
 msgstr ""
 
-#: inc/admin.php:270
+#: inc/admin.php:279
 msgid "(Optional)"
 msgstr ""
 
-#: inc/admin.php:273
+#: inc/admin.php:282
 msgid ""
 "You can find the Website's API Key in <a href='http://www.woopra.com/"
 "members/'>your member&#8217;s area"
 msgstr ""
 
-#: inc/admin.php:277
+#: inc/admin.php:286
 msgid "Analytics Link Location"
 msgstr ""
 
-#: inc/admin.php:280
+#: inc/admin.php:289
 msgid "At the dashboard menu"
 msgstr ""
 
-#: inc/admin.php:280
+#: inc/admin.php:289
 msgid "At the top level menu"
 msgstr ""
 
-#: inc/admin.php:290
+#: inc/admin.php:300
 msgid "Tracking Settings"
 msgstr ""
 
-#: inc/admin.php:293
+#: inc/admin.php:303
 msgid "Status"
 msgstr ""
 
-#: inc/admin.php:296
+#: inc/admin.php:306
 msgid "On"
 msgstr ""
 
-#: inc/admin.php:296
+#: inc/admin.php:306
 msgid "Off"
 msgstr ""
 
-#: inc/admin.php:305
+#: inc/admin.php:315
 msgid "Auto Tagging"
 msgstr ""
 
-#: inc/admin.php:307
+#: inc/admin.php:317
 msgid "Automatically Tag Members &amp; Commentators"
 msgstr ""
 
-#: inc/admin.php:307
+#: inc/admin.php:317
 msgid "Enable this check box if you want Woopra to auto-tag visitors."
 msgstr ""
 
-#: inc/admin.php:311
+#: inc/admin.php:321
 msgid "Ignore Administrator"
 msgstr ""
 
-#: inc/admin.php:313
+#: inc/admin.php:323
 msgid "Ignore Administrator Visits"
 msgstr ""
 
-#: inc/admin.php:313
+#: inc/admin.php:323
 msgid ""
 "Enable this check box if you want Woopra to ignore your or any other "
 "administrator visits."
 msgstr ""
 
-#: inc/admin.php:317
+#: inc/admin.php:327
 msgid "Admin Area"
 msgstr ""
 
-#: inc/admin.php:319
+#: inc/admin.php:329
 msgid "Track Admin Pages"
 msgstr ""
 
-#: inc/admin.php:319
+#: inc/admin.php:329
 #, php-format
 msgid "Admin pages are all pages under %s"
 msgstr ""
 
-#: inc/admin.php:324
+#: inc/admin.php:334
 msgid "Event Settings"
 msgstr ""
 
-#: inc/admin.php:327
+#: inc/admin.php:337
 msgid "Main Area Events"
 msgstr ""
 
-#: inc/admin.php:337
+#: inc/admin.php:347
 msgid "No Main Events Regestiered."
 msgstr ""
 
-#: inc/admin.php:342
+#: inc/admin.php:352
 msgid "Admin Area Events"
 msgstr ""
 
-#: inc/admin.php:352
+#: inc/admin.php:362
 msgid "No Admin Events Regestiered."
 msgstr ""
 
-#: inc/admin.php:357
+#: inc/admin.php:367
 msgid "Third Party Events"
 msgstr ""
 
-#: inc/admin.php:364
+#: inc/admin.php:374
 msgid "No Custom Events Regestiered."
 msgstr ""
 
-#: inc/admin.php:371
+#: inc/admin.php:381
 msgid "Save Changes"
 msgstr ""
 
-#: inc/analytics.php:50
+#: inc/analytics.php:51
 #, php-format
 msgid ""
 "You must fill in your API Key in order to view Analytics. Please fill it out "
@@ -159,248 +163,266 @@ msgid ""
 "analytics."
 msgstr ""
 
-#: inc/analytics.php:75
+#: inc/analytics.php:94
 msgid "Refresh"
 msgstr ""
 
-#: inc/analytics.php:77
+#: inc/analytics.php:96
 msgid "Click here to change the date range"
 msgstr ""
 
-#: inc/analytics.php:80
+#: inc/analytics.php:101
 msgid "From"
 msgstr ""
 
-#: inc/analytics.php:81
+#: inc/analytics.php:104
 msgid "To"
 msgstr ""
 
-#: inc/analytics.php:85
+#: inc/analytics.php:109
 msgid "Cancel"
 msgstr ""
 
-#: inc/analytics.php:86
+#: inc/analytics.php:110
 msgid "Apply Date Range"
 msgstr ""
 
-#: inc/analytics.php:99
+#: inc/analytics.php:122 inc/chart.php:151
 msgid "Visitors"
 msgstr ""
 
-#: inc/analytics.php:100
+#: inc/analytics.php:123
 msgid "Systems"
 msgstr ""
 
-#: inc/analytics.php:101 inc/render.php:844
+#: inc/analytics.php:124 inc/render.php:476
 msgid "Pages"
 msgstr ""
 
-#: inc/analytics.php:102
+#: inc/analytics.php:125
 msgid "Referrers"
 msgstr ""
 
-#: inc/analytics.php:103
+#: inc/analytics.php:126
 msgid "Searches"
 msgstr ""
 
-#: inc/analytics.php:105
+#: inc/analytics.php:128
 msgid "Overview"
 msgstr ""
 
-#: inc/analytics.php:106
+#: inc/analytics.php:129
 msgid "Countries"
 msgstr ""
 
-#: inc/analytics.php:107
+#: inc/analytics.php:130
 msgid "Tagged Visitors"
 msgstr ""
 
-#: inc/analytics.php:108
+#: inc/analytics.php:131
 msgid "Bounce Rate"
 msgstr ""
 
-#: inc/analytics.php:109
+#: inc/analytics.php:132
 msgid "Visit Durations"
 msgstr ""
 
-#: inc/analytics.php:111
+#: inc/analytics.php:134
 msgid "Browsers"
 msgstr ""
 
-#: inc/analytics.php:112
+#: inc/analytics.php:135
 msgid "Platforms"
 msgstr ""
 
-#: inc/analytics.php:113
+#: inc/analytics.php:136
 msgid "Screen Resolutions"
 msgstr ""
 
-#: inc/analytics.php:114
+#: inc/analytics.php:137
 msgid "Languages"
 msgstr ""
 
-#: inc/analytics.php:116 inc/render.php:225
+#: inc/analytics.php:139 inc/render.php:231
 msgid "Pageviews"
 msgstr ""
 
-#: inc/analytics.php:117 inc/render.php:846
+#: inc/analytics.php:140 inc/render.php:478
 msgid "Landing Pages"
 msgstr ""
 
-#: inc/analytics.php:118 inc/render.php:848
+#: inc/analytics.php:141 inc/render.php:480
 msgid "Exit Pages"
 msgstr ""
 
-#: inc/analytics.php:119 inc/render.php:850
+#: inc/analytics.php:142 inc/render.php:482
 msgid "Outgoing Links"
 msgstr ""
 
-#: inc/analytics.php:120 inc/render.php:852
+#: inc/analytics.php:143 inc/render.php:484
 msgid "Downloads"
 msgstr ""
 
-#: inc/analytics.php:122
+#: inc/analytics.php:145
 msgid "Referrer Types"
 msgstr ""
 
-#: inc/analytics.php:123
+#: inc/analytics.php:146
 msgid "Regular Referrers"
 msgstr ""
 
-#: inc/analytics.php:124
+#: inc/analytics.php:147
 msgid "Search Engines"
 msgstr ""
 
-#: inc/analytics.php:125
+#: inc/analytics.php:148
 msgid "Feed Readers"
 msgstr ""
 
-#: inc/analytics.php:126
+#: inc/analytics.php:149
 msgid "Emails"
 msgstr ""
 
-#: inc/analytics.php:127
+#: inc/analytics.php:150
 msgid "Social Bookmarks"
 msgstr ""
 
-#: inc/analytics.php:128
+#: inc/analytics.php:151
 msgid "Social Networks"
 msgstr ""
 
-#: inc/analytics.php:129
+#: inc/analytics.php:152
 msgid "Media"
 msgstr ""
 
-#: inc/analytics.php:130
+#: inc/analytics.php:153
 msgid "News"
 msgstr ""
 
-#: inc/analytics.php:132 inc/render.php:854
+#: inc/analytics.php:155 inc/render.php:486
 msgid "Search Queries"
 msgstr ""
 
-#: inc/analytics.php:133 inc/render.php:856
+#: inc/analytics.php:156 inc/render.php:488
 msgid "Keywords"
 msgstr ""
 
-#: inc/analytics.php:139
+#: inc/analytics.php:162
 #, php-format
 msgid "Powered by <a href=\"%1$s\">Woopra Analytics</a>"
 msgstr ""
 
-#: inc/events.php:88
+#: inc/chart.php:65
+#, php-format
+msgid "Hour %d"
+msgstr ""
+
+#: inc/chart.php:95 inc/chart.php:137
+msgid "Page Views"
+msgstr ""
+
+#: inc/chart.php:101 inc/chart.php:144
+msgid "Visits"
+msgstr ""
+
+#: inc/events.php:90
 msgid "Comments"
 msgstr ""
 
-#: inc/events.php:89
+#: inc/events.php:91
 msgid "Show comments as they are posted."
 msgstr ""
 
-#: inc/events.php:96
+#: inc/events.php:98
 msgid "Search"
 msgstr ""
 
-#: inc/events.php:97
+#: inc/events.php:99
 msgid "Show users search queries."
 msgstr ""
 
-#: inc/render.php:162
+#: inc/render.php:165
 #, php-format
 msgid ""
 "The Woopra Plugin was not able to request your analytics data from the "
 "Woopra Engines<br/><small>Your hosting provider is not allowing the Woopra "
 "Plugin to fetch data from the Woopra Servers.<br/>%s<br/><a href=\"http://"
-"www.woopra.com/forums/\">Report this error onto the forums!</a>"
+"www.woopra.com/forums/\">Report this error onto the forums!</a><br/>"
 msgstr ""
 
-#: inc/render.php:178
+#: inc/render.php:170
 msgid ""
 "Your query returned 0 results.<br/>Click <a href=\"#\" onclick="
 "\"refreshCurrent(); return false;\">here</a> to retry again!"
 msgstr ""
 
-#: inc/render.php:221
+#: inc/render.php:227
 msgid "Day"
 msgstr ""
 
-#: inc/render.php:222
+#: inc/render.php:228
 msgid "Avg Time Spent"
 msgstr ""
 
-#: inc/render.php:223
+#: inc/render.php:229
 msgid "New Visitors"
 msgstr ""
 
-#: inc/render.php:224
-msgid "Visits"
+#: inc/render.php:230
+msgid "Total Visits"
 msgstr ""
 
-#: inc/render.php:279 inc/render.php:438
+#: inc/render.php:287 inc/render.php:336
 msgid "Hits"
 msgstr ""
 
-#: inc/render.php:437
+#: inc/render.php:335
 msgid "Referrer"
 msgstr ""
 
-#: inc/render.php:830
+#: inc/render.php:447
+#, php-format
+msgid "%dm, %ds"
+msgstr ""
+
+#: inc/render.php:462
 msgid "Country"
 msgstr ""
 
-#: inc/render.php:832
+#: inc/render.php:464
 msgid "Pageviews per Visit"
 msgstr ""
 
-#: inc/render.php:834
+#: inc/render.php:466
 msgid "Durations"
 msgstr ""
 
-#: inc/render.php:836
+#: inc/render.php:468
 msgid "Browser"
 msgstr ""
 
-#: inc/render.php:838
+#: inc/render.php:470
 msgid "Platform"
 msgstr ""
 
-#: inc/render.php:840
+#: inc/render.php:472
 msgid "Resolution"
 msgstr ""
 
-#: inc/render.php:842
+#: inc/render.php:474
 msgid "Language"
 msgstr ""
 
-#: inc/render.php:858
+#: inc/render.php:490
 msgid "Name"
 msgstr ""
 
-#: inc/xml.php:146
+#: inc/xml.php:178
 #, php-format
 msgid "%s: XML error at line %d column %d"
 msgstr ""
 
-#: inc/xml.php:154
+#: inc/xml.php:186
 #, php-format
 msgid "%s: No data entries."
 msgstr ""
