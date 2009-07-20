@@ -78,6 +78,10 @@ class WoopraAnalytics extends WoopraAdmin {
 			jQuery("#datepickerdiv").toggle();
 		});
 		
+		jQuery("#refreshdate").click(function() {
+			refreshCurrent();
+		});	
+		
 		jQuery("#woopra_from").datepicker({ dateFormat: 'yy-mm-dd' });
 		jQuery("#woopra_to").datepicker({ dateFormat: 'yy-mm-dd' });
 		
