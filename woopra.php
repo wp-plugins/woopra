@@ -21,7 +21,7 @@
  * itself here: http://teethgrinder.co.uk/open-flash-chart-2/
  * 
  *
- * @author Elie El Khoury <elie@woopra.com> and Shane Froebel <shane@bugssite.org>
+ * @author Elie El Khoury <elie@woopra.com> and Shane Froebel <shane@woopra.com>
  * @version 1.4.1
  * @copyright 2007-2009
  * @package woopra
