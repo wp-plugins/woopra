@@ -70,6 +70,20 @@ class WoopraAnalytics extends WoopraAdmin {
 			/** HTML CODE START **/
 			?>
 <!-- Woopra Analytics Starts Here -->
+<script type="text/javascript">
+//<![CDATA[
+	jQuery(document).ready(function() {
+		//	Show Date Picker
+		jQuery("#daterange").click(function() {
+			jQuery("#datepickerdiv").toggle();
+		});
+		
+		jQuery("#woopra_from").datepicker({ dateFormat: 'yy-mm-dd' });
+		jQuery("#woopra_to").datepicker({ dateFormat: 'yy-mm-dd' });
+		
+	});
+//]]>
+</script>
 <div id="woopra_analytics_global">
 	<div id="woopra_analytics_box">
 		<div class="woptions">

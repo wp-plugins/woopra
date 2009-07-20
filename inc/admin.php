@@ -150,16 +150,11 @@ class WoopraAdmin extends Woopra {
 									'error'			=>	__('An error has happened. Please try again later.', 'woopra'),
 				)
 			);
-			wp_enqueue_script( 'woopra-swfobject',	$plugin_url . '/js/swfobject.js'	);
+			wp_enqueue_script( 'woopra-swfobject',	$plugin_url . '/js/swfobject.js'							);
 			// ** jQuery Datepicker **/
-			wp_enqueue_script( 'woopra-datepicker',			$plugin_url . '/js/datepicker.js',		array('jquery')				);
-			wp_enqueue_script( 'woopra-datepicker-eye',		$plugin_url . '/js/eye.js',				array('woopra-datepicker')	);
-			wp_enqueue_script( 'woopra-datepicker-utils',	$plugin_url . '/js/utils.js',			array('woopra-datepicker-eye')	);
-			wp_enqueue_script( 'woopra-datepicker-layout',	$plugin_url . '/js/layout.js',			array('woopra-datepicker-utils')	);
+			wp_enqueue_script( 'woopra-datepicker',	$plugin_url . '/js/ui.datepicker.js',		array('jquery')	);
 			
-			wp_enqueue_style( 'woopra-analytics',	$plugin_url . '/css/analytics.css'	);
-			wp_enqueue_style( 'woopra-datepicker',	$plugin_url . '/css/datepicker.css'	);
-			$this->analytics_js();
+			wp_enqueue_style( 'woopra-analytics',	$plugin_url . '/css/analytics.css'							);
 		}
 	}
 	
@@ -229,7 +224,7 @@ class WoopraAdmin extends Woopra {
 			'api_key'		=> '',
 			'analytics_tab'	=> 'dashboard',
 			'run_status'	=> 'on',
-			'date_format'	=> 'yyyy-MM-dd',
+			'date_format'	=> 'yyyy-MM-dd',	// hardcoded for now
 			'limit'			=> 50,
 			'auto_tagging'	=> 1,
 			'ignore_admin'	=> 0,
@@ -252,57 +247,6 @@ class WoopraAdmin extends Woopra {
 			unset($options['delete'], $options['default']);
 			return $options;
 		}
-	}
-
-	/**
-	 * Print the JS for the Anaylitics Page
-	 * @since 1.4.1
-	 * @return none
-	 */
-	function analytics_js() {
-	?>
-<script type="text/javascript">
-//<![CDATA[
-	jQuery(document).ready(function($) {
-		//	Show Date Picker
-		jQuery("a#daterange").click(function() {
-			jQuery("#datepickerdiv").toggle();
-		});
-		
-		//	Woopra From Date
-		jQuery('#woopra_from').DatePicker({
-			format: 'Y-m-d',
-			date: $('#woopra_from').val(),
-			current: $('#woopra_from').val(),
-			starts: 1,
-			position: 'r',
-			onBeforeShow: function(){
-				$('#woopra_from').DatePickerSetDate($('#woopra_from').val(), true);
-			},
-			onChange: function(formated, dates){
-				$('#woopra_from').val(formated);
-				$('#woopra_from').DatePickerHide();
-			}
-		});
-		
-		//	Woopra To Date
-		jQuery('#woopra_to').DatePicker({
-			format: 'Y-m-d',
-			date: $('#woopra_to').val(),
-			current: $('#woopra_to').val(),
-			starts: 1,
-			position: 'r',
-			onBeforeShow: function(){
-				$('#woopra_to').DatePickerSetDate($('#woopra_to').val(), true);
-			},
-			onChange: function(formated, dates){
-				$('#woopra_to').val(formated);
-				$('#woopra_to').DatePickerHide();
-			}
-		});			
-	});
-//]]>
-</script><?php
 	}
 
 	/**

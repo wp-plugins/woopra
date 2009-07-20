@@ -131,8 +131,8 @@ function setPageLoading(page) {
 }
 
 function initDatePicker() {
-	document.getElementById('dp-from').value = date_from;
-	document.getElementById('dp-to').value = date_to;
+	document.getElementById('woopra_from').value = date_from;
+	document.getElementById('woopra_to').value = date_to;
 }
 
 function expandByDay(key, hashid, id, index) {
@@ -192,8 +192,8 @@ function closeDatePicker() {
 }
 
 function applyDatePicker() {
-	date_from = document.getElementById('dp-from').value;
-	date_to = document.getElementById('dp-to').value;
+	date_from = document.getElementById('woopra_from').value;
+	date_to = document.getElementById('woopra_to').value;
 	//pageObjects = new Array();
 	refreshDateLinkText();
 	refreshCurrent();
@@ -217,7 +217,7 @@ function getDateLinkText() {
 }
 
 function refreshDateLinkText() {
-	document.getElementById("daterangelink").innerHTML = getDateLinkText();
+	document.getElementById("daterange").innerHTML = getDateLinkText();
 }
 
 function refreshCurrent() {
