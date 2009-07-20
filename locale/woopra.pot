@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/woopra\n"
-"POT-Creation-Date: 2009-07-20 03:54+0000\n"
+"POT-Creation-Date: 2009-07-20 05:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -15,143 +15,143 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inc/admin.php:108
+#: inc/admin.php:142
 msgid "Woopra"
 msgstr ""
 
-#: inc/admin.php:119 inc/admin.php:121 inc/analytics.php:63
+#: inc/admin.php:153 inc/admin.php:155 inc/analytics.php:63
 msgid "Woopra Analytics"
 msgstr ""
 
-#: inc/admin.php:150
+#: inc/admin.php:184
 msgid "An error has happened. Please try again later."
 msgstr ""
 
-#: inc/admin.php:267
+#: inc/admin.php:310
 msgid "Woopra Settings"
 msgstr ""
 
-#: inc/admin.php:268
+#: inc/admin.php:311
 msgid ""
 "For more info about installation and customization, please visit <a href="
 "\"http://www.woopra.com/installation-guide\">the installation page in your "
 "member&#8217;s area</a>"
 msgstr ""
 
-#: inc/admin.php:276
+#: inc/admin.php:321
 msgid "Main Settings"
 msgstr ""
 
-#: inc/admin.php:279
+#: inc/admin.php:324
 msgid "API Key"
 msgstr ""
 
-#: inc/admin.php:279
+#: inc/admin.php:324
 msgid "(Optional)"
 msgstr ""
 
-#: inc/admin.php:282
+#: inc/admin.php:327
 msgid ""
 "You can find the Website's API Key in <a href='http://www.woopra.com/"
 "members/'>your member&#8217;s area"
 msgstr ""
 
-#: inc/admin.php:286
+#: inc/admin.php:331
 msgid "Analytics Link Location"
 msgstr ""
 
-#: inc/admin.php:289
+#: inc/admin.php:334
 msgid "At the dashboard menu"
 msgstr ""
 
-#: inc/admin.php:289
+#: inc/admin.php:334
 msgid "At the top level menu"
 msgstr ""
 
-#: inc/admin.php:300
+#: inc/admin.php:344
 msgid "Tracking Settings"
 msgstr ""
 
-#: inc/admin.php:303
+#: inc/admin.php:347
 msgid "Status"
 msgstr ""
 
-#: inc/admin.php:306
+#: inc/admin.php:350
 msgid "On"
 msgstr ""
 
-#: inc/admin.php:306
+#: inc/admin.php:350
 msgid "Off"
 msgstr ""
 
-#: inc/admin.php:315
+#: inc/admin.php:359
 msgid "Auto Tagging"
 msgstr ""
 
-#: inc/admin.php:317
+#: inc/admin.php:361
 msgid "Automatically Tag Members &amp; Commentators"
 msgstr ""
 
-#: inc/admin.php:317
+#: inc/admin.php:361
 msgid "Enable this check box if you want Woopra to auto-tag visitors."
 msgstr ""
 
-#: inc/admin.php:321
+#: inc/admin.php:365
 msgid "Ignore Administrator"
 msgstr ""
 
-#: inc/admin.php:323
+#: inc/admin.php:367
 msgid "Ignore Administrator Visits"
 msgstr ""
 
-#: inc/admin.php:323
+#: inc/admin.php:367
 msgid ""
 "Enable this check box if you want Woopra to ignore your or any other "
 "administrator visits."
 msgstr ""
 
-#: inc/admin.php:327
+#: inc/admin.php:371
 msgid "Admin Area"
 msgstr ""
 
-#: inc/admin.php:329
+#: inc/admin.php:373
 msgid "Track Admin Pages"
 msgstr ""
 
-#: inc/admin.php:329
+#: inc/admin.php:373
 #, php-format
 msgid "Admin pages are all pages under %s"
 msgstr ""
 
-#: inc/admin.php:334
+#: inc/admin.php:378
 msgid "Event Settings"
 msgstr ""
 
-#: inc/admin.php:337
+#: inc/admin.php:381
 msgid "Main Area Events"
 msgstr ""
 
-#: inc/admin.php:347
+#: inc/admin.php:391
 msgid "No Main Events Regestiered."
 msgstr ""
 
-#: inc/admin.php:352
+#: inc/admin.php:396
 msgid "Admin Area Events"
 msgstr ""
 
-#: inc/admin.php:362
+#: inc/admin.php:406
 msgid "No Admin Events Regestiered."
 msgstr ""
 
-#: inc/admin.php:367
+#: inc/admin.php:411
 msgid "Third Party Events"
 msgstr ""
 
-#: inc/admin.php:374
+#: inc/admin.php:418
 msgid "No Custom Events Regestiered."
 msgstr ""
 
-#: inc/admin.php:381
+#: inc/admin.php:425
 msgid "Save Changes"
 msgstr ""
 
