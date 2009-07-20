@@ -155,6 +155,7 @@ class WoopraAdmin extends Woopra {
 			wp_enqueue_script( 'woopra-datepicker',	$plugin_url . '/js/ui.datepicker.js',		array('jquery')	);
 			
 			wp_enqueue_style( 'woopra-analytics',	$plugin_url . '/css/analytics.css'							);
+			wp_enqueue_style( 'woopra-datepicker',	$plugin_url . '/css/ui.datepicker.css'						);
 		}
 	}
 	

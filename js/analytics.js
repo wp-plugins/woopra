@@ -1,4 +1,7 @@
 
+//@todo Covert this to jQuery Format for version 1.5.0
+//@todo Add 'Localization' also for 1.5.0
+
 var woopra_website;
 var currentSuperView = null;
 var pageKeys = new Array();
