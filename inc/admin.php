@@ -69,16 +69,21 @@ class WoopraAdmin extends Woopra {
 		load_plugin_textdomain( 'woopra', false, '/woopra/locale' );
 
 		//	Run this when installed or upgraded.
-		register_activation_hook( $this->plugin_file , array(&$this, 'init') );
+		register_activation_hook( $this->plugin_file,	array(&$this, 'init') 				);
+		register_deactivation_hook( $this->plugin_file, array(&$this, 'init_deactivate')	);
 		
-		//	Admin Actions
+		//	Only run if activated!
+		if ($this->get_option('activated')) {
+			//	Admin Actions
+			add_action( 'admin_enqueue_scripts', 		array(&$this, 'enqueue' ) 							);
+			add_action(	'admin_menu', 					array(&$this, 'woopra_add_menu') 					);
+			
+			//	AJAX Render
+			add_action(	'wp_ajax_woopra',				array(&$this, 'render_page' ) 						);
+		}
+
 		add_action( 'admin_menu',					array(&$this, 'register_settings_page') 			);
-		add_action(	'admin_menu', 					array(&$this, 'woopra_add_menu') 					);
 		add_action( 'admin_init',					array(&$this, 'admin_init' ) 						);
-		add_action( 'admin_enqueue_scripts', 		array(&$this, 'enqueue' ) 							);
-		
-		//	AJAX Render
-		add_action(	'wp_ajax_woopra',				array(&$this, 'render_page' ) 						);
 		
 		//	Process Events
 		$this->event = new WoopraEvents('admin');
@@ -93,10 +98,39 @@ class WoopraAdmin extends Woopra {
 	 * @return none
 	 */
 	function init() {
-		if (!get_option('woopra'))
+		if (!get_option('woopra')) {
 			add_option('woopra', $this->defaults());
-		else
+		} elseif (!$this->get_option('activated')) {
+			$this->init_activate();
+		} else {
 			$this->check_upgrade();
+		}
+	}
+	
+	/**
+	 * Mark that we are activated!
+	 * @since 1.4.1
+	 * @return none
+	 */
+	function init_activate() {
+		$woopra = get_option('woopra');
+		$newopts = array (
+				'activated'		=>	1,
+		);
+		update_option( 'woopra', array_merge($woopra, $newopts) );
+	}
+	
+	/**
+	 * Mark that we are no deactivated!
+	 * @since 1.4.1
+	 * @return none
+	 */
+	function init_deactivate() {
+		$woopra = get_option('woopra');
+		$newopts = array (
+				'activated'		=>	0,
+		);
+		update_option( 'woopra', array_merge($woopra, $newopts) );
 	}
 
 	/**
@@ -181,16 +215,23 @@ class WoopraAdmin extends Woopra {
 			$woopra = get_option('woopra');
 			
 			/* Upgrading from non-class to class */
-			$tagging = (get_option('woopra_auto_tag_commentators' == 'YES')) ? 1 : 0;
-			$ignoreadmin = (get_option('woopra_ignore_admin' == 'YES')) ? 1 : 0;
-			$trackadmin = (get_option('woopra_track_admin' == 'YES')) ? 1 : 0;
-			$comment_event = (get_option('woopra_show_comments' == 'YES')) ? 1 : 0;
-			$search_event = (get_option('woopra_show_searches' == 'YES')) ? 1 : 0;
-						
+			$tagging = (get_option('woopra_auto_tag_commentators') == 'YES') ? 1 : 0;
+			$ignoreadmin = (get_option('woopra_ignore_admin') == 'YES') ? 1 : 0;
+			$trackadmin = (get_option('woopra_track_admin') == 'YES') ? 1 : 0;
+			$comment_event = (get_option('woopra_show_comments') == 'YES') ? 1 : 0;
+			$search_event = (get_option('woopra_show_searches') == 'YES') ? 1 : 0;
+			
+			$api_key = get_option('woopra_api_key');
+			$tab = get_option('woopra_analytics_tab');
+			
+			$api_key = (!empty($api_key)) ? $api_key : '';
+			$tab = (!empty($tab)) ? $tab : 'dashboard';
+				
 			$newopts = array (
 					'version'		=>	'1.4.1',
-					'api_key'		=>	get_option('woopra_api_key'),
-					'analytics_tab'	=>	get_option('woopra_analytics_tab'),
+					'activated'		=>	1,
+					'api_key'		=>	$api_key,
+					'analytics_tab'	=>	$tab,
 					'run_status'	=>	'on',
 					'ignore_admin'	=>	$tagging,
 					'ignore_admin'	=>	$ignoreadmin,
@@ -212,6 +253,7 @@ class WoopraAdmin extends Woopra {
 			
 			update_option( 'woopra', array_merge($woopra, $newopts) );
 		}
+		$this->check_upgrade();
 	}
 
 	/**
@@ -222,6 +264,7 @@ class WoopraAdmin extends Woopra {
 	function defaults() {
 		$defaults = array(
 			'version' 		=> '',
+			'activated'		=> 1,
 			'api_key'		=> '',
 			'analytics_tab'	=> 'dashboard',
 			'run_status'	=> 'on',
@@ -271,8 +314,10 @@ class WoopraAdmin extends Woopra {
 	<?php settings_fields('woopra'); ?>
 	
 	<!-- This is harded coded for now.. -->
+	<input type="hidden" name="woopra[version]" value="<?php echo $this->version; ?>" />
+	<input type="hidden" name="woopra[activated]" value="<?php echo $this->get_option('activated'); ?>" />
 	<input type="hidden" name="woopra[date_format]" value="yyyy-MM-dd" />
-	
+		
 	<h3><? _e('Main Settings', 'woopra'); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
@@ -294,7 +339,6 @@ class WoopraAdmin extends Woopra {
 			?>
 			</td>
 		</tr>
-		<!-- Add Limit Option Here - Max 100 -- Later Versions -->
 	</table>
 	<br/>
 	<h3><? _e('Tracking Settings', 'woopra'); ?></h3>
