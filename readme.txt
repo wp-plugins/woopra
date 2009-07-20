@@ -2,11 +2,11 @@
 Contributors: eliekhoury, markjaquith, ShaneF
 Web site: http://www.woopra.com
 Tags: statistics, analytics, stats, real-time
-Requires at least: 2.0
-Tested up to: 2.7.0
-Stable tag: 1.4.0.3
+Requires at least: 2.7.0
+Tested up to: 2.8.1
+Stable tag: 1.4.1
 
-This plugin adds Woopra's real-time analytics to any WordPress installation.  Activate the plugin and configure your site ID in the Woopra settings.
+This plugin adds Woopra's real-time analytics to any WordPress installation.  Activate the plugin and configure your site API ID in the Woopra settings. There are other setting for event tracking as well!
 
 == Description ==
 
@@ -28,19 +28,44 @@ Features include:
 
 These installation instructions assume you have an active account established on Woopra.com.  If not, please visit the site and sign up for service.
 
+Using the manual method:
+
 1. Extract the Woopra.zip file to a location on your local machine
-2. Upload the `woopra` folder and all contents into the `/wp-content/plugins/` directory
+2. Upload the `woopra` folder and all contents into the `/plugins/` directory
+
+Using the automatic method:
+
+1. Click on 'Download' or 'Upgrade'
+2. Wait for WordPress to acknowledge that it is on your system amd ready to activate.
+
+After step 2 (of either method):
+
 3. Activate the plugin through the 'Plugins' menu in WordPress
-4. Configure your API key in the Woopra Settings menu
+4. Configure your API key and event settings in the Woopra Settings menu
 (Your API key can be found in the Members area on Woopra.com)
 
-IMPORTANT NOTE: 
-In order for the WordPress Plugin to work, your WordPress theme must have the following code immediately before the </BODY> element in the footer.php file:
+For Version 1.4.1, Event Processing in the Javascript has been disabled until further testing has completed.
+
+IMPORTANT NOTE: In order for the WordPress Plugin to work, your WordPress theme must have the following code immediately before the </BODY> element in the footer.php file:
 
     `<?php wp_footer(); ?>`
 
-For more detailed installation instructions refer to:
-http://www.woopra.com/installation-guide/
+Without this function, the Woopra application will fail to track users who visit your site.
 
-For more support refer to:
-http://www.woopra.com/forums/
+For more detailed installation instructions refer to: http://www.woopra.com/installation-guide/
+
+For more support refer to: http://www.woopra.com/forums/
+
+== Changelog ==
+
+= 1.4.1 (07-20-09) =
+
+* [NEW] Woopra moved into a 'php class' format
+* [NEW] Woopra event tracking made more universal. Moved to the 'wp' hook for tracking
+* [NEW] Woopra settings moved into a single varabile
+* [NEW] XML-API version 2.1 being used.
+* [NEW] jQuery used for Datepicker: ui.datepicker.js
+* [UPGRADE] Woopra now requires at least WordPress 2.7.x
+* [UPGRADE] All functions are now documented
+* [UPGRADE] Open-Flash-Charts Version 2
+* [BUG] Woopra can now operate out of any directory. Doesn't matter the location.
