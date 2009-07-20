@@ -349,7 +349,7 @@ class WoopraAdmin extends Woopra {
 			?>
 			</td>
 		</tr>
-		<!-- Add Limit Option Here - Max 100. -->
+		<!-- Add Limit Option Here - Max 100 -- Later Versions -->
 	</table>
 	<br/>
 	<h3><? _e('Tracking Settings', 'woopra'); ?></h3>
