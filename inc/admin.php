@@ -203,7 +203,7 @@ class WoopraAdmin extends Woopra {
 	function check_upgrade() {
 		if ($this->version_compare(array( '1.4.1' => '<')))
 			$this->upgrade('1.4.1');
-		else if ($this->version_compare(array( '1.4.1' => '>' , '1.4.1.1' => '<' )))
+		elseif ($this->version_compare(array( '1.4.1' => '>' , '1.4.1.1' => '<' )))
 			$this->upgrade('1.4.1.1');
 	}
 
@@ -272,7 +272,7 @@ class WoopraAdmin extends Woopra {
 			
 			update_option( 'woopra', array_merge($woopra, $newopts) );
 		}
-		if ( $ver == '1.4.1' ) {
+		if ( $ver == '1.4.1.1' ) {
 			$woopra = get_option('woopra');
 			
 			$newopts = array (
