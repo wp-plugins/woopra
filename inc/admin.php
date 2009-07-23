@@ -339,7 +339,6 @@ class WoopraAdmin extends Woopra {
 	<form method="post" action="options.php">
 	<?php settings_fields('woopra'); ?>
 	
-	<!-- This is harded coded for now.. -->
 	<input type="hidden" name="woopra[version]" value="<?php echo $this->version; ?>" />
 	<input type="hidden" name="woopra[activated]" value="<?php echo $this->get_option('activated'); ?>" />
 	<input type="hidden" name="woopra[date_format]" value="yyyy-MM-dd" />

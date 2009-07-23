@@ -120,6 +120,10 @@ class WoopraRender extends WoopraAdmin {
 			$this->data_type = $_GET['datatype'];
 			$this->api_key = $_GET['apikey'];
 			$this->key = str_replace("&amp;", "&", $_GET['wkey']);
+			
+			if ($_GET['type'])
+				$this->key = $this->key . "&type=" . $_GET['type'];
+			
 			$this->hostname = get_option('siteurl');
 			
 			$date_format = $_GET['date_format'];
@@ -190,13 +194,8 @@ class WoopraRender extends WoopraAdmin {
 			exit;
 		}
 		
-		if ($this->woopra_contains($this->key, 'REFERRERS&')) {
-			if ($this->woopra_contains($this->key, '&id=')) {
-				// @todo This code to be worked on!
-				// $this->render_expanded_referrers($this->entries, $this->key);
-			} else {
-				$this->render_referrers($this->entries, $this->key);
-			}
+		if ($this->woopra_contains($this->key, 'REFERRERS')) {
+			$this->render_referrers($this->entries, $this->key);
 			exit;
 		}
 		
@@ -326,8 +325,6 @@ class WoopraRender extends WoopraAdmin {
 	 */
 	function render_referrers($entries, $key) {
 		
-		$bydaykey = str_replace('GET_REFERRERS&', 'GET_REFERRERS_BY_DAY&', $key);
-		
 		?>
 		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
 		<tr>
@@ -354,53 +351,12 @@ class WoopraRender extends WoopraAdmin {
 			?>
 			<tr<?php echo (($counter++%2==0) ? " class=\"even_row\"" : "" ); ?>>
 				<td class="wrank"><?php echo $counter; ?></td>
-			<?php if ($this->woopra_key_expansible($key)) { ?>
-				<td><span class="ellipsis"><a href="#" onclick="return expandReferrer('<?php echo $key . '&id=' . $counter; ?>', '<?php echo $hashid .'-'. $counter; ?>')"><?php echo $this->woopra_render_name($key, $name, $meta); ?></a></span></td>
-			<?php } else { ?>
-				<td><span class="ellipsis"><a href="http://<?php echo $name; ?>" target="_blank"><?php echo $this->woopra_render_name($key, $name, $meta); ?></a></span></td>
-			<?php } ?>
-				<td width="100" class="center whighlight"><a href="#" onclick="return expandByDay('<?php echo $bydaykey; ?>', '<?php echo $hashid; ?>',<?php echo $counter; ?>)"><?php echo $hits; ?></a></td>
+				<td><span class="ellipsis"><a href="<?php echo $name; ?>" target="_blank"><?php echo $this->woopra_render_name($key, $name, $meta); ?></a></span></td>
+				<td width="100" class="center whighlight"><a href="#" onclick="return expandByDay('<?php echo $key; ?>', '<?php echo $hashid; ?>', <?php echo $counter; ?>, <?php echo $entry['index']; ?>)"><?php echo $hits; ?></a></td>
 				<td class="wbar"><?php echo $this->woopra_bar($percent) ?></td>
 			</tr>
 			<tr id="wlc-<?php echo $hashid; ?>-<?php echo $counter ?>" style=" height: 120px; display: none;"><td class="wlinechart" id="linecharttd-<?php echo $hashid ?>-<?php echo $counter; ?>" colspan="4"></td></tr>
 			<tr id="refexp-<?php echo $hashid; ?>-<?php echo $counter; ?>" style="display: none;"><td colspan="4" style="padding: 0;"><div id="refexptd-<?php echo $hashid; ?>-<?php echo $counter; ?>"></div></td></tr>
-			<?php
-		}
-		?>
-		</table>
-		<?php
-	}
-	
-	// @todo Debug this code!
-	function render_expanded_referrers($entries, $key) {
-
-		?>
-		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
-		<?php
-		
-		$counter = 0;
-		$sum = $this->woopra_sum($entries, 'hits');
-		foreach ($entries as $index => $entry) {
-		
-			$id = (int) $entry['id'];
-			$name = urldecode($entry['name']);
-			$hits = (int) $entry['hits'];
-			$meta = urldecode($entry['meta']);
-		
-			$percent = 0;
-			if ($sum != 0) {
-				$percent = round($hits*100/$sum);
-			}
-			$hashid = $this->woopra_friendly_hash($key);
-			?>
-			<tr class="<?php echo (($counter++%2==0) ? "expanded_even_row" : "expanded_row"); ?>">
-				<td class="wrank"><?php echo $counter; ?></td>
-				<td><span class="ellipsis"><a href="<?php echo $name; ?>" target="_blank"><?php echo $this->woopra_render_name($key, $name, $meta); ?></a></span></td>
-				<td width="100" class="center whighlight"><a href="#" onclick="return expandByDay('<?php echo $bydaykey; ?>', '<?php echo $hashid; ?>',<?php echo $id; ?>)"><?php echo $hits; ?></a></td>
-				<td class="wbar"><?php echo $this->woopra_bar($percent); ?></td>
-			</tr>
-			<tr id="wlc-<?php echo $hashid; ?>-<?php echo $id; ?>" style=" height: 120px; display: none;"><td class="wlinechart" id="linecharttd-<?php echo $hashid; ?>-<?php echo $id; ?>" colspan="4"></td></tr>
-			<tr id="refexp-<?php echo $hashid; ?>-<?php echo $id; ?>" style="display: none;"><td colspan="4"><div id="refexptd-<?php echo $hashid; ?>-<?php echo $id; ?>"></div></td></tr>
 			<?php
 		}
 		?>
@@ -422,6 +378,7 @@ class WoopraRender extends WoopraAdmin {
 			exit;
 		}
 		
+
 		foreach ($entries as $index => $entry) {
 			if ($entry['index'] == $_GET['id'])
 				$chart->data = $entry;
@@ -578,18 +535,6 @@ class WoopraRender extends WoopraAdmin {
 		}
 		
 		return $max;
-	}
-	
-	// @todo Expandable Key 
-	/**
-	 * 
-	 * @return 
-	 * @param object $key
-	 */
-	function woopra_key_expansible($key) {
-		if ($this->woopra_contains($key, '&type=SEARCHENGINES') || $this->woopra_contains($key, '&type=FEEDS') || $this->woopra_contains($key, '&type=MAILS'))
-			return false;
-		return true;
 	}
 	
 	/**
