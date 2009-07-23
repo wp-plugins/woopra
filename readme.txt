@@ -74,7 +74,7 @@ A. If you have downloaded this and have never signed up, please visit http://www
 * [BUG] "Parse error: parse error in \woopra\inc\chart.php on line 130": Reverted back to 4.3.0 format.
 * [BUG] "Parse error: parse error, expecting T_OLD_FUNCTION' orT_FUNCTION' or T_VAR' or'}'' in \plugins\woopra\inc\chart.php on line 194": Moved array values into a global var in the class.
 * [BUG] Forgot hook_action name for toplevel support.
-* [BUG] Removed index.html files from both the 1.4.1 tag and truck. Was causing errors during automatic upgrade.
+* [BUG] Removed index.html files from both the 1.4.1 tag and trunk. Was causing errors during automatic upgrade.
 * [BUG] Ignoreing admin visits fixed.
 * [BUG] Detection is admin section is now being set correctly.
 * [BUG] Removed all PHP 5 stuff. :(
