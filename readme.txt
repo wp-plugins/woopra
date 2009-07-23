@@ -3,10 +3,10 @@ Contributors: eliekhoury, markjaquith, ShaneF
 Web site: http://www.woopra.com
 Tags: statistics, analytics, stats, real-time
 Requires at least: 2.7.0
-Tested up to: 2.8.1
-Stable tag: 1.4.1
+Tested up to: 2.8.2
+Stable tag: 1.4.1.1
 
-This plugin adds Woopra's real-time analytics to any WordPress installation.  Activate the plugin and configure your site API ID in the Woopra settings. There are other setting for event tracking as well!
+This plugin adds Woopra's real-time analytics to any WordPress installation.
 
 == Description ==
 
@@ -44,7 +44,7 @@ After step 2 (of either method):
 4. Configure your API key and event settings in the Woopra Settings menu
 (Your API key can be found in the Members area on Woopra.com)
 
-For Version 1.4.1, Event Processing in the Javascript has been disabled until further testing has completed.
+For Version 1.4.1.x, Event Processing in the Javascript has been disabled until further testing has completed.
 
 IMPORTANT NOTE: In order for the WordPress Plugin to work, your WordPress theme must have the following code immediately before the </BODY> element in the footer.php file:
 
@@ -56,7 +56,30 @@ For more detailed installation instructions refer to: http://www.woopra.com/inst
 
 For more support refer to: http://www.woopra.com/forums/
 
+== Frequently Asked Questions == 
+
+Q. I do not see 'Woopra Analytics' link.
+A. Make sure the plugin is active.
+
+Q. I can not see any of the flash charts.
+A. Make sure you have flash installed and be sure you are not stopping or blocking flash from loading.
+
+Q. How do I get an API Key?
+A. If you have downloaded this and have never signed up, please visit http://www.woopra.com to sign up. Once your site is approved you can get your API key from your members section.
+
 == Changelog ==
+
+= 1.4.1.1 (07-23-09) =
+
+* [BUG] "Parse error: parse error in \woopra\inc\chart.php on line 130": Reverted back to 4.3.0 format.
+* [BUG] "Parse error: parse error, expecting T_OLD_FUNCTION' orT_FUNCTION' or T_VAR' or'}'' in \plugins\woopra\inc\chart.php on line 194": Moved array values into a global var in the class.
+* [BUG] Forgot hook_action name for toplevel support.
+* [BUG] Removed index.html files from both the 1.4.1 tag and truck. Was causing errors during automatic upgrade.
+* [BUG] Ignoreing admin visits fixed.
+* [BUG] Detection is admin section is now being set correctly.
+* [BUG] Removed all PHP 5 stuff. :(
+* [BUG] Fixed Referrers Subsections: Regular Referrers, Search Engines, Emails, Social Bookmarks, and Social Networks when trying to expand to view the charts now works.
+* [BUG] API Key now transfers correctly.
 
 = 1.4.1 (07-20-09) =
 
