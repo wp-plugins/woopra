@@ -209,8 +209,6 @@ class WoopraAdmin extends Woopra {
 
 	/**
 	 * Compare Versions
-	 *
-	 * @param array Array of the version you want to compare to the version stored in the database as the key and the operator as the value
 	 * @since 1.4.1.1
 	 * @return boolean
 	 */
