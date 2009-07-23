@@ -26,6 +26,13 @@ class WoopraChart {
 	var $data = null;
 	
 	/**
+	 * Hold the round_max and round_min values
+	 * @since 1.4.1.1
+	 * @var array
+	 */
+	var $values = array(5,10,15,20,30,40,50,60,70,80,90,100,120,150,200,250,300,400,500,600,700,800,900,1000,1200,1500,2000,2500,3000,3500,4000,4500,5000,10000,20000,50000,100000,200000,500000,1000000,2000000,5000000,10000000,50000000);
+		
+	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
 	 * @since 1.4.1
 	 * @return none
@@ -190,9 +197,8 @@ class WoopraChart {
 	 * @param object $max
 	 * @return int
 	 */
-	private function rounded_max($max) {
-		$values = array(5,10,15,20,30,40,50,60,70,80,90,100,120,150,200,250,300,400,500,600,700,800,900,1000,1200,1500,2000,2500,3000,3500,4000,4500,5000,10000,20000,50000,100000,200000,500000,1000000,2000000,5000000,10000000,50000000);
-		foreach ($values as $value) {
+	function rounded_max($max) {
+		foreach ($this->values as $value) {
 			if ($value > $max) {
 				return $value;
 			}
@@ -206,31 +212,15 @@ class WoopraChart {
 	 * @param object $min
 	 * @return int
 	 */
-	private function rounded_min($min) {
-		$values = array(5,10,15,20,30,40,50,60,70,80,90,100,120,150,200,250,300,400,500,600,700,800,900,1000,1200,1500,2000,2500,3000,3500,4000,4500,5000,10000,20000,50000,100000,200000,500000,1000000,2000000,5000000,10000000,50000000);
+	function rounded_min($min) {
 		$rounded_min = 0;
-		foreach ($values as $value) {
+		foreach ($this->values as $value) {
 			if ($value < $min) {
 				$rounded_min = $value;
 			} else {
 				return $rounded_min;
 			}
 		}
-	}
-	
-	/**
-	 * Create the array for rounded_max and rounded_min
-	 * 
-	 * Note: Not currently in use in Version 1.4.1
-	 * 
-	 * @since 1.4.2
-	 * @return array
-	 */
-	private function max_array() {
-		for ($i = 1; $i++; $i <= 500000)
-			$step[] = $i*10;
-			
-		return (array) $step;
 	}
 	
 }

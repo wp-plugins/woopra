@@ -441,7 +441,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @return string
 	 * @param object $milli
 	 */
-	private function woopra_ms_to_string($milli) {
+	function woopra_ms_to_string($milli) {
 		$minutes = (($milli % (1000*60*60)) / (1000*60));
 		$seconds = ((($milli % (1000*60*60)) % (1000*60)) / 1000);
 		return sprintf(__("%dm, %ds", 'woopra'), $minutes, $seconds);
@@ -455,7 +455,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @param object $name[optional]
 	 * @param object $meta[optional]
 	 */
-	private function woopra_render_name($key, $name = null, $meta = null) {
+	function woopra_render_name($key, $name = null, $meta = null) {
 		if (is_null($name)) {
 			switch ($key) {
 				case 'COUNTRIES':
@@ -540,7 +540,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @since 1.4.1
 	 * @return string
 	 */
-	private function woopra_host() {
+	function woopra_host() {
 		$site = $this->hostname;
 		preg_match('@^(?:http://)?([^/]+)@i', $site, $matches);
 		$host = $matches[1];
@@ -554,7 +554,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @param object $entries
 	 * @param object $key
 	 */
-	private function woopra_sum($entries, $key) {
+	function woopra_sum($entries, $key) {
 		$sum = 0;
 		foreach ($entries as $entry) {
 			$val = (int) $entry[$key];
@@ -569,7 +569,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @param object $entries
 	 * @param object $key
 	 */
-	private function woopra_max($entries, $key) {
+	function woopra_max($entries, $key) {
 		$max = 0;
 		foreach ($entries as $entry) {
 			$val = (int) $entry[$key];
@@ -586,7 +586,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @return 
 	 * @param object $key
 	 */
-	private function woopra_key_expansible($key) {
+	function woopra_key_expansible($key) {
 		if ($this->woopra_contains($key, '&type=SEARCHENGINES') || $this->woopra_contains($key, '&type=FEEDS') || $this->woopra_contains($key, '&type=MAILS'))
 			return false;
 		return true;
@@ -598,7 +598,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @return 
 	 * @param object $country
 	 */
-	private function woopra_country_flag($country) {
+	function woopra_country_flag($country) {
 		return "<img src=\"http://static.woopra.com/images/flags/$country.png\" />";
 	}
 
@@ -608,7 +608,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @return 
 	 * @param object $name
 	 */
-	private function woopra_image($name) {
+	function woopra_image($name) {
 		return "<img src=\"http://static.woopra.com/images/$name.png\" />";
 	}
 	
@@ -617,7 +617,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @return 
 	 * @param object $percent
 	 */	
-	private function woopra_bar($percent) {
+	function woopra_bar($percent) {
 		//	@todo Add more colors!
 		$barurl = $this->plugin_url() . '/images/bar.png';
 		$width = $percent . "%";
@@ -633,7 +633,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @return string
 	 * @param object $browser
 	 */
-	private function woopra_browser_icon($browser) {
+	function woopra_browser_icon($browser) {
 		$browser = strtolower($browser);
 	    if (stripos($browser, "firefox") !== false) {
 	        return $this->woopra_image("browsers/firefox");
@@ -677,7 +677,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @return string
 	 * @param object $platform
 	 */
-	private function woopra_platform_icon($platform) {
+	function woopra_platform_icon($platform) {
 		$platform = strtolower($platform);
 	    if (stripos($platform, "windows") !== false) {
 	        return $this->woopra_image("os/windows");
@@ -720,7 +720,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @since 1.4.1
 	 * @return array
 	 */
-	private function init_countries() {
+	function init_countries() {
 		$this->countries = array(
 			"TJ" => "Tajikistan",
 			"TH" => "Thailand",
@@ -944,7 +944,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @param object $sub
 	 * @uses strpos
 	 */
-	private function woopra_contains($str, $sub) {
+	function woopra_contains($str, $sub) {
 		return strpos($str, $sub) !== false;
 	}
 	
@@ -955,7 +955,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @param object $string
 	 * @uses str_replace
 	 */
-	private function woopra_encode($string) {
+	function woopra_encode($string) {
 		return str_replace(',', '%2C', urlencode($string));
 	}
 	
@@ -967,7 +967,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @uses substr
 	 * @uses md5
 	 */
-	private function woopra_friendly_hash($value) {
+	function woopra_friendly_hash($value) {
 		return substr(md5($value),0,4);
 	}
 
@@ -976,7 +976,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @since 1.4.1
 	 * @return none
 	 */
-	private function sort_analytics_response() {
+	function sort_analytics_response() {
 		usort($this->entries, array(&$this, 'compare_analytics_entries'));
 	}
 	
@@ -987,7 +987,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @param object $entry2
 	 * @users sort_analytics_response
 	 */
-	private function compare_analytics_entries($entry1, $entry2) {
+	function compare_analytics_entries($entry1, $entry2) {
 		$sort_by = (isset($entry1['day'])?'day':'vts');
 		
 		$v1 = (int)$entry1[$sort_by];
