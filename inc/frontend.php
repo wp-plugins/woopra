@@ -36,10 +36,13 @@ class WoopraFrontend extends Woopra {
 		Woopra::__construct();
 		
 		//	Frontend Actions
-		add_action(	'wp'				,		array(&$this, 'woopra_detect')					);
+		add_action(	'wp',						array(&$this, 'woopra_detect')					);
 		add_action( 'wp_footer', 				array(&$this, 'woopra_widget'), 			10	);
+		
+		add_action(	'admin_head',				array(&$this, 'woopra_detect')					);
+					
 		if ($this->get_option('track_admin'))
-			add_action( 'admin_footer',			array(&$this, 'woopra_widget'),		 		10	);
+			add_action( 'admin_footer',				array(&$this, 'woopra_widget'),			10	);
 		
 		//	Process Events
 		$this->event = new WoopraEvents('frontend');
@@ -64,7 +67,7 @@ class WoopraFrontend extends Woopra {
 	 */
 	function woopra_admin() {
 		if ($this->get_option('ignore_admin'))
-			if (is_admin())
+			if ($this->woopra_visitor['admin'])
 				return true;
 			else
 				return false;
@@ -119,6 +122,10 @@ class WoopraFrontend extends Woopra {
 			$this->woopra_visitor['name'] = $current_user->display_name;
 			$this->woopra_visitor['email'] = $current_user->user_email;
 		}
+		
+		if ($current_user->user_level == 10)
+			$this->woopra_visitor['admin'] = true;
+		
 	}
 	
 }
