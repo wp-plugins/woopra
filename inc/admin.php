@@ -150,8 +150,8 @@ class WoopraAdmin extends Woopra {
 	 * @since 1.4.1.1
 	 */
 	function filter_plugin_actions($links) { 
-		$settings_link = '<a href="options-general.php?page=woopra">' . __('Settings') . '</a>'; 
-		array_unshift ( $settings_link, $links ); 
+		$settings_link = '<a href="options-general.php?page=woopra">' . __('Settings', 'woopra') . '</a>'; 
+		array_unshift($links, $settings_link); 
 		return $links;
 	}
 	
