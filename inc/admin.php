@@ -58,7 +58,7 @@ class WoopraAdmin extends Woopra {
 		Woopra::__construct();
 		
 		//	Should we be upgrading the options?
-		if ( version_compare( $this->get_option('version'), $this->version, '!=' ) && $this->get_option('version') !== false )
+		if ( version_compare( $this->get_option('version'), $this->version, '!=' ) && !empty($this->options) )
 			$this->check_upgrade();
 		
 		//	Store Plugin Location Information
@@ -100,7 +100,7 @@ class WoopraAdmin extends Woopra {
 	function init() {
 		if (!get_option('woopra')) {
 			add_option('woopra', $this->defaults());
-		} elseif (!$this->get_option('activated')) {
+		} else if (!$this->get_option('activated')) {
 			$this->init_activate();
 		} else {
 			$this->check_upgrade();
@@ -140,8 +140,21 @@ class WoopraAdmin extends Woopra {
 	 */
 	function register_settings_page() {
 		add_options_page( __('Woopra', 'woopra'), __("Woopra", 'woopra'), 'manage_options', 'woopra', array(&$this, 'settings_page') );
+		add_filter ( "plugin_action_links_{$this->plugin_basename}" , array ( &$this , 'filter_plugin_actions' ) );	
 	}
-
+	
+	/**
+	 * Add a settings link to the plugin actions
+	 * @param array $links Array of the plugin action links
+	 * @return array
+	 * @since 1.4.1.1
+	 */
+	function filter_plugin_actions($links) { 
+		$settings_link = '<a href="options-general.php?page=woopra">' . __('Settings') . '</a>'; 
+		array_unshift ( $settings_link, $links ); 
+		return $links;
+	}
+	
 	/**
 	 * Add the Menu to Access the Stat Pages
 	 * @since 1.4.1
@@ -156,7 +169,9 @@ class WoopraAdmin extends Woopra {
 			}
 		}
 	}
-	
+
+
+
 	/**
 	 * Whitelist the 'woopra' options
 	 * @since 1.4.1
@@ -193,6 +208,7 @@ class WoopraAdmin extends Woopra {
 		}
 	}
 	
+	
 	/*** OTHER FUNCTIONS ***/
 	
 	/**
@@ -203,7 +219,7 @@ class WoopraAdmin extends Woopra {
 	function check_upgrade() {
 		if ($this->version_compare(array( '1.4.1' => '<')))
 			$this->upgrade('1.4.1');
-		elseif ($this->version_compare(array( '1.4.1' => '>' , '1.4.1.1' => '<' )))
+		else if ($this->version_compare(array( '1.4.1' => '>' , '1.4.1.1' => '<' )))
 			$this->upgrade('1.4.1.1');
 	}
 
@@ -240,10 +256,10 @@ class WoopraAdmin extends Woopra {
 			
 			$api_key = get_option('woopra_api_key');
 			$tab = get_option('woopra_analytics_tab');
-			
+	
 			$api_key = (!empty($api_key)) ? $api_key : '';
 			$tab = (!empty($tab)) ? $tab : 'dashboard';
-				
+
 			$newopts = array (
 					'version'		=>	'1.4.1',
 					'activated'		=>	1,
@@ -258,7 +274,7 @@ class WoopraAdmin extends Woopra {
 						'the_search_query'	=>	$search_event,
 					),
 			);
-			
+
 			/* Delete old options */
 			delete_option('woopra_api_key');
 			delete_option('woopra_analytics_tab');
@@ -269,17 +285,17 @@ class WoopraAdmin extends Woopra {
 			delete_option('woopra_show_searches');
 			
 			update_option( 'woopra', array_merge($woopra, $newopts) );
-		}
-		if ( $ver == '1.4.1.1' ) {
-			$woopra = get_option('woopra');
+		} else if ( $ver == '1.4.1.1' ) {
 			
+			$woopra = get_option('woopra');
+
 			$newopts = array (
 					'version'		=>	'1.4.1.1'
 			);
 			
+			unset($woopra['version']);
 			update_option( 'woopra', array_merge($woopra, $newopts) );
 		}
-		$this->check_upgrade();
 	}
 
 	/**
@@ -289,7 +305,7 @@ class WoopraAdmin extends Woopra {
 	 */
 	function defaults() {
 		$defaults = array(
-			'version' 		=> '',
+			'version'		=> '',
 			'activated'		=> 1,
 			'api_key'		=> '',
 			'analytics_tab'	=> 'dashboard',
