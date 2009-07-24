@@ -170,8 +170,6 @@ class WoopraAdmin extends Woopra {
 		}
 	}
 
-
-
 	/**
 	 * Whitelist the 'woopra' options
 	 * @since 1.4.1
