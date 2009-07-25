@@ -76,7 +76,7 @@ A. If you have downloaded this and have never signed up, please visit http://www
 * [BUG] Forgot hook_action name for toplevel support.
 * [BUG] Removed index.html files from both the 1.4.1 tag and trunk. Was causing errors during automatic upgrade.
 * [BUG] Ignoreing admin visits fixed.
-* [BUG] Detection is admin section is now being set correctly.
+* [BUG] Detection in admin section is now being set correctly.
 * [BUG] Removed all PHP 5 stuff. :(
 * [BUG] Fixed Referrers Subsections: Regular Referrers, Search Engines, Emails, Social Bookmarks, and Social Networks when trying to expand to view the charts now works.
 * [BUG] API Key now transfers correctly.
