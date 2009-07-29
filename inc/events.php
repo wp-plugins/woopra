@@ -116,7 +116,7 @@ class WoopraEvents {
 	 */
 	function process_event($event, &$args) {
 		if (!isset($_SESSION))
-			session_start();
+			@session_start();
 			
 		$_SESSION['woopra']['events'][$event] = $args;
 	}
@@ -131,7 +131,7 @@ class WoopraEvents {
 	 */
 	function session_start() {
 		if (!isset($_SESSION))
- 			session_start();
+ 			@session_start();
 		
 		$this->current_event = $_SESSION['woopra']['events'];
 	}

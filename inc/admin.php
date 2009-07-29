@@ -427,7 +427,7 @@ class WoopraAdmin extends Woopra {
 					}
 				}
 				if ($event_reg < 1)
-					echo "<strong>" . __('No Main Events Regestiered.', 'woopra') . "</strong>";
+					echo "<strong>" . __('No Main Events Registered.', 'woopra') . "</strong>";
 			?>				
 			</td>
 		</tr>
@@ -442,7 +442,7 @@ class WoopraAdmin extends Woopra {
 					}
 				}
 				if ($event_admin < 1)
-					echo "<strong>" . __('No Admin Events Regestiered.', 'woopra') . "</strong>";
+					echo "<strong>" . __('No Admin Events Registered.', 'woopra') . "</strong>";
 			?>
 			</td>
 		</tr>
@@ -456,7 +456,7 @@ class WoopraAdmin extends Woopra {
 				}
 				*/
 				if (!count($this->custom_events))
-					echo "<strong>" . __('No Custom Events Regestiered.', 'woopra') . "</strong>";
+					echo "<strong>" . __('No Custom Events Registered.', 'woopra') . "</strong>";
 			?>
 			</td>
 		</tr>
