@@ -1,7 +1,35 @@
+/*
+ * Global
+ */
+
 #woopra_analytics_box {
 	margin: 0 auto;
 	text-align: left;
 }
+
+/*
+ * 
+ */
+
+.woopra_options {
+	float: right;
+	display: inline;
+	background: #fff;
+	padding: 5px;
+	border: 1px solid #ddd;
+	-moz-border-radius: 4px;
+	-khtml-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	border-radius: 4px;
+}
+
+.woopra_options a {
+	text-decoration: none;
+}
+
+/*
+ * Tabs
+ */
 
 #woopra-super-tabs {
 	margin: 0;
@@ -33,19 +61,6 @@
 	border-style: solid;
 	border-color: #dddddd;
 	color: #ff2222;
-}
-
-#datepickerdiv {
-	margin: 8px 0 0 -260px;
-	display: none;
-	position: absolute;
-	padding: 5px;
-	-moz-border-radius: 4px;
-	-khtml-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-	border: 1px solid #ddd;
-	
 }
 
 #woopra-super-tabs a.current {
@@ -83,17 +98,27 @@
 	font-size: 14px;
 }
 
+/*
+ * Date Picker
+ */
 
-
-.woopra_analytics_inner {
+#datepickerdiv {
+	margin: 8px 0 0 -150px;
+	display: none;
+	position: absolute;
+	padding: 5px;
 	-moz-border-radius: 4px;
-	-khtml-border-: 4px;
+	-khtml-border-radius: 4px;
 	-webkit-border-radius: 4px;
 	border-radius: 4px;
 	border: 1px solid #ddd;
-	min-height: 200px;
-	background: #fff;
+	background: #ffffff;
+	
 }
+
+/*
+ * Render View
+ */
 
 .woopra_table {
 	width: 100%;
@@ -106,38 +131,25 @@
 	border-bottom: 1px solid #dddddd;
 }
 
-
-#woopra_footer {
-	padding-top: 10px;
+.index {
 	text-align: center;
-}
-
-.center {
-	text-align: center;
-}
-
-.right {
-	text-align: right;
-}
-
-.even_row td {
-	background: #f2f9ff;
-}
-
-.expanded_row td {
-	background: #ffffe5;
-}
-.expanded_even_row td {
-	background: #ffffd4;
-}
-
-.expanded_even_row .wrank, .expanded_row .wrank {
-	background: #eeee99 !important;
-}
-
-.whighlight {
+	background: #CFCFCF !important;
 	font-weight: bold;
-	font-size: 110%
+}
+
+.text-header, .text-item {
+	text-align: center;
+}
+
+.highlight {
+	font-weight: bold;
+	background: #CFCFCF !important;
+}
+
+.bar {
+	border: none;
+	width: 400px;
+	background: #FFFFFF !important;
 }
 
 span.ellipsis {
@@ -148,38 +160,17 @@ span.ellipsis {
    display:block;
 }
 
+.wlinechart {
+	text-align: center;
+	padding: 5px !important;
+}
+
+
 .tagged_renderer {
 	height: 32px;
 	padding-left: 38px;
 }
 
-.wrank {
-	text-align: center;
-	background: #ddd !important;
-	font-weight: bold;
-}
-
-.wbar {
-	border: none;
-	width: 400px;
-}
-
-.woptions {
-	float: right;
-	display: inline;
-	background: #fff;
-	padding: 5px;
-	border: 1px solid #ddd;
-	-moz-border-radius: 4px;
-	-khtml-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-}
-
-.woptions a {
-	text-decoration: none;
-}
-
-.wlinechart {
-	padding: 5px !important;
+.right {
+	text-align: right;
 }

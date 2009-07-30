@@ -226,11 +226,11 @@ class WoopraRender extends WoopraAdmin {
 	?>
 		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
 			<tr>
-				<th class="center"><?php _e("Day", 'woopra') ?></th>
-				<th class="center"><?php _e("Avg Time Spent", 'woopra') ?></th>
-				<th class="center"><?php _e("New Visitors", 'woopra') ?></th>
-				<th class="center"><?php _e("Total Visits", 'woopra') ?></th>
-				<th class="center"><?php _e("Pageviews", 'woopra') ?></th>
+				<th class="text-header"><?php _e("Day", 'woopra') ?></th>
+				<th class="text-header"><?php _e("Avg Time Spent", 'woopra') ?></th>
+				<th class="text-header"><?php _e("New Visitors %", 'woopra') ?></th>
+				<th class="text-header"><?php _e("Total Visits", 'woopra') ?></th>
+				<th class="text-header"><?php _e("Page Views", 'woopra') ?></th>
 				<th>&nbsp;</th>
 			</tr>
 			<?php
@@ -255,12 +255,12 @@ class WoopraRender extends WoopraAdmin {
 				
 				?>
 				<tr<?php echo (($counter++%2==0)?" class=\"even_row\"":""); ?>>
-					<td class="wrank"><?php echo $entry['day']; ?></td>
-					<td class="center"><?php echo $timespentstring; ?></td>
-					<td class="center"><?php echo $visitorsstring; ?></td>
-					<td class="center"><?php echo number_format($visitors); ?></td>
-					<td class="center highlight"><a href="#" onclick="return expandByDay('GLOBALS', '<?php echo $hashid; ?>', <?php echo $counter; ?>, <?php echo $entry['index']; ?>)"><?php echo number_format($pageviews); ?></a></td>
-					<td class="wbar"><?php echo $this->woopra_bar($percent); ?></td>
+					<td class="index"><?php echo $entry['day']; ?></td>
+					<td class="text-item"><?php echo $timespentstring; ?></td>
+					<td class="text-item"><?php echo $visitorsstring; ?></td>
+					<td class="text-item"><?php echo number_format($visitors); ?></td>
+					<td class="text-item highlight"><a href="#" onclick="return expandByDay('GLOBALS', '<?php echo $hashid; ?>', <?php echo $counter; ?>, <?php echo $entry['index']; ?>)"><?php echo number_format($pageviews); ?></a></td>
+					<td class="bar"><?php echo $this->woopra_bar($percent); ?></td>
 				</tr>
 				<tr id="wlc-<?php echo $hashid; ?>-<?php echo $counter; ?>" style=" height: 120px; display: none;">
 					<td class="wlinechart" id="linecharttd-<?php echo $hashid; ?>-<?php echo $counter ?>" colspan="6"></td>
@@ -285,8 +285,8 @@ class WoopraRender extends WoopraAdmin {
 		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
 			<tr>
 				<th>&nbsp;</th>
-				<th><?php echo $this->woopra_render_name($key); ?></th>
-				<th class="center" width="100"><?php _e("Hits", 'woopra') ?></th>
+				<th class="text-header"><?php echo $this->woopra_render_name($key); ?></th>
+				<th class="text-header" width="100"><?php _e("Hits", 'woopra') ?></th>
 				<th width="400">&nbsp;</th>
 			</tr>
 			<?php
@@ -305,10 +305,10 @@ class WoopraRender extends WoopraAdmin {
 				$hashid = $this->woopra_friendly_hash($key);
 				?>
 				<tr<?php echo (($counter++%2==0) ? " class=\"even_row\"" : ""); ?>>
-					<td class="wrank"><?php echo $counter; ?></td>
+					<td class="index"><?php echo $counter; ?></td>
 					<td><span class="ellipsis"><?php echo $this->woopra_render_name($key, $name, $meta); ?></span></td>
-					<td width="100" class="center highlight"><a href="#" onclick="return expandByDay('<?php echo $key; ?>', '<?php echo $hashid; ?>', <?php echo $counter; ?>, <?php echo $entry['index']; ?>)"><?php echo $hits; ?></a></td>
-					<td class="wbar"><?php echo $this->woopra_bar($percent); ?></td>
+					<td width="100" class="text-item highlight"><a href="#" onclick="return expandByDay('<?php echo $key; ?>', '<?php echo $hashid; ?>', <?php echo $counter; ?>, <?php echo $entry['index']; ?>)"><?php echo $hits; ?></a></td>
+					<td class="bar"><?php echo $this->woopra_bar($percent); ?></td>
 				</tr>
 				<tr id="wlc-<?php echo $hashid; ?>-<?php echo $counter; ?>" style=" height: 120px; display: none;">
 					<td class="wlinechart" id="linecharttd-<?php echo $hashid; ?>-<?php echo $counter ?>" colspan="4"></td>
@@ -332,8 +332,8 @@ class WoopraRender extends WoopraAdmin {
 		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
 		<tr>
 			<th>&nbsp;</th>
-			<th><?php _e('Referrer', 'woopra'); ?></th>
-			<th class="center" width="100"><?php _e('Hits', 'woopra'); ?></th>
+			<th class="text-header"><?php _e('Referrer', 'woopra'); ?></th>
+			<th class="text-header" width="100"><?php _e('Hits', 'woopra'); ?></th>
 			<th width="400">&nbsp;</th>
 		</tr>
 		<?php
@@ -353,10 +353,10 @@ class WoopraRender extends WoopraAdmin {
 			$hashid = $this->woopra_friendly_hash($key);
 			?>
 			<tr<?php echo (($counter++%2==0) ? " class=\"even_row\"" : "" ); ?>>
-				<td class="wrank"><?php echo $counter; ?></td>
+				<td class="index"><?php echo $counter; ?></td>
 				<td><span class="ellipsis"><a href="<?php echo $name; ?>" target="_blank"><?php echo $this->woopra_render_name($key, $name, $meta); ?></a></span></td>
-				<td width="100" class="center whighlight"><a href="#" onclick="return expandByDay('<?php echo $key; ?>', '<?php echo $hashid; ?>', <?php echo $counter; ?>, <?php echo $entry['index']; ?>)"><?php echo $hits; ?></a></td>
-				<td class="wbar"><?php echo $this->woopra_bar($percent) ?></td>
+				<td width="100" class="text-item highlight"><a href="#" onclick="return expandByDay('<?php echo $key; ?>', '<?php echo $hashid; ?>', <?php echo $counter; ?>, <?php echo $entry['index']; ?>)"><?php echo $hits; ?></a></td>
+				<td class="bar"><?php echo $this->woopra_bar($percent) ?></td>
 			</tr>
 			<tr id="wlc-<?php echo $hashid; ?>-<?php echo $counter ?>" style=" height: 120px; display: none;"><td class="wlinechart" id="linecharttd-<?php echo $hashid ?>-<?php echo $counter; ?>" colspan="4"></td></tr>
 			<tr id="refexp-<?php echo $hashid; ?>-<?php echo $counter; ?>" style="display: none;"><td colspan="4" style="padding: 0;"><div id="refexptd-<?php echo $hashid; ?>-<?php echo $counter; ?>"></div></td></tr>
@@ -381,7 +381,6 @@ class WoopraRender extends WoopraAdmin {
 			exit;
 		}
 		
-
 		foreach ($entries as $index => $entry) {
 			if ($entry['index'] == $_GET['id'])
 				$chart->data = $entry;

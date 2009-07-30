@@ -61,14 +61,13 @@ class WoopraAnalytics extends WoopraAdmin {
 		<div class="wrap">
 		<?php screen_icon(); ?>
 			<h2><?php _e( 'Woopra Analytics', 'woopra' ); ?></h2>	
-		
 		<?php
 		
 		if (empty($this->api_key)) {
 			$this->analytics_warn();
 		} else {
 			/** HTML CODE START **/
-			?>
+		?>
 <!-- Woopra Analytics Starts Here -->
 <script type="text/javascript">
 //<![CDATA[
@@ -88,80 +87,81 @@ class WoopraAnalytics extends WoopraAdmin {
 	});
 //]]>
 </script>
-	<div id="woopra_analytics_box">
-		<div class="woptions">
-		<a id="refreshdate" href="#" title="<?php _e('Refresh', 'woopra') ?>"><?php _e('Refresh', 'woopra') ?></a>
-		&nbsp;-&nbsp;
-		<a id="daterange" href="#" title="<?php _e('Click here to change the date range', 'woopra') ?>"><script type="text/javascript">document.write(getDateLinkText())</script></a>
-			<div id="datepickerdiv" style="visibiliy:hidden">
-				<table>
-					<tr>
-						<td align="center">
-							<?php _e('From', 'woopra') ?>: <input type="text" id="woopra_from" name="woopra_from" value="" maxlength="10" />
-						</td>
-						<td align="center">
-							<?php _e('To', 'woopra') ?>: <input type="text" id="woopra_to" name="woopra_to" value="" maxlength="10" />
-						</td>
-					</tr>
-				<tr>
-					<td colspan="2" style="padding-top: 5px; text-align: right;">
-						<input value="<?php _e('Cancel', 'woopra') ?>" name="approveit" class="button-secondary" type="submit" onclick="return closeDatePicker();">
-						<input value="<?php _e('Apply Date Range', 'woopra') ?>" name="approveit" class="button-secondary" type="submit" onclick="return applyDatePicker();">
-					</td>
-				</tr>
-				</table>
-			</div>
-		</div>
-		<ul id="woopra-super-tabs">
-		</ul>
+<div id="woopra_analytics_box">
+	<div class="woopra_options">
+	<a id="refreshdate" href="#" title="<?php _e('Refresh', 'woopra') ?>"><?php _e('Refresh', 'woopra') ?></a>
+	&nbsp;-&nbsp;
+	<a id="daterange" href="#" title="<?php _e('Click here to change the date range', 'woopra') ?>"><script type="text/javascript">document.write(getDateLinkText())</script></a>
+	<!-- Date Picker -->
+	<div id="datepickerdiv" style="visibiliy:hidden">
+		<table>
+			<tr>
+				<td align="center">
+					<?php _e('From', 'woopra') ?>: <input type="text" id="woopra_from" name="woopra_from" value="" maxlength="10" />
+				</td>
+				<td align="center">
+					<?php _e('To', 'woopra') ?>: <input type="text" id="woopra_to" name="woopra_to" value="" maxlength="10" />
+				</td>
+			</tr>
+		<tr>
+			<td colspan="2" style="padding-top: 5px; text-align: right;">
+				<input value="<?php _e('Cancel', 'woopra') ?>" name="approveit" class="button-secondary" type="submit" onclick="return closeDatePicker();">
+				<input value="<?php _e('Apply Date Range', 'woopra') ?>" name="approveit" class="button-secondary" type="submit" onclick="return applyDatePicker();">
+			</td>
+		</tr>
+		</table>
 	</div>
-	<!-- Woopra Javascript Code Starts Here -->
-	<script type="text/javascript">
-	
-	addSuperTab('<?php _e("Visitors", 'woopra') ?>','visitors');
-	addSuperTab('<?php _e("Systems", 'woopra') ?>','systems');
-	addSuperTab('<?php _e("Pages", 'woopra') ?>','pages');
-	addSuperTab('<?php _e("Referrers", 'woopra') ?>','referrers');
-	addSuperTab('<?php _e("Searches", 'woopra') ?>','searches');
-	
-	addSubTab('<?php _e("Overview", 'woopra') ?>', 'overview', 'visitors', 'GLOBALS');
-	addSubTab('<?php _e("Countries", 'woopra') ?>', 'countries', 'visitors', 'COUNTRIES');
-	addSubTab('<?php _e("Tagged Visitors", 'woopra') ?>', 'taggedvisitors', 'visitors', 'SPECIALVISITORS');
-	addSubTab('<?php _e("Bounce Rate", 'woopra') ?>', 'bounces', 'visitors', 'VISITBOUNCES');
-	addSubTab('<?php _e("Visit Durations", 'woopra') ?>', 'durations', 'visitors', 'VISITDURATIONS');
-	
-	addSubTab('<?php _e("Browsers", 'woopra') ?>', 'browsers', 'systems', 'BROWSERS');
-	addSubTab('<?php _e("Platforms", 'woopra') ?>', 'platforms', 'systems', 'PLATFORMS');
-	addSubTab('<?php _e("Screen Resolutions", 'woopra') ?>', 'resolutions', 'systems', 'RESOLUTIONS');
-	addSubTab('<?php _e("Languages", 'woopra') ?>', 'languages', 'systems', 'LANGUAGES');
-	
-	addSubTab('<?php _e("Pageviews", 'woopra') ?>', 'pageviews', 'pages', 'PAGEVIEWS');
-	addSubTab('<?php _e("Landing Pages", 'woopra') ?>', 'landing', 'pages', 'PAGELANDINGS');
-	addSubTab('<?php _e("Exit Pages", 'woopra') ?>', 'exit', 'pages', 'PAGEEXITS');
-	addSubTab('<?php _e("Outgoing Links", 'woopra') ?>', 'outgoing', 'pages', 'OUTGOINGLINKS');
-	addSubTab('<?php _e("Downloads", 'woopra') ?>', 'downloads', 'pages', 'DOWNLOADS');
-	
-	addSubTab('<?php _e("Referrer Types", 'woopra') ?>', 'reftypes', 'referrers', 'REFERRERTYPES');
-	addSubTab('<?php _e("Regular Referrers", 'woopra') ?>', 'refdefault', 'referrers', 'REFERRERS&type=BACKLINK');
-	addSubTab('<?php _e("Search Engines", 'woopra') ?>', 'refsearch', 'referrers', 'REFERRERS&type=SEARCH');
-	addSubTab('<?php _e("Feed Readers", 'woopra') ?>', 'reffeeds', 'referrers', 'REFERRERS&type=FEEDS');
-	addSubTab('<?php _e("Emails", 'woopra') ?>', 'refmails', 'referrers', 'REFERRERS&type=EMAIL');
-	addSubTab('<?php _e("Social Bookmarks", 'woopra') ?>', 'refbookmarks', 'referrers', 'REFERRERS&type=SOCIALBOOKMARKS');
-	addSubTab('<?php _e("Social Networks", 'woopra') ?>', 'refnetworks', 'referrers', 'REFERRERS&type=SOCIALNETWORK');
-	addSubTab('<?php _e("Media", 'woopra') ?>', 'refmedia', 'referrers', 'REFERRERS&type=MEDIA');
-	addSubTab('<?php _e("News", 'woopra') ?>', 'refnews', 'referrers', 'REFERRERS&type=NEWS');
-	
-	addSubTab('<?php _e("Search Queries", 'woopra') ?>', 'queries', 'searches', 'QUERIES');
-	addSubTab('<?php _e("Keywords", 'woopra') ?>', 'keywords', 'searches', 'KEYWORDS');
-	
-	setCurrentSuperTab('visitors');
-	</script>
-	<!-- Woopra Javascript Code Ends Here -->
-	<div id="woopra_footer">
-		<?php printf( __('Powered by <a href="%1$s">Woopra Analytics</a>', 'woopra'), 'http://woopra.com'); ?>
+	<!-- Date Picker -->
 	</div>
-<!-- Woopra Analytics Ends Here -->
+	<ul id="woopra-super-tabs">
+		<!-- All Tabs -->
+	</ul>
+</div>
+<!-- Woopra Javascript Code Starts Here -->
+<script type="text/javascript">
+//<![CDATA[
 
+addSuperTab('<?php _e("Visitors", 'woopra') ?>','visitors');
+addSuperTab('<?php _e("Systems", 'woopra') ?>','systems');
+addSuperTab('<?php _e("Pages", 'woopra') ?>','pages');
+addSuperTab('<?php _e("Referrers", 'woopra') ?>','referrers');
+addSuperTab('<?php _e("Searches", 'woopra') ?>','searches');
+
+addSubTab('<?php _e("Overview", 'woopra') ?>', 'overview', 'visitors', 'GLOBALS');
+addSubTab('<?php _e("Countries", 'woopra') ?>', 'countries', 'visitors', 'COUNTRIES');
+addSubTab('<?php _e("Tagged Visitors", 'woopra') ?>', 'taggedvisitors', 'visitors', 'SPECIALVISITORS');
+addSubTab('<?php _e("Bounce Rate", 'woopra') ?>', 'bounces', 'visitors', 'VISITBOUNCES');
+addSubTab('<?php _e("Visit Durations", 'woopra') ?>', 'durations', 'visitors', 'VISITDURATIONS');
+
+addSubTab('<?php _e("Browsers", 'woopra') ?>', 'browsers', 'systems', 'BROWSERS');
+addSubTab('<?php _e("Platforms", 'woopra') ?>', 'platforms', 'systems', 'PLATFORMS');
+addSubTab('<?php _e("Screen Resolutions", 'woopra') ?>', 'resolutions', 'systems', 'RESOLUTIONS');
+addSubTab('<?php _e("Languages", 'woopra') ?>', 'languages', 'systems', 'LANGUAGES');
+
+addSubTab('<?php _e("Pageviews", 'woopra') ?>', 'pageviews', 'pages', 'PAGEVIEWS');
+addSubTab('<?php _e("Landing Pages", 'woopra') ?>', 'landing', 'pages', 'PAGELANDINGS');
+addSubTab('<?php _e("Exit Pages", 'woopra') ?>', 'exit', 'pages', 'PAGEEXITS');
+addSubTab('<?php _e("Outgoing Links", 'woopra') ?>', 'outgoing', 'pages', 'OUTGOINGLINKS');
+addSubTab('<?php _e("Downloads", 'woopra') ?>', 'downloads', 'pages', 'DOWNLOADS');
+
+addSubTab('<?php _e("Referrer Types", 'woopra') ?>', 'reftypes', 'referrers', 'REFERRERTYPES');
+addSubTab('<?php _e("Regular Referrers", 'woopra') ?>', 'refdefault', 'referrers', 'REFERRERS&type=BACKLINK');
+addSubTab('<?php _e("Search Engines", 'woopra') ?>', 'refsearch', 'referrers', 'REFERRERS&type=SEARCH');
+addSubTab('<?php _e("Feed Readers", 'woopra') ?>', 'reffeeds', 'referrers', 'REFERRERS&type=FEEDS');
+addSubTab('<?php _e("Emails", 'woopra') ?>', 'refmails', 'referrers', 'REFERRERS&type=EMAIL');
+addSubTab('<?php _e("Social Bookmarks", 'woopra') ?>', 'refbookmarks', 'referrers', 'REFERRERS&type=SOCIALBOOKMARKS');
+addSubTab('<?php _e("Social Networks", 'woopra') ?>', 'refnetworks', 'referrers', 'REFERRERS&type=SOCIALNETWORK');
+addSubTab('<?php _e("Media", 'woopra') ?>', 'refmedia', 'referrers', 'REFERRERS&type=MEDIA');
+addSubTab('<?php _e("News", 'woopra') ?>', 'refnews', 'referrers', 'REFERRERS&type=NEWS');
+
+addSubTab('<?php _e("Search Queries", 'woopra') ?>', 'queries', 'searches', 'QUERIES');
+addSubTab('<?php _e("Keywords", 'woopra') ?>', 'keywords', 'searches', 'KEYWORDS');
+
+setCurrentSuperTab('visitors');
+//]]>
+</script>
+<!-- Woopra Javascript Code Ends Here -->
+<!-- Woopra Analytics Ends Here -->
 			<?php
 			/** HTML CODE END **/
 		}
