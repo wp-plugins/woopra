@@ -1,17 +1,6 @@
-#woopra_analytics_global {
-	text-align: center;
-	padding: 10px;
-	background: #e4f2fd;
-}
-
-#woopra_analytics_global a.current {
-	color: #cc0000;
-}
-
 #woopra_analytics_box {
 	margin: 0 auto;
 	text-align: left;
-	width: 980px;
 }
 
 #woopra-super-tabs {
@@ -50,7 +39,6 @@
 	margin: 8px 0 0 -260px;
 	display: none;
 	position: absolute;
-	background: #e4f2fd;
 	padding: 5px;
 	-moz-border-radius: 4px;
 	-khtml-border-radius: 4px;

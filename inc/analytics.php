@@ -88,7 +88,6 @@ class WoopraAnalytics extends WoopraAdmin {
 	});
 //]]>
 </script>
-<div id="woopra_analytics_global">
 	<div id="woopra_analytics_box">
 		<div class="woptions">
 		<a id="refreshdate" href="#" title="<?php _e('Refresh', 'woopra') ?>"><?php _e('Refresh', 'woopra') ?></a>
@@ -161,7 +160,6 @@ class WoopraAnalytics extends WoopraAdmin {
 	<div id="woopra_footer">
 		<?php printf( __('Powered by <a href="%1$s">Woopra Analytics</a>', 'woopra'), 'http://woopra.com'); ?>
 	</div>
-</div>
 <!-- Woopra Analytics Ends Here -->
 
 			<?php
