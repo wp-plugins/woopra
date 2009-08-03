@@ -252,11 +252,11 @@ class WoopraEvents_Frontend extends WoopraEvents {
 		$event_status = $Woopra->get_option('woopra_event');		
 
 		foreach ($all_events as $event_name => $data) {
-			if ($data['action']) {
+			if (isset($data['action'])) {
 				if ($event_status[(isset($data['setting']) ? $data['setting'] : $data['action'])])
 					add_action( $data['action'], 			array(&$this, 'process_events') );
 			}
-			if ($data['filter']) {
+			if (isset($data['filter'])) {
 				if ($event_status[(isset($data['setting']) ? $data['setting'] : $data['filter'])])
 					add_filter( $data['filter'], 			array(&$this, 'process_filter_events') );
 			}
@@ -318,11 +318,11 @@ class WoopraEvents_Admin extends WoopraEvents {
 		$event_status = $Woopra->get_option('woopra_event');		
 
 		foreach ($all_events as $event_name => $data) {
-			if ($data['action']) {
+			if (isset($data['action'])) {
 				if ($event_status[(isset($data['setting']) ? $data['setting'] : $data['action'])])
 					add_action( $data['action'], 			array(&$this, 'admin_process_events') );
 			}
-			if ($data['filter']) {
+			if (isset($data['filter'])) {
 				if ($event_status[(isset($data['setting']) ? $data['setting'] : $data['filter'])])
 					add_filter( $data['filter'], 			array(&$this, 'admin_process_filter_events') );
 			}

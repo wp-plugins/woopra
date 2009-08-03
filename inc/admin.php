@@ -467,6 +467,7 @@ class WoopraAdmin extends Woopra {
 	</p>
 	
 	</form>
+	</div>
 	
 	<?php }
 
