@@ -22,7 +22,7 @@
  * 
  *
  * @author Elie El Khoury <elie@woopra.com> and Shane Froebel <shane@woopra.com>
- * @version 1.4.1.1
+ * @version 1.4.2
  * @copyright 2007-2009
  * @package woopra
  */
@@ -32,7 +32,7 @@
  * @since 1.4.1
  * @return none
  */
-DEFINE ('WOOPRA_VERSION', '1.4.1.1');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
+DEFINE ('WOOPRA_VERSION', '1.4.2');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
 
 /*
 
@@ -40,7 +40,7 @@ DEFINE ('WOOPRA_VERSION', '1.4.1.1');		// MAKE SURE THIS MATCHES THE VERSION ABO
 
 Plugin Name:  Woopra
 Plugin URI:   http://wordpress.org/extend/plugins/woopra/
-Version:      1.4.1.1
+Version:      1.4.2
 Description:  This plugin adds Woopra's real-time analytics to any WordPress installation.  Simply sign up at Woopra.com, then activate the plugin!
 Author:       <a href="http://www.ekhoury.com">Elie El Khoury</a>, <a href="http://bugssite.org">Shane Froebel</a>
 Author URI:   http://www.woopra.com/
