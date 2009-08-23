@@ -45,10 +45,27 @@ class WoopraAnalytics extends WoopraAdmin {
 	/**
 	 * Display a notice telling the user to fill in their Woopra details
 	 * @since 1.4.1
+	 * @param object $item
 	 * @return none
 	 */
-	function analytics_warn() {
-		echo '<div class="error"><p>' . sprintf( __( 'You must fill in your API Key in order to view Analytics. Please fill it out on the <a href="%s">settings page</a> in order for you to view your analytics.', 'woopra' ), admin_url('options-general.php?page=woopra') ) . "</p></div>\n";
+	function analytics_warn($item) {
+		$message[1]	=	'<div class="error"><p>' . __( 'Your site must be part of the beta in order for this plugin to work correctly.', 'woopra' ) . "</p></div>\n";
+		$message[2]	=	'<div class="error"><p>' . sprintf( __( 'You must fill in your API Key in order to view Analytics. Please fill it out on the <a href="%s">settings page</a> in order for you to view your analytics.', 'woopra' ), admin_url('options-general.php?page=woopra') ) . "</p></div>\n";
+		echo $message[$item];
+	}
+	
+	/**
+	 * Checking site status.
+	 * 
+	 * This will check to see if the site based on get_option('siteurl') is vaild. If it
+	 * is not, we will tell the user and stop functioning.
+	 * 
+	 * @since 1.4.2
+	 * @return 
+	 */
+	function check_site_status() {
+		// @todo New XML query to see if the site is really active. If it is, we return false... 
+		return false;
 	}
 	
 	/**
@@ -63,8 +80,10 @@ class WoopraAnalytics extends WoopraAdmin {
 			<h2><?php _e( 'Woopra Analytics', 'woopra' ); ?></h2>	
 		<?php
 		
-		if (empty($this->api_key)) {
-			$this->analytics_warn();
+		if ($this->check_site_status()) {
+			$this->analytics_warn(1);
+		} else if (empty($this->api_key)) {
+			$this->analytics_warn(2);
 		} else {
 			/** HTML CODE START **/
 		?>
@@ -126,10 +145,10 @@ addSuperTab('<?php _e("Systems", 'woopra') ?>','systems');
 addSuperTab('<?php _e("Pages", 'woopra') ?>','pages');
 addSuperTab('<?php _e("Referrers", 'woopra') ?>','referrers');
 addSuperTab('<?php _e("Searches", 'woopra') ?>','searches');
+addSuperTab('<?php _e("Tagged Vistors", 'woopra') ?>','tagvisitors');
 
 addSubTab('<?php _e("Overview", 'woopra') ?>', 'overview', 'visitors', 'GLOBALS');
 addSubTab('<?php _e("Countries", 'woopra') ?>', 'countries', 'visitors', 'COUNTRIES');
-addSubTab('<?php _e("Tagged Visitors", 'woopra') ?>', 'taggedvisitors', 'visitors', 'SPECIALVISITORS');
 addSubTab('<?php _e("Bounce Rate", 'woopra') ?>', 'bounces', 'visitors', 'VISITBOUNCES');
 addSubTab('<?php _e("Visit Durations", 'woopra') ?>', 'durations', 'visitors', 'VISITDURATIONS');
 
@@ -156,6 +175,8 @@ addSubTab('<?php _e("News", 'woopra') ?>', 'refnews', 'referrers', 'REFERRERS&ty
 
 addSubTab('<?php _e("Search Queries", 'woopra') ?>', 'queries', 'searches', 'QUERIES');
 addSubTab('<?php _e("Keywords", 'woopra') ?>', 'keywords', 'searches', 'KEYWORDS');
+
+addSubTab('<?php _e("By Name", 'woopra') ?>', 'taggedvisitors_byname', 'tagvisitors', 'CUSTOMVISITORDATA&aggregate_by=name');
 
 setCurrentSuperTab('visitors');
 //]]>

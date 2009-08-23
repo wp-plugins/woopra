@@ -107,9 +107,7 @@ class WoopraRender extends WoopraAdmin {
 		//	Generate the Data
 		$this->generate_data();	
 	}
-
-	/** THIS IS CUSTOM CODE THAT CAN BE DELETED LATER ON **/
-
+	
 	/**
 	 * Generate the data.
 	 * @since 1.4.1
@@ -123,6 +121,9 @@ class WoopraRender extends WoopraAdmin {
 			
 			if ($_GET['type'])
 				$this->key = $this->key . "&type=" . $_GET['type'];
+				
+			if ($_GET['aggregate_by'])
+				$this->key = $this->key . "&aggregate_by=" . $_GET['aggregate_by'];
 			
 			$this->hostname = get_option('siteurl');
 			
