@@ -48,12 +48,13 @@ class WoopraEvents {
 	 * @constructor
 	 */
 	function __construct($area = 'frontend') {
+		
+		add_action('wp', 			array(&$this, 'session_start') );
+		
 		if ($area == 'frontend')
 			$WoopraEvent_Global = new WoopraEvents_Frontend();
 		if ($area == 'admin')
 			$WoopraEvent_Global = new WoopraEvents_Admin();
-
-		add_action('wp', 			array(&$this, 'session_start') );
 		
 		return $WoopraEvent_Global;
 		
@@ -248,13 +249,13 @@ class WoopraEvents_Frontend extends WoopraEvents {
 		$Woopra = new Woopra;
 		$this->default_events = $this->register_events();
 		$all_events = $this->default_events;
-
 		$event_status = $Woopra->get_option('woopra_event');		
-
+	
 		foreach ($all_events as $event_name => $data) {
 			if (isset($data['action'])) {
-				if ($event_status[(isset($data['setting']) ? $data['setting'] : $data['action'])])
+				if ($event_status[(isset($data['setting']) ? $data['setting'] : $data['action'])]) {
 					add_action( $data['action'], 			array(&$this, 'process_events') );
+				}
 			}
 			if (isset($data['filter'])) {
 				if ($event_status[(isset($data['setting']) ? $data['setting'] : $data['filter'])])
@@ -314,7 +315,6 @@ class WoopraEvents_Admin extends WoopraEvents {
 		$Woopra = new Woopra;
 		$this->default_events = $this->register_events();
 		$all_events = $this->default_events;
-
 		$event_status = $Woopra->get_option('woopra_event');		
 
 		foreach ($all_events as $event_name => $data) {
