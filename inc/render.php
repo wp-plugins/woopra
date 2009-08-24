@@ -168,7 +168,10 @@ class WoopraRender extends WoopraAdmin {
 		
 		if ($xml->connection_error != null || $xml->error_msg != null || !$xml->init()) {
 			if ($this->data_type != "flash")
-				echo '<div class="error"><p>' . sprintf(__('The Woopra Plugin was not able to request your analytics data from the Woopra Engines<br/><small>Your hosting provider is not allowing the Woopra Plugin to fetch data from the Woopra Servers.<br/>%s<br/><a href="http://www.woopra.com/forums/">Report this error onto the forums!</a><br/>', 'woopra'), $xml->connection_error . $xml->error_msg) . '</small></p></div>';
+				echo '<div class="error"><p>' . sprintf(__('The Woopra Plugin was not able to request your analytics data from the Woopra Engines. 
+				<br/> Key %s / Error Code: %s
+				<br/> <small><a href="http://www.woopra.com/forums/">Report this error onto the forums!</a><small>
+				<br/>', 'woopra'), $key, $xml->connection_error . $xml->error_msg) . '</small></p></div>';
 			else
 				echo $xml->connection_error . $xml->error_msg;
 			return false;

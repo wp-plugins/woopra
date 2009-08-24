@@ -169,7 +169,7 @@ class WoopraXML {
         xml_parser_set_option($this->parser, XML_OPTION_CASE_FOLDING, false);
 				
         if (!($fp = @fopen($this->url, 'rb'))) {
-            $this->connection_error = sprintf(__("%s: Cannot open URL. @fopen failed.", 'woopra'), 'WoopraXML::parse(172)');
+            $this->connection_error = sprintf(__("%s: Cannot open URL. @fopen failed or URL failed.", 'woopra'), 'WoopraXML::parse(172)');
             return $this->error();
         }
 
