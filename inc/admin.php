@@ -300,7 +300,9 @@ class WoopraAdmin extends Woopra {
 			$woopra = get_option('woopra');
 
 			$newopts = array (
-					'version'		=>	'1.4.2'
+					'version'		=>	'1.4.2',
+					'use_timeout'	=>	0,
+					'timeout'		=>	600,
 			);
 			
 			unset($woopra['version']);
@@ -325,6 +327,8 @@ class WoopraAdmin extends Woopra {
 			'auto_tagging'	=> 1,
 			'ignore_admin'	=> 0,
 			'track_admin'	=> 0,
+			'use_timeout'	=> 0,
+			'timeout'		=> 600,
 		);
 		return $defaults;
 	}
@@ -404,6 +408,13 @@ class WoopraAdmin extends Woopra {
 					echo "\n\t<label><input id='$key' type='radio' name='woopra[run_status]' value='$key' $selected/> $value</label><br />";
 				}
 			?>
+			</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><?php _e('Auto Timeout', 'woopra') ?></th>
+			<td>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('use_timeout')); ?> id="use_timeout" name="woopra[use_timeout]"/> <label for="use_timeout"><?php _e("Override Woopra Default 'Auto Time Out'"); ?></label><br /><small><?php _e("Turn this 'on' if you want to override Woopra Default Timeout Settings. Setting this to low might cause incorrect statistics. Once a user is considered 'timed out' they will be considered gone. If they revisit they will be considered a 'new visit' and might mess up your statistics.", 'woopra'); ?></small>
+				<br/> <?php printf("<label for='woopra[timeout]'>".__('Seconds before Timeout: %s')."</label>", $this->wp_dropdown_number_select("name=woopra[timeout]&echo=0&max=600&selected=" . $this->get_option('timeout') . "&disabled=" . (string) $this->get_option('use_timeout'))); ?>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -503,5 +514,81 @@ class WoopraAdmin extends Woopra {
 		$WoopraRender = new WoopraRender();
 		unset($WoopraRender);
 	}
-
+	
+	
+	/** CUSTOM FUNCTIONS UNITL THIS ARE ADDED TO WORDPRESS CORE **/
+	
+	/**
+	 * 
+	 * @param object $args [optional]
+	 * @return 
+	 */
+	function wp_dropdown_number_select($args = '') {
+		$defaults = array(
+			'default' => 600, 'selected' => 0, 
+			'echo' => 1, 'show_option_none' => sprintf(__('Default (%s)', 'woopra'), 600),
+			'min' => 0, 'max' => 100,
+			'disabled' => false
+		);
+		
+		$r = wp_parse_args( $args, $defaults );
+		extract( $r, EXTR_SKIP );
+		
+		if ( empty($disabled) )
+			$disabled = false;
+		
+		$output = '';
+		if ( !empty($name) ) {
+			if ($default != 5)
+				$show_option_none = sprintf(__('Default (%s)', 'woopra'), $default);
+		
+			$output = '';
+			$output = "<select name=\"$name\" id=\"$name\" " . $this->disabled($disabled, false) . ">\n";
+			for ($i = $min; $i <= $max; $i++) {
+				if ($i == $default)
+					$output .= "\t<option " . selected($i, $selected, false) . " value=\"$default\">$show_option_none</option>";
+				else
+					$output .= "\t<option " . selected($i, $selected, false) . " value=\"$i\">$i</option>";
+			}
+			$output .= "</select>\n";	
+			if ( !$disabled )
+				$output .= "<input type=\"hidden\" name=\"$name\" value=\"$selected\" />";
+		}
+		
+		if ( $echo )
+			echo $output;
+	
+		return $output;
+	}
+	
+	/**
+	 * 
+	 * @param object $current [optional]
+	 * @param object $echo [optional]
+	 * @return 
+	 */
+	function disabled( $current = true, $echo = true) {
+		return $this->__disabled_selected_helper( $current, $echo, 'disabled' );
+	}
+	
+	/**
+	 * 
+	 * @param object $current
+	 * @param object $echo
+	 * @param object $type
+	 * @return 
+	 */
+	function __disabled_selected_helper( $current, $echo, $type) {
+		if ( false === (bool) $current)
+			$result = " $type='$type'";
+		else
+			$result = '';
+	
+		if ($echo)
+			echo $result;
+	
+		return $result;
+	}
+	
+	
 }

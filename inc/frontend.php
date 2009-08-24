@@ -91,12 +91,12 @@ class WoopraFrontend extends Woopra {
 		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
 		echo "<!-- Woopra Analytics Code -->\n";
 		echo "<script type=\"text/javascript\">\r\n";
-		echo "var woopra_visitor = new Array();\r\n";
-		echo "var woopra_event = new Array();\r\n\n";
+		echo "var we = new WoopraEvent();\r\n";
+		
 		if ($this->get_option('auto_tagging') || !empty($this->woopra_visitor['name'])) {
-			echo "woopra_visitor['name'] = '" . js_escape($this->woopra_visitor['name']) . "';\r\n";
-			echo "woopra_visitor['email'] = '" . js_escape($this->woopra_visitor['email']) . "';\r\n";
-			echo "woopra_visitor['avatar'] = 'http://www.gravatar.com/avatar.php?gravatar_id=" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http%3A%2F%2Fstatic.woopra.com%2Fimages%2Favatar.png';\r\n";
+			echo "we.addProperty('name','" . js_escape($this->woopra_visitor['name']) . "');\r\n";
+			echo "we.addProperty('email','" . js_escape($this->woopra_visitor['email']) . "');\r\n";
+			echo "we.addProperty('avatar','http://www.gravatar.com/avatar.php?gravatar_id=" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http%3A%2F%2Fstatic.woopra.com%2Fimages%2Favatar.png');\r\n";
 		}
 		//	$this->event->print_javascript_events();
 		echo "</script>\r\n";

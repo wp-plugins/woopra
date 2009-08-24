@@ -60,11 +60,14 @@ class WoopraAnalytics extends WoopraAdmin {
 	 * This will check to see if the site based on get_option('siteurl') is vaild. If it
 	 * is not, we will tell the user and stop functioning.
 	 * 
-	 * @since 1.4.2
+	 * @note Not implmented yet!
+	 * 
+	 * @since unknown
 	 * @return 
 	 */
 	function check_site_status() {
 		// @todo New XML query to see if the site is really active. If it is, we return false... 
+		// @todo Awaiting new API from Jad
 		return false;
 	}
 	
