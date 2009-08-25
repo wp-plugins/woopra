@@ -3,8 +3,8 @@ Contributors: eliekhoury, markjaquith, ShaneF
 Web site: http://www.woopra.com
 Tags: statistics, analytics, stats, real-time
 Requires at least: 2.7.0
-Tested up to: 2.8.2
-Stable tag: 1.4.1.1
+Tested up to: 2.8.4
+Stable tag: 1.4.2
 
 This plugin adds Woopra's real-time analytics to any WordPress installation.
 
@@ -36,7 +36,7 @@ Using the manual method:
 Using the automatic method:
 
 1. Click on 'Download' or 'Upgrade'
-2. Wait for WordPress to acknowledge that it is on your system amd ready to activate.
+2. Wait for WordPress to acknowledge that it is on your system and ready to activate.
 
 After step 2 (of either method):
 
@@ -44,7 +44,7 @@ After step 2 (of either method):
 4. Configure your API key and event settings in the Woopra Settings menu
 (Your API key can be found in the Members area on Woopra.com)
 
-For Version 1.4.1.x, Event Processing in the Javascript has been disabled until further testing has completed.
+For Version 1.4.1.x and above, Event Processing in the Javascript has been disabled until the system is fully tested.
 
 IMPORTANT NOTE: In order for the WordPress Plugin to work, your WordPress theme must have the following code immediately before the </BODY> element in the footer.php file:
 
@@ -67,7 +67,16 @@ A. Make sure you have flash installed and be sure you are not stopping or blocki
 Q. How do I get an API Key?
 A. If you have downloaded this and have never signed up, please visit http://www.woopra.com to sign up. Once your site is approved you can get your API key from your members section.
 
+Q. I can not see anything under 'Woopra Analytics' even though I have an API Key.
+A. Make sure your site is registered exactly like it should be in the Woopra Members area.
+
 == Changelog ==
+
+= 1.4.2 (08-24-09) =
+
+* [NEW] New SuperTab - Tagged Visitors - You can aggregate by name. More options to come in the future.
+* [NEW] New Option - Auto Timeout - Up to 600 seconds (Default) for manually setting the timeout.
+* [CHANGE] Changed to the new javascript convention. No change it what is outputed.
 
 = 1.4.1.1 (07-23-09) =
 
@@ -75,8 +84,8 @@ A. If you have downloaded this and have never signed up, please visit http://www
 * [BUG] "Parse error: parse error, expecting T_OLD_FUNCTION' orT_FUNCTION' or T_VAR' or'}'' in \plugins\woopra\inc\chart.php on line 194": Moved array values into a global var in the class.
 * [BUG] Forgot hook_action name for toplevel support.
 * [BUG] Removed index.html files from both the 1.4.1 tag and trunk. Was causing errors during automatic upgrade.
-* [BUG] Ignoreing admin visits fixed.
-* [BUG] Detection is admin section is now being set correctly.
+* [BUG] Ignoring admin visits fixed.
+* [BUG] Detection in admin section is now being set correctly.
 * [BUG] Removed all PHP 5 stuff. :(
 * [BUG] Fixed Referrers Subsections: Regular Referrers, Search Engines, Emails, Social Bookmarks, and Social Networks when trying to expand to view the charts now works.
 * [BUG] API Key now transfers correctly.
