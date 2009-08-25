@@ -121,6 +121,7 @@ require_once( dirname(__FILE__) . '/inc/frontend.php' 		);
 require_once( dirname(__FILE__) . '/inc/events.php' 		);
 if (is_admin()) {
 	require_once( dirname(__FILE__) . '/inc/admin.php' 		);
+	require_once( dirname(__FILE__) . '/inc/xml.php' 		);
 	require_once( dirname(__FILE__) . '/inc/analytics.php' 	);
 	require_once( dirname(__FILE__) . '/inc/chart.php' 		);
 	require_once( dirname(__FILE__) . '/inc/render.php' 	);
