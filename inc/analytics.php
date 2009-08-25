@@ -49,7 +49,7 @@ class WoopraAnalytics extends WoopraAdmin {
 	 * @return none
 	 */
 	function analytics_warn($item) {
-		$message[1]	=	'<div class="error"><p>' . __( 'Your site must be part of the beta in order for this plugin to work correctly.', 'woopra' ) . "</p></div>\n";
+		$message[1]	=	'<div class="error"><p>' . sprintf(__( 'Your site (%s) must be part of the beta in order for this plugin to work correctly.', 'woopra' ), $this->woopra_host()) . "</p></div>\n";
 		$message[2]	=	'<div class="error"><p>' . sprintf( __( 'You must fill in your API Key in order to view Analytics. Please fill it out on the <a href="%s">settings page</a> in order for you to view your analytics.', 'woopra' ), admin_url('options-general.php?page=woopra') ) . "</p></div>\n";
 		echo $message[$item];
 	}
@@ -80,8 +80,11 @@ class WoopraAnalytics extends WoopraAdmin {
 		
 		$xml->clear_data();
 		unset($xml);
-
-		return (bool) !$entries['status'];
+		
+		if ($entries['status'] == "true")
+			return true;
+		
+		return false;
 	}
 	
 	/**
@@ -108,7 +111,7 @@ class WoopraAnalytics extends WoopraAdmin {
 			<h2><?php _e( 'Woopra Analytics', 'woopra' ); ?></h2>	
 		<?php
 		
-		if ($this->check_site_status()) {
+		if (!$this->check_site_status()) {
 			$this->analytics_warn(1);
 		} else if (empty($this->api_key)) {
 			$this->analytics_warn(2);
