@@ -8,7 +8,6 @@
  * @package woopra
  * @subpackage render
  */
-require_once('xml.php');
 class WoopraRender extends WoopraAdmin {
 
 	/**
@@ -131,8 +130,17 @@ class WoopraRender extends WoopraAdmin {
 			$start_date = $_GET['from'];
 			$end_date = $_GET['to'];
 			
+			$xml_data = array(
+				'key'			=> 	$this->key,
+				'date_format'	=>	$date_format,
+				'start_date'	=>	$start_date,
+				'end_date'		=>	$end_date,
+				'limit'			=>	$this->limit,
+				'offset'		=>	$this->offset
+			);
+			
 			/** LAST LINES **/
-			if ($this->process_xml($this->key, $date_format, $start_date, $end_date, $this->limit, $this->offset)) {
+			if ($this->process_xml("render", $xml_data)) {
 				$this->render_results();
 			}
 		}
@@ -141,16 +149,14 @@ class WoopraRender extends WoopraAdmin {
 	
 	/**
 	 * Prccess the XML file.
-	 * @since 1.4.1
+	 * 
+	 * @since 1.4.2
+	 * 
+	 * @param object $area
+	 * @param object $xml_data
 	 * @return 
-	 * @param object $key
-	 * @param object $date_format
-	 * @param object $start_date
-	 * @param object $end_date
-	 * @param object $limit
-	 * @param object $offset
 	 */
-	function process_xml($key, $date_format, $start_date, $end_date, $limit, $offset) {
+	function process_xml($area, $xml_data) {
 		
 		$xml = new WoopraXML;
 		
@@ -159,7 +165,7 @@ class WoopraRender extends WoopraAdmin {
 	
 		$this->entries = null;
 		if ($xml->init()) {
-			if ($xml->set_xml($key, $date_format, $start_date, $end_date, $limit, $offset)) {
+			if ($xml->set_xml($area, $xml_data)) {
 				if ($xml->process_data()) {
 					$this->entries = $xml->data;
 				}

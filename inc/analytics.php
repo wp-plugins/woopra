@@ -66,9 +66,34 @@ class WoopraAnalytics extends WoopraAdmin {
 	 * @return 
 	 */
 	function check_site_status() {
-		// @todo New XML query to see if the site is really active. If it is, we return false... 
-		// @todo Awaiting new API from Jad
-		return false;
+		
+		$xml = new WoopraXML;
+		
+		$xml->hostname = $this->woopra_host();
+	
+		$entries = null;
+		if ($xml->set_xml("status")) {
+			if ($xml->process_data()) {
+				$entries = $xml->data[0];
+			}
+		}
+		
+		$xml->clear_data();
+		unset($xml);
+
+		return (bool) !$entries['status'];
+	}
+	
+	/**
+	 * Return a pretty version of the hostname.
+	 * @since 1.4.2
+	 * @return string
+	 */
+	function woopra_host() {
+		$site = get_option('siteurl');
+		preg_match('@^(?:http://)?([^/]+)@i', $site, $matches);
+		$host = $matches[1];
+		return preg_replace('!^www\.!i', '', $host);
 	}
 	
 	/**

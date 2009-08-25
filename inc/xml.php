@@ -16,7 +16,14 @@ class WoopraXML {
 	 * @var object
 	 */
 	var $parser = null;
-
+	
+	/**
+	 * Area of the set_url
+	 * @since 1.4.2
+	 * @var string
+	 */
+	var $area = null;
+	
 	/**
 	 * URL
 	 * @since 1.4.1
@@ -133,16 +140,25 @@ class WoopraXML {
 	
 	/**
 	 * Set the XML File Location
-	 * @return boolean
-	 * @param object $key
-	 * @param object $date_format
-	 * @param object $start_date
-	 * @param object $end_date
-	 * @param object $limit
-	 * @param object $offset
+	 * 
+	 * @since 1.4.2
+	 * 
+	 * @param object $area
+	 * @param object $xml_data
+	 * @return 
 	 */
-	function set_xml($key, $date_format, $start_date, $end_date, $limit, $offset) {
-		$this->url = "http://".$this->hostname.".woopra-ns.com/apiv2/website=".$this->hostname."&api_key=".$this->api_key."&key=".$key."&date_format=".$date_format."&start_day=".$start_date."&end_day=".$end_date."&limit=".$limit."&offset=".$offset;
+	function set_xml($area, $xml_data = null) {
+		
+		$this->area = $area;
+		extract($xml_data, EXTR_OVERWRITE);
+		switch ($area) {
+			case 'render':
+				$this->url = "http://".$this->hostname.".woopra-ns.com/apiv2/website=".$this->hostname."&api_key=".$this->api_key."&key=".$key."&date_format=".$date_format."&start_day=".$start_date."&end_day=".$end_date."&limit=".$limit."&offset=".$offset;
+				break;
+			case 'status':
+				$this->url = "http://api.woopra.com/api/function=isactive&website=".$this->hostname;
+				break;
+		}
 		return true;
 	}
 	
@@ -208,28 +224,38 @@ class WoopraXML {
 	 * @uses xml_set_element_handler
 	 */
 	function start_xml($parser, $name, $attribs) {
+
 		//	Response Check
-		if (($name == "response") && (!$this->founddata))
+		if (($name == "response") && (!$this->founddata)) {
 			if ($attribs['success'] == "true") {
 				$this->founddata = true;
+				
+				if ($this->area == "status")
+					$this->current_tag = "status";
+					
 				return;
 			}
-
-		//	By Day
-		if ($name == "byday")
-			$this->byday_found = true;
-	
-		if (($name == "day") && ($this->byday_found))
-			$this->data[$this->counter]['days'][] = $attribs;
+		}
 		
-		//	Hours
-		if ($name == "hours")
-			$this->byhours_found = true;
+		if ($this->area == "render") {
+			//	By Day
+			if ($name == "byday")
+				$this->byday_found = true;
 		
-		if (($name == "hour") && ($this->byhours_found))
-			$this->data[$this->counter]['hours'][] = $attribs;
+			if (($name == "day") && ($this->byday_found))
+				$this->data[$this->counter]['days'][] = $attribs;
+			
+			//	Hours
+			if ($name == "hours")
+				$this->byhours_found = true;
+			
+			if (($name == "hour") && ($this->byhours_found))
+				$this->data[$this->counter]['hours'][] = $attribs;
+			
+		}
 		
 		$this->current_tag = $name;
+		
     }
 	
 	/**
