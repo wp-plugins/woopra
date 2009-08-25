@@ -133,6 +133,11 @@ function woopra_process_request($key,$start_date, $end_date, $limit, $offset) {
 			$entries = $woopraXML->data;//['data']['entry'];
 		} 
 	}
+	
+	if ($woopraXML->connection_error != null) {
+		die('<p style="text-align: center; background: #dc0303; padding: 10px; color: #fff;">The Woopra Plugin was not able to request your analytics data from the Woopra Engines.<br/><small>Your hosting provider is not allowing the Woopra Plugin to fetch data from the Woopra Servers.</small></p>');
+	}
+	
 	$woopraXML->clearData();
 	
 	//print_r($entries);
