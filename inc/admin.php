@@ -414,7 +414,7 @@ class WoopraAdmin extends Woopra {
 			<th scope="row"><?php _e('Auto Timeout', 'woopra') ?></th>
 			<td>
 				<input type="checkbox" value="1"<?php checked('1', $this->get_option('use_timeout')); ?> id="use_timeout" name="woopra[use_timeout]"/> <label for="use_timeout"><?php _e("Override Woopra Default 'Auto Time Out'"); ?></label><br /><small><?php _e("Turn this 'on' if you want to override Woopra Default Timeout Settings. Setting this to low might cause incorrect statistics. Once a user is considered 'timed out' they will be considered gone. If they revisit they will be considered a 'new visit' and might mess up your statistics.", 'woopra'); ?></small>
-				<br/> <?php printf("<label for='woopra[timeout]'>".__('Seconds before Timeout: %s')."</label>", $this->wp_dropdown_number_select("name=woopra[timeout]&echo=0&max=600&selected=" . $this->get_option('timeout') . "&disabled=" . (string) $this->get_option('use_timeout'))); ?>
+				<br/> <?php printf("<label for='woopra[timeout]'>".__('Seconds before Timeout: %s')."</label>", $this->wp_dropdown_number_select("name=woopra[timeout]&default=600&echo=0&max=600&selected=" . $this->get_option('timeout') . "&disabled=" . (string) $this->get_option('use_timeout'))); ?>
 			</td>
 		</tr>
 		<tr valign="top">
@@ -526,21 +526,23 @@ class WoopraAdmin extends Woopra {
 	function wp_dropdown_number_select($args = '') {
 		$defaults = array(
 			'default' => 600, 'selected' => 0, 
-			'echo' => 1, 'show_option_none' => sprintf(__('Default (%s)', 'woopra'), 600),
-			'min' => 0, 'max' => 100,
-			'disabled' => false
+			'echo' => 1, 'min' => 0, 
+			'max' => 100, 'disabled' => false
 		);
 		
 		$r = wp_parse_args( $args, $defaults );
 		extract( $r, EXTR_SKIP );
+		
+		if ($default > $max)
+			$max = $default;
+		
+		$show_option_none = sprintf(__('Default (%s)', 'woopra'), $default);
 		
 		if ( empty($disabled) )
 			$disabled = false;
 		
 		$output = '';
 		if ( !empty($name) ) {
-			if ($default != 5)
-				$show_option_none = sprintf(__('Default (%s)', 'woopra'), $default);
 		
 			$output = '';
 			$output = "<select name=\"$name\" id=\"$name\" " . $this->disabled($disabled, false) . ">\n";
