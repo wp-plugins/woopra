@@ -60,16 +60,14 @@ class WoopraAnalytics extends WoopraAdmin {
 	 * This will check to see if the site based on get_option('siteurl') is vaild. If it
 	 * is not, we will tell the user and stop functioning.
 	 * 
-	 * @note Not implmented yet!
-	 * 
-	 * @since unknown
+	 * @since 1.4.2
 	 * @return 
 	 */
 	function check_site_status() {
 		
 		$xml = new WoopraXML;
 		
-		$xml->hostname = $this->woopra_host();
+		$xml->hostname = trim($this->woopra_host());
 	
 		$entries = null;
 		if ($xml->set_xml("status")) {
