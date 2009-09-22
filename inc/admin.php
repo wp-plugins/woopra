@@ -39,6 +39,7 @@ class WoopraAdmin extends Woopra {
 	 */
 	var $plugin_basename;
 
+
 	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
 	 * @since 1.4.1
@@ -194,7 +195,7 @@ class WoopraAdmin extends Woopra {
 									'siteurl'		=>	get_option('siteurl'),
 									'baseurl'		=>	$plugin_url,
 									'dateformat'	=>	$this->get_option('date_format'),
-									'error'			=>	__('An error has happened. Please try again later.', 'woopra'),
+									'error'			=>	__('An javascript error has happened. Please try again later.', 'woopra'),
 				)
 			);
 			wp_enqueue_script( 'woopra-swfobject',	$plugin_url . '/js/swfobject.js'							);
@@ -221,6 +222,8 @@ class WoopraAdmin extends Woopra {
 			$this->upgrade('1.4.1.1');
 		else if ($this->version_compare(array( '1.4.1.1' => '>' , '1.4.2' => '<' )))
 			$this->upgrade('1.4.2');
+		else if ($this->version_compare(array( '1.4.2' => '>' , '1.4.3' => '<' )))
+			$this->upgrade('1.4.3');
 	}
 
 	/**
@@ -307,6 +310,16 @@ class WoopraAdmin extends Woopra {
 			
 			unset($woopra['version']);
 			update_option( 'woopra', array_merge($woopra, $newopts) );
+		}  else if ( $ver == '1.4.3' ) {
+			
+			$woopra = get_option('woopra');
+
+			$newopts = array (
+					'version'		=>	'1.4.3',
+			);
+			
+			unset($woopra['version']);
+			update_option( 'woopra', array_merge($woopra, $newopts) );
 		}
 	}
 
@@ -345,10 +358,32 @@ class WoopraAdmin extends Woopra {
 			return $this->defaults();
 		} else {
 			unset($options['delete'], $options['default']);
+			
+			$error = new WP_Error();
+			
+			if ( !is_numeric( $options['timeout'] ) )
+				$error->add('timeout_not_numeric', sprintf( _('You entred (<strong>%s</strong>) as a timeout value. This is not a vaild entry. Please enter whole numbers only!'), $options['timeout']) );
+			
+			$this->error_check($error);
+
 			return $options;
 		}
 	}
-
+	
+	/**
+	 * Error Checking
+	 * @param object $error
+	 * @since 1.4.3
+	 * @return 
+	 */
+	function error_check($error) {
+		if ( (is_wp_error($error) && (count($error->get_error_messages()) > 0)) ) {
+			foreach ($error->get_error_messages() as $message)
+				$output .= $message . "<br/>";
+			wp_die($output);
+		}
+	}
+	
 	/**
 	 * The setting page itself.
 	 * @since 1.4.1
@@ -413,8 +448,8 @@ class WoopraAdmin extends Woopra {
 		<tr valign="top">
 			<th scope="row"><?php _e('Auto Timeout', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('use_timeout')); ?> id="use_timeout" name="woopra[use_timeout]"/> <label for="use_timeout"><?php _e("Override Woopra Default 'Auto Time Out'"); ?></label><br /><small><?php _e("Turn this 'on' if you want to override Woopra Default Timeout Settings. Setting this to low might cause incorrect statistics. Once a user is considered 'timed out' they will be considered gone. If they revisit they will be considered a 'new visit' and might mess up your statistics.", 'woopra'); ?></small>
-				<br/> <?php printf("<label for='woopra[timeout]'>".__('Seconds before Timeout: %s')."</label>", $this->wp_dropdown_number_select("name=woopra[timeout]&default=600&echo=0&max=600&selected=" . $this->get_option('timeout') . "&disabled=" . (string) $this->get_option('use_timeout'))); ?>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('use_timeout')); ?> id="use_timeout" name="woopra[use_timeout]"/> <label for="use_timeout"><?php _e("Override Woopra Default 'Auto Time Out'"); ?></label><br /><small><?php _e("Turn this 'on' if you want to override Woopra Default Timeout Settings (600 seconds). Setting this to low might cause incorrect statistics. Once a user is considered 'timed out' they will be considered gone. If they revisit they will be considered a 'new visit' and might mess up your statistics. This must be a whole number. (e.g. 34, 23)", 'woopra'); ?></small>
+				<br/> <label for="timeout"><?php _e('Seconds before Timeout:') ?> </label> <input type="text" value="<?php echo $this->get_option('timeout'); ?>" <?php checked( '1', $this->get_option('use_timeout') ) ?> id="timeout" name="woopra[timeout]" />
 			</td>
 		</tr>
 		<tr valign="top">
@@ -513,84 +548,6 @@ class WoopraAdmin extends Woopra {
 	function render_page() {
 		$WoopraRender = new WoopraRender();
 		unset($WoopraRender);
-	}
-	
-	
-	/** CUSTOM FUNCTIONS UNITL THIS ARE ADDED TO WORDPRESS CORE **/
-	
-	/**
-	 * 
-	 * @param object $args [optional]
-	 * @return 
-	 */
-	function wp_dropdown_number_select($args = '') {
-		$defaults = array(
-			'default' => 600, 'selected' => 0, 
-			'echo' => 1, 'min' => 0, 
-			'max' => 100, 'disabled' => false
-		);
-		
-		$r = wp_parse_args( $args, $defaults );
-		extract( $r, EXTR_SKIP );
-		
-		if ($default > $max)
-			$max = $default;
-		
-		$show_option_none = sprintf(__('Default (%s)', 'woopra'), $default);
-		
-		if ( empty($disabled) )
-			$disabled = false;
-		
-		$output = '';
-		if ( !empty($name) ) {
-		
-			$output = '';
-			$output = "<select name=\"$name\" id=\"$name\" " . $this->disabled($disabled, false) . ">\n";
-			for ($i = $min; $i <= $max; $i++) {
-				if ($i == $default)
-					$output .= "\t<option " . selected($i, $selected, false) . " value=\"$default\">$show_option_none</option>";
-				else
-					$output .= "\t<option " . selected($i, $selected, false) . " value=\"$i\">$i</option>";
-			}
-			$output .= "</select>\n";	
-			if ( !$disabled )
-				$output .= "<input type=\"hidden\" name=\"$name\" value=\"$selected\" />";
-		}
-		
-		if ( $echo )
-			echo $output;
-	
-		return $output;
-	}
-	
-	/**
-	 * 
-	 * @param object $current [optional]
-	 * @param object $echo [optional]
-	 * @return 
-	 */
-	function disabled( $current = true, $echo = true) {
-		return $this->__disabled_selected_helper( $current, $echo, 'disabled' );
-	}
-	
-	/**
-	 * 
-	 * @param object $current
-	 * @param object $echo
-	 * @param object $type
-	 * @return 
-	 */
-	function __disabled_selected_helper( $current, $echo, $type) {
-		if ( false === (bool) $current)
-			$result = " $type='$type'";
-		else
-			$result = '';
-	
-		if ($echo)
-			echo $result;
-	
-		return $result;
-	}
-	
+	}	
 	
 }
