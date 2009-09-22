@@ -89,26 +89,31 @@ class WoopraFrontend extends Woopra {
 			return;
 		
 		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
+		
 		echo "<!-- Woopra Analytics Code -->\n";
-		echo "<script type=\"text/javascript\">";
-    	echo "var _wh = ((document.location.protocol=='https:') ? \"https://sec1.woopra.com\" : \"http://static.woopra.com\");";
-		echo "document.write(unescape(\"%3Cscript src='\" + _wh + \"/js/woopra.js' type='text/javascript'%3E%3C/script%3E\"));";
-		if ($this->get_option('use_timeout') && ($this->get_option('timeout') < 600)) {
-			$woopra_tracker = " woopraTracker.setidletimeout = ".($this->get_option('timeout')*1000)."; ";
-			echo "document.write(unescape(\"%3Cscript type='text/javascript'%3E".$woopra_tracker."%3C/script%3E\"));";
-		}		
-		echo "</script>";
-		echo "<script type=\"text/javascript\">\r\n";
-		echo "var we = new WoopraEvent();\r\n";
+		echo "<script type=\"text/javascript\"> var _wh = ((document.location.protocol=='https:') ? \"https://sec1.woopra.com\" : \"http://static.woopra.com\");document.write(unescape(\"%3Cscript src='\" + _wh + \"/js/woopra.js' type='text/javascript'%3E%3C/script%3E\")); </script>\r\n";
 		
 		if ($this->get_option('auto_tagging') && !empty($this->woopra_visitor['name'])) {
-			echo "we.addProperty('name','" . js_escape($this->woopra_visitor['name']) . "');\r\n";
-			echo "we.addProperty('email','" . js_escape($this->woopra_visitor['email']) . "');\r\n";
-			echo "we.addProperty('avatar','". urlencode("http://www.gravatar.com/avatar/" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http://static.woopra.com/images/avatar.png") . "');\r\n";
+			$woopra_tracker .= "woopraTracker.addVisitorProperty('name','" . js_escape($this->woopra_visitor['name']) . "');\r\n";
+			$woopra_tracker .= "woopraTracker.addVisitorProperty('email','" . js_escape($this->woopra_visitor['email']) . "');\r\n";
+			$woopra_tracker .= "woopraTracker.addVisitorProperty('avatar','". urlencode("http://www.gravatar.com/avatar/" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http://static.woopra.com/images/avatar.png") . "');\r\n";
 		}
-		//	$this->event->print_javascript_events();
+		if ($this->get_option('use_timeout')) {
+			$woopra_tracker .= "woopraTracker.setidletimeout = ".($this->get_option('timeout')*1000).";\r\n";
+		}
+		
+		echo "<script type=\"text/javascript\">\r\n";
+		echo $woopra_tracker;
 		echo "</script>\r\n";
-		echo "\n<!-- End of Woopra Analytics Code -->";
+		
+		if ( $this->event->current_event->vaild ) {
+			echo "<script type=\"text/javascript\">\r\n";
+			echo "var we = new WoopraEvent();\r\n";
+			$this->event->print_javascript_events();
+			echo "we.fire();";
+			echo "</script>\r\n";
+		}
+		echo "<!-- End of Woopra Analytics Code -->";
 		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
 		
 	}
@@ -120,6 +125,7 @@ class WoopraFrontend extends Woopra {
 	 */
 	function woopra_detect() {
 		$current_user = wp_get_current_user();
+		
 		// Wait? The user is logged in. Get that data instead.
 		if (is_user_logged_in()) {
 			$this->woopra_visitor['name'] = $current_user->display_name;
