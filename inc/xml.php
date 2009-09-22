@@ -226,17 +226,17 @@ class WoopraXML {
 	 * @uses xml_set_element_handler
 	 */
 	function start_xml($parser, $name, $attribs) {
-
+		
 		//	Response Check
 		if (($name == "response") && (!$this->founddata)) {
 			if ($attribs['success'] == "true") {
 				$this->founddata = true;
-				
-				if ($this->area == "status")
-					$this->current_tag = "status";
-					
-				return;
 			}
+		}
+		
+		if ($this->area == "status") {
+			$this->current_tag = "status";
+			return;
 		}
 		
 		if ($this->area == "render") {
