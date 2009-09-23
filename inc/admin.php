@@ -87,8 +87,8 @@ class WoopraAdmin extends Woopra {
 		add_action( 'admin_init',					array(&$this, 'admin_init' ) 						);
 		
 		//	Process Events
-		$this->event = new WoopraEvents('admin');
-		
+		$this->event = new WoopraEvents();
+				
 	}
 	
 	/*** MAIN FUNCTIONS ***/
@@ -359,28 +359,17 @@ class WoopraAdmin extends Woopra {
 		} else {
 			unset($options['delete'], $options['default']);
 			
-			$error = new WP_Error();
-			
 			if ( !is_numeric( $options['timeout'] ) )
-				$error->add('timeout_not_numeric', sprintf( _('You entred (<strong>%s</strong>) as a timeout value. This is not a vaild entry. Please enter whole numbers only!'), $options['timeout']) );
+				$this->fire_error( 'timeout_not_numeric' , array('message' => 'You entred (<strong>%s</strong>) as a timeout value. This is not a vaild entry. Please enter whole numbers only!', 'values' => $options['timeout']) );
 			
-			$this->error_check($error);
+			$this->check_error( 'timeout_not_numeric' );
+			
+			if ($options['timeout'] <= 0)
+				$options['use_timeout'] = false;
+				
+				
 
 			return $options;
-		}
-	}
-	
-	/**
-	 * Error Checking
-	 * @param object $error
-	 * @since 1.4.3
-	 * @return 
-	 */
-	function error_check($error) {
-		if ( (is_wp_error($error) && (count($error->get_error_messages()) > 0)) ) {
-			foreach ($error->get_error_messages() as $message)
-				$output .= $message . "<br/>";
-			wp_die($output);
 		}
 	}
 	
@@ -391,7 +380,7 @@ class WoopraAdmin extends Woopra {
 	 */
 	function settings_page() {
 	
-	$this->_events = $this->event->register_events();
+	$this->_events = $this->event->default_events;
 	$event_status = $this->get_option('woopra_event');
 
 	?>
@@ -448,7 +437,7 @@ class WoopraAdmin extends Woopra {
 		<tr valign="top">
 			<th scope="row"><?php _e('Auto Timeout', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('use_timeout')); ?> id="use_timeout" name="woopra[use_timeout]"/> <label for="use_timeout"><?php _e("Override Woopra Default 'Auto Time Out'"); ?></label><br /><small><?php _e("Turn this 'on' if you want to override Woopra Default Timeout Settings (600 seconds). Setting this to low might cause incorrect statistics. Once a user is considered 'timed out' they will be considered gone. If they revisit they will be considered a 'new visit' and might mess up your statistics. This must be a whole number. (e.g. 34, 23)", 'woopra'); ?></small>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('use_timeout')); ?> id="use_timeout" name="woopra[use_timeout]"/> <label for="use_timeout"><?php _e("Override Woopra Default 'Auto Time Out'"); ?></label><br /><small><?php _e("Turn this 'on' if you want to override Woopra Default Timeout Settings (600 seconds). Setting this to low might cause incorrect statistics. Once a user is considered 'timed out' they will be considered gone. If they revisit they will be considered a 'new visit' and might mess up your statistics. This must be a whole number. (e.g. 34, 23) System will automaticly turn off if the number is less than or equal to 'zero'.", 'woopra'); ?></small>
 				<br/> <label for="timeout"><?php _e('Seconds before Timeout:') ?> </label> <input type="text" value="<?php echo $this->get_option('timeout'); ?>" <?php checked( '1', $this->get_option('use_timeout') ) ?> id="timeout" name="woopra[timeout]" />
 			</td>
 		</tr>

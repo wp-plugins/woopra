@@ -22,7 +22,7 @@
  * 
  *
  * @author Elie El Khoury <elie@woopra.com> and Shane Froebel <shane@woopra.com>
- * @version 1.4.2
+ * @version 1.4.3
  * @copyright 2007-2009
  * @package woopra
  */
@@ -32,7 +32,7 @@
  * @since 1.4.1
  * @return none
  */
-DEFINE ('WOOPRA_VERSION', '1.4.2');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
+DEFINE ('WOOPRA_VERSION', '1.4.3');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
 
 /*
 
@@ -40,7 +40,7 @@ DEFINE ('WOOPRA_VERSION', '1.4.2');		// MAKE SURE THIS MATCHES THE VERSION ABOVE
 
 Plugin Name:  Woopra
 Plugin URI:   http://wordpress.org/extend/plugins/woopra/
-Version:      1.4.2
+Version:      1.4.3
 Description:  This plugin adds Woopra's real-time analytics to any WordPress installation.  Simply sign up at Woopra.com, then activate the plugin!
 Author:       <a href="http://www.ekhoury.com">Elie El Khoury</a>, <a href="http://bugssite.org">Shane Froebel</a>
 Author URI:   http://www.woopra.com/
@@ -68,6 +68,11 @@ class Woopra {
 	var $woopra_vistor;
 
 	/**
+	 * @var
+	 */
+	var $error;
+
+	/**
 	 * Compatability for PHP 4.
 	 * @since 1.4.1
 	 * @return none
@@ -83,6 +88,7 @@ class Woopra {
 	 * @constructor
 	 */
 	function __construct() {
+		$this->error = new WP_Error();
 		//	Load Options
 		$this->options = get_option('woopra');		
 	}
@@ -109,7 +115,60 @@ class Woopra {
 		else
 			return false;
 	}
+	
+	/**
+	 * 
+	 * @param object $code [optional]
+	 * @param object $args [optional]
+	 * @return 
+	 */
+	function fire_error($code = '', $args = '') {
+		$defaults = array(
+			'code' => 'generic_error', 'message' => _('Woopra: An unknown error occured.'), 
+			'values' => null, 'debug' => 0
+		);
+		$r = wp_parse_args( $args, $defaults );
+		extract( $r, EXTR_SKIP );
 
+		$this->error->add($code, sprintf( _($message), $values), $debug );
+	}
+	
+	/**
+	 * 
+	 * @return 
+	 */
+	function check_error($code) {
+		if ( (is_wp_error($this->error) && (count($this->error->get_error_messages()) > 0)) ) {
+			foreach ($this->error->get_error_messages() as $message) {
+				$output .= $message . "<br/>";
+			}
+			$this->display_error($output, $this->error->error_data[$code]);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param object $output
+	 * @param object $hide_debug [optional]
+	 * @return 
+	 */
+	function display_error($output, $show_debug) {
+		
+		ob_start();
+        debug_print_backtrace();
+        $trace = ob_get_contents();
+        ob_end_clean(); 
+		
+		$trace = preg_replace ('/^#0\s+' . __FUNCTION__ . "[^\n]*\n/", '', $trace, 1); 
+		$trace = preg_replace ('/^#(\d+)/me', '\'<br/><strong>#</strong>\' . ($1 - 1)', $trace);
+		
+		if ($show_debug)
+			$trace_output = '<br />Please report the following as well on the forums: <br/> <small>' . $trace . '</small>';
+		
+		wp_die($output . $trace_output);
+		
+	}
+	
 }
 
 /**
