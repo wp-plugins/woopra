@@ -68,7 +68,8 @@ class Woopra {
 	var $woopra_vistor;
 
 	/**
-	 * @var
+	 * @since 1.4.4
+	 * @var object
 	 */
 	var $error;
 
@@ -117,14 +118,14 @@ class Woopra {
 	}
 	
 	/**
-	 * 
+	 * Fire Error
 	 * @param object $code [optional]
 	 * @param object $args [optional]
 	 * @return 
 	 */
 	function fire_error($code = '', $args = '') {
 		$defaults = array(
-			'code' => 'generic_error', 'message' => _('Woopra: An unknown error occured.'), 
+			'code' => 'generic_error', 'message' => _('An unknown error occured.'), 
 			'values' => null, 'debug' => 0
 		);
 		$r = wp_parse_args( $args, $defaults );
@@ -134,13 +135,13 @@ class Woopra {
 	}
 	
 	/**
-	 * 
+	 * Check to see if an error exists.
 	 * @return 
 	 */
-	function check_error($code) {
+	function check_error($code = 'generic_error') {
 		if ( (is_wp_error($this->error) && (count($this->error->get_error_messages()) > 0)) ) {
 			foreach ($this->error->get_error_messages() as $message) {
-				$output .= $message . "<br/>";
+				$output .= _('Woopra: ') . $message . "<br/>";
 			}
 			$this->display_error($output, $this->error->error_data[$code]);
 		}

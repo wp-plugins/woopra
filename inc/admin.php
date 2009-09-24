@@ -315,7 +315,8 @@ class WoopraAdmin extends Woopra {
 			$woopra = get_option('woopra');
 
 			$newopts = array (
-					'version'		=>	'1.4.3',
+					'version'			=>	'1.4.3',
+					'process_events'	=>	1,
 			);
 			
 			unset($woopra['version']);
@@ -330,18 +331,19 @@ class WoopraAdmin extends Woopra {
 	 */
 	function defaults() {
 		$defaults = array(
-			'version'		=> '',
-			'activated'		=> 1,
-			'api_key'		=> '',
-			'analytics_tab'	=> 'dashboard',
-			'run_status'	=> 'on',
-			'date_format'	=> 'yyyy-MM-dd',	// hardcoded for now
-			'limit'			=> 50,
-			'auto_tagging'	=> 1,
-			'ignore_admin'	=> 0,
-			'track_admin'	=> 0,
-			'use_timeout'	=> 0,
-			'timeout'		=> 600,
+			'version'			=> '',
+			'activated'			=> 1,
+			'api_key'			=> '',
+			'analytics_tab'		=> 'dashboard',
+			'run_status'		=> 'on',
+			'date_format'		=> 'yyyy-MM-dd',	// hardcoded for now
+			'limit'				=> 50,
+			'auto_tagging'		=> 1,
+			'ignore_admin'		=> 0,
+			'track_admin'		=> 0,
+			'use_timeout'		=> 0,
+			'process_events'	=> 1,
+			'timeout'			=> 600,
 		);
 		return $defaults;
 	}
@@ -366,8 +368,6 @@ class WoopraAdmin extends Woopra {
 			
 			if ($options['timeout'] <= 0)
 				$options['use_timeout'] = false;
-				
-				
 
 			return $options;
 		}
@@ -463,6 +463,12 @@ class WoopraAdmin extends Woopra {
 	<br/>
 	<h3><? _e('Event Settings', 'woopra'); ?></h3>
 	<table class="form-table">
+		<tr valign="top">
+			<th scope="row"><?php _e('Global Event Tracking', 'woopra') ?></th>
+			<td>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('process_event')); ?> id="process_event" name="woopra[process_event]"/> <label for="process_event"><?php _e("Turn on Event Tracking System", 'woopra'); ?></label><br /><?php printf(__("If this is turned on, all events that are selected below will be tracked and reported back to the Woopra system.", 'woopra')); ?>
+			</td>
+		</tr>
 		<tr valign="top">
 			<th scope="row"><?php _e('Main Area Events', 'woopra') ?></th>
 			<td>

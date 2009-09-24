@@ -49,7 +49,7 @@ class WoopraAnalytics extends WoopraAdmin {
 	 * @return none
 	 */
 	function analytics_warn($item) {
-		$message[1]	=	'<div class="error"><p>' . sprintf(__( 'Your site (%s) must be part of the beta in order for this plugin to work correctly.', 'woopra' ), $this->woopra_host()) . "</p></div>\n";
+		$message[1]	=	'<div class="error"><p>' . sprintf(__( 'Your site (%s) must be part of the beta in order for this plugin to work correctly.', 'woopra' ), $this->woopra_host(), get_option('siteurl')) . "</p></div>\n";
 		$message[2]	=	'<div class="error"><p>' . sprintf( __( 'You must fill in your API Key in order to view Analytics. Please fill it out on the <a href="%s">settings page</a> in order for you to view your analytics.', 'woopra' ), admin_url('options-general.php?page=woopra') ) . "</p></div>\n";
 		echo $message[$item];
 	}

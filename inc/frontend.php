@@ -9,14 +9,20 @@
  * @subpackage frontend
  */
 class WoopraFrontend extends Woopra {
-
+	
 	/**
-	 * Holder for the event class.
-	 * @since 1.4.1
+	 * What are the current event's going on?
+	 * @since 1.4.3
 	 * @var object
 	 */
-	var $event;
-
+	var $current_event;
+	
+	/**
+	 * Are there events present?
+	 * @var 1.4.3
+	 */
+	var $present_event;
+	
 	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
 	 * @since 1.4.1
@@ -33,19 +39,109 @@ class WoopraFrontend extends Woopra {
 	 * @constructor
 	 */
 	function __construct() {
+		
+		if (!isset($_SESSION))
+			@session_start();
+		
 		Woopra::__construct();
+		
+		// Load Event Processing
+		$this->event = new WoopraEvents();
 		
 		//	Frontend Actions
 		add_action(	'wp',						array(&$this, 'woopra_detect')					);
-		add_action( 'wp_footer', 				array(&$this, 'woopra_widget'), 			10	);
+
+		add_action(	'admin_head',				array(&$this, 'woopra_detect'),				10	);
+
+		//	Events Actions
+		$this->add_events();
+		if ($this->get_option('process_event'))
+			$this->event->current_event = $_SESSION['woopra']['events'];
 		
-		add_action(	'admin_head',				array(&$this, 'woopra_detect')					);
-					
+		add_action( 'wp_footer', 				array(&$this, 'woopra_widget'), 			10	);
 		if ($this->get_option('track_admin'))
 			add_action( 'admin_footer',				array(&$this, 'woopra_widget'),			10	);
 		
-		//	Process Events
-		$this->event = new WoopraEvents('frontend');
+	}
+
+	/**
+	 * Add Actions to Filter List
+	 * @since 1.4.3
+	 * @return true if suscess full.
+	 */
+	function add_events() {
+		
+		$all_events = $this->event->default_events;
+		$event_status = $this->get_option('woopra_event');		
+		
+		foreach ($all_events as $event_name => $data) {
+			$action_name = isset($data['action']) ? $data['action'] : $data['filter'];
+			$is_action = isset($data['action']) ? true : false;
+			
+			if ( ($event_status[$action_name] == 1) && ($is_action) ) {
+				
+				add_action( $action_name, array(&$this, 'process_events') );
+					
+				if ( !has_action( $action_name, array(&$this, 'process_events') ) )
+					$this->fire_error( 'action_could_not_be_added' , array( 'message' => _('This action (<strong>%s</strong>) could not be added to the system. Please disable tracking of this event and report this error.'), 'values' => $action_name, 'debug' => true) );
+
+			} elseif ( ($event_status[$action_name] == 1) && ($is_action == false) ) {
+				
+				add_filter( $action_name, array(&$this, 'process_filter_events') );
+					
+				if ( !has_filter( $action_name, array(&$this, 'process_filter_events') ) )
+					$this->fire_error( 'action_could_not_be_added' , array( 'message' => _('This action (<strong>%s</strong>) could not be added to the system. Please disable tracking of this event and report this error.'), 'values' => $action_name, 'debug' => true) );
+				
+			}
+		}
+		
+	}
+
+	/**
+	 * The handler for processing events.
+	 * @since 1.4.1
+	 * @return boolean
+	 * @param object $args
+	 */
+	function process_events($args) {
+		$current_event = current_filter();
+		
+		if ( !isset($current_event) )
+			$this->fire_error( 'current_filter_no_name' , array( 'message' => _('There is no name with this event.'), 'debug' => true) );
+		$this->check_error( 'current_filter_no_name' );
+		
+		return $this->add_event($current_event, $args);
+	}
+
+	/**
+	 * The handler for processing filter events.
+	 * @since 1.4.1
+	 * @return boolean
+	 * @param object $args
+	 */
+	function process_filter_events($args) {
+		$current_event = current_filter();
+		
+		if ( !isset($current_event) )
+			$this->fire_error( 'current_filter_no_name' , array( 'message' => _('There is no name with this event.'), 'debug' => true) );
+		$this->check_error( 'current_filter_no_name' );
+		
+		$this->add_event($current_event, $args);
+		return $args;
+	}
+
+	/**
+	 * Process Event
+	 * @since 1.4.1
+	 * @return none
+	 * @param object $event
+	 * @param object $args
+	 */
+	function add_event($event, $args) {
+		if (!isset($_SESSION))
+			@session_start();
+
+		$_SESSION['woopra']['events'][$event] = $args;
 	}
 	
 	/**
@@ -87,7 +183,7 @@ class WoopraFrontend extends Woopra {
 		
 		if ($this->woopra_admin())
 			return;
-		
+
 		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
 		
 		echo "<!-- Woopra Analytics Code -->\n";
@@ -106,11 +202,10 @@ class WoopraFrontend extends Woopra {
 		echo $woopra_tracker;
 		echo "</script>\r\n";
 		
-		if ( $this->event->current_event->vaild ) {
+		if ( is_array($this->event->current_event) ) {
 			echo "<script type=\"text/javascript\">\r\n";
-			echo "var we = new WoopraEvent();\r\n";
 			$this->event->print_javascript_events();
-			echo "we.fire();";
+			echo "we.fire();\r\n";
 			echo "</script>\r\n";
 		}
 		echo "<!-- End of Woopra Analytics Code -->";
