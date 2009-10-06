@@ -204,6 +204,7 @@ class WoopraFrontend extends Woopra {
 		
 		if ( is_array($this->event->current_event) ) {
 			echo "<script type=\"text/javascript\">\r\n";
+			echo "var we = new WoopraEvent();\r\n";
 			$this->event->print_javascript_events();
 			echo "we.fire();\r\n";
 			echo "</script>\r\n";

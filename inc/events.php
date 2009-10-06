@@ -91,7 +91,7 @@ class WoopraEvents extends WoopraFrontend {
 				'label'		=>	__('Show comments as they are posted.', 'woopra'),
 				'function'	=>	'get_comment',
 				'object'	=>	'comment_content',
-				'value'		=>	null,
+				'value'		=>	__('User posted comment.', 'woopra'),
 				'action'	=>	'comment_post',
 			),
 			array(
@@ -116,11 +116,10 @@ class WoopraEvents extends WoopraFrontend {
 	function print_javascript_events() {	
 		if (is_array($this->current_event)) {
 			foreach ($this->current_event as $event_name => $event_value) {
-				echo "var we = new WoopraEvent('" . strtoupper(js_escape($this->event_display($event_name))) . "','" . js_escape($this->event_display($event_name)) . "');\r\n";
 				if (!is_null($event_value) || is_object($event_value) || !empty($event_value))
 					echo "we.addProperty('" . js_escape($this->event_display($event_name)) . "','" . js_escape($this->event_value($event_name, $event_value)) . "');\r\n";
 			}
-			unset($_SESSION['woopra']['events']);
+			unset($_SESSION['woopra']['events'], $this->current_event);
 		}
 	}
 	
@@ -183,11 +182,14 @@ class WoopraEvents extends WoopraFrontend {
 	function event_function($func, $args) {
 		if (function_exists($func['function'])) {
 			$func_args = array(); 
-			
-			$args_array = preg_split("%,%", $args); 
-			foreach ($args_array as $arg_array) 
-				array_push($func_args, $arg_array);
-			
+			if (!is_array($args)) {
+				$args_array = preg_split("%,%", $args); 
+				foreach ($args_array as $arg_array) 
+					array_push($func_args, $arg_array);
+			} else {
+				$func_args = $args;
+			}
+			$value = call_user_func_array($func['function'], $func_args);
 			if (is_object($value))
 				return $value->{$func['object']};
 			else
