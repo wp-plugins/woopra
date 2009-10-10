@@ -99,7 +99,7 @@ class WoopraEvents extends WoopraFrontend {
 				'label'		=>	__('Show users search queries.', 'woopra'),
 				'function'	=>	'get_search_query',
 				'object'	=>	null,
-				'value'		=>	'Executed Search',
+				'value'		=>	__('Executed Search', 'woopra'),
 				'filter'	=>	'the_search_query',
 			)
 		);
