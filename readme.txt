@@ -4,7 +4,7 @@ Web site: http://www.woopra.com
 Tags: statistics, analytics, stats, real-time
 Requires at least: 2.7.0
 Tested up to: 2.8.4
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 
 This plugin adds Woopra's real-time analytics to any WordPress installation.
 
@@ -44,8 +44,6 @@ After step 2 (of either method):
 4. Configure your API key and event settings in the Woopra Settings menu
 (Your API key can be found in the Members area on Woopra.com)
 
-For Version 1.4.1.x and above, Event Processing in the Javascript has been disabled until the system is fully tested.
-
 IMPORTANT NOTE: In order for the WordPress Plugin to work, your WordPress theme must have the following code immediately before the </BODY> element in the footer.php file:
 
     `<?php wp_footer(); ?>`
@@ -65,12 +63,21 @@ Q. I can not see any of the flash charts.
 A. Make sure you have flash installed and be sure you are not stopping or blocking flash from loading.
 
 Q. How do I get an API Key?
-A. If you have downloaded this and have never signed up, please visit http://www.woopra.com to sign up. Once your site is approved you can get your API key from your members section.
+A. You must be invited (for free account) or sign up for a paid account to use Woopra.
 
 Q. I can not see anything under 'Woopra Analytics' even though I have an API Key.
-A. Make sure your site is registered exactly like it should be in the Woopra Members area.
+A. Make sure your site is registered exactly like it should be in the Woopra Members area that matches your WordPress SiteUrl. (A fix will be along shortly.)
 
 == Changelog ==
+
+= 1.4.3 (10-12-09) =
+
+* [NEW] Adding Error Handling Code
+* [ACTIVATED] Uncommented code for events to work now! (Posting Comment, Searching)
+* [BUG] Javascript for the Frontend again is updated to work with the new Woopra.js master file.
+* [BUG] Fixed 'Site not part of...'. In most cases the XML data returned was not being inturpted correctly.
+* [CHANGE] Events code re-written from scratch.
+* [CHANGE] No more dropdown for the 'Timeout' feild. This value must be a whole number. Numbers will round down to the lower number if it's set a fraction. Setting it to '0' (Zero) will remove the override timeout.
 
 = 1.4.2 (08-24-09) =
 

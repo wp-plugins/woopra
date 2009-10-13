@@ -1,7 +1,7 @@
 <?php
 /**
  * Woopra is the world’s most comprehensive, information rich, easy to use, real-time Web
- * tracking and analysis application. And it’s free!
+ * tracking and analysis application. And it’s free! For more information please visit the website.
  * 
  * Woopra delivers the richest library of visitor statistics in the industry, and does it
  * within an unmatched user interface designed to be aesthetically pleasing as well as highly
@@ -19,7 +19,6 @@
  * Open Flash Charts 2 is copyrighted and created by John Glazebrook <http://teethgrinder.co.uk>
  * It is licenced as LGPL. You can view the terms of the object helper files and the flash file
  * itself here: http://teethgrinder.co.uk/open-flash-chart-2/
- * 
  *
  * @author Elie El Khoury <elie@woopra.com> and Shane Froebel <shane@woopra.com>
  * @version 1.4.3
