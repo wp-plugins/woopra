@@ -254,7 +254,12 @@ class WoopraRender extends WoopraAdmin {
 				//	Vistor Code
 				$newvisitors = (int) $entry['newvtrs'];
 				$visitors = (int) $entry['vts'];
-				// @todo Code to figure out % of new vistors
+				
+				$visitorsstring = "-";
+				if ($newvisitors <= $visitors && $visitors != 0) {
+					$visitorsstring = (int) ($newvisitors*100/$visitors) . '%';
+				}
+				
 				//	Page Views Code
 				$pageviews = (int) $entry['pvs'];
 				//	Percent Code

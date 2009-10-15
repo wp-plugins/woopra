@@ -310,7 +310,7 @@ class WoopraAdmin extends Woopra {
 			
 			unset($woopra['version']);
 			update_option( 'woopra', array_merge($woopra, $newopts) );
-		}  else if ( $ver == '1.4.3' ) {
+		} else if ( $ver == '1.4.3' ) {
 			
 			$woopra = get_option('woopra');
 
@@ -321,7 +321,17 @@ class WoopraAdmin extends Woopra {
 			
 			unset($woopra['version']);
 			update_option( 'woopra', array_merge($woopra, $newopts) );
-		}
+		} else if ( $ver == '1.4.3.1' ) {
+			
+			$woopra = get_option('woopra');
+
+			$newopts = array (
+					'version'			=>	'1.4.3.1',
+			);
+			
+			unset($woopra['version']);
+			update_option( 'woopra', array_merge($woopra, $newopts) );
+		} 
 	}
 
 	/**

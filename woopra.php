@@ -21,7 +21,7 @@
  * itself here: http://teethgrinder.co.uk/open-flash-chart-2/
  *
  * @author Elie El Khoury <elie@woopra.com> and Shane Froebel <shane@woopra.com>
- * @version 1.4.3
+ * @version 1.4.3.1
  * @copyright 2007-2009
  * @package woopra
  */
@@ -31,7 +31,7 @@
  * @since 1.4.1
  * @return none
  */
-DEFINE ('WOOPRA_VERSION', '1.4.3');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
+DEFINE ('WOOPRA_VERSION', '1.4.3.1');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
 
 /*
 
