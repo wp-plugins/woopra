@@ -107,8 +107,8 @@ class WoopraAnalytics extends WoopraAdmin {
 			</tr>
 		<tr>
 			<td colspan="2" style="padding-top: 5px; text-align: right;">
-				<input value="<?php _e('Cancel', 'woopra') ?>" name="approveit" class="button-secondary" type="submit" onclick="return closeDatePicker();">
-				<input value="<?php _e('Apply Date Range', 'woopra') ?>" name="approveit" class="button-secondary" type="submit" onclick="return applyDatePicker();">
+				<input value="<?php _e('Cancel', 'woopra') ?>" name="approveit" class="button-secondary" type="submit" onclick="return closeDatePicker();" />
+				<input value="<?php _e('Apply Date Range', 'woopra') ?>" name="approveit" class="button-secondary" type="submit" onclick="return applyDatePicker();" />
 			</td>
 		</tr>
 		</table>
