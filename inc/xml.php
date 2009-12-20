@@ -231,11 +231,6 @@ class WoopraXML {
 			}
 		}
 		
-		if ($this->area == "status") {
-			$this->current_tag = "status";
-			return;
-		}
-		
 		if ($this->area == "render") {
 			//	By Day
 			if ($name == "byday")

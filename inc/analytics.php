@@ -49,7 +49,7 @@ class WoopraAnalytics extends WoopraAdmin {
 	 * @return none
 	 */
 	function analytics_warn($item) {
-		$message[1]	=	'<div class="error"><p>' . sprintf( __( 'You must fill in your API Key in order to view Analytics. Please fill it out on the <a href="%s">settings page</a> in order for you to view your analytics.', 'woopra' ), admin_url('options-general.php?page=woopra') ) . "</p></div>\n";
+		$message[0]	=	'<div class="error"><p>' . sprintf( __( 'You must fill in your API Key in order to view Analytics. Please fill it out on the <a href="%s">settings page</a> in order for you to view your analytics.', 'woopra' ), admin_url('options-general.php?page=woopra') ) . "</p></div>\n";
 		echo $message[$item];
 	}
 	
@@ -66,7 +66,7 @@ class WoopraAnalytics extends WoopraAdmin {
 		<?php
 		
 		if (empty($this->api_key)) {
-			$this->analytics_warn(1);
+			$this->analytics_warn(0);
 		} else {
 			/** HTML CODE START **/
 		?>
