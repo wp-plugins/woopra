@@ -185,8 +185,8 @@ class WoopraFrontend extends Woopra {
 			return;
 
 		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
-		echo "<!-- Woopra Analytics Code -->\n";
-		echo "<script type=\"text/javascript\"> var _wh = ((document.location.protocol=='https:') ? \"https://sec1.woopra.com\" : \"http://static.woopra.com\");document.write(unescape(\"%3Cscript src='\" + _wh + \"/js/woopra.js' type='text/javascript'%3E%3C/script%3E\")); </script>\r\n";
+		echo "\r\n<!-- Woopra Analytics Code -->\r\n";
+		echo "<script type=\"text/javascript\" src=\"//static.woopra.com/js/woopra.v2.js\"></script>\r\n";
 		
 		if ($this->get_option('auto_tagging') && !empty($this->woopra_visitor['name'])) {
 			$woopra_tracker .= "woopraTracker.addVisitorProperty('name','" . js_escape($this->woopra_visitor['name']) . "');\r\n";
@@ -198,7 +198,8 @@ class WoopraFrontend extends Woopra {
 		}
 		
 		echo "<script type=\"text/javascript\">\r\n";
-		echo $woopra_tracker;
+		echo $woopra_tracker; 
+                echo "woopraTracker.track();\r\n";
 		echo "</script>\r\n";
 		
 		if ( is_array($this->event->current_event) ) {
@@ -208,7 +209,7 @@ class WoopraFrontend extends Woopra {
 			echo "we.fire();\r\n";
 			echo "</script>\r\n";
 		}
-		echo "<!-- End of Woopra Analytics Code -->";
+		echo "<!-- End of Woopra Analytics Code -->\r\n\r\n";
 		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
 		
 	}
