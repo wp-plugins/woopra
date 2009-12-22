@@ -3,8 +3,8 @@ Contributors: eliekhoury, markjaquith, ShaneF
 Web site: http://www.woopra.com
 Tags: statistics, analytics, stats, real-time
 Requires at least: 2.7.0
-Tested up to: 2.8.4
-Stable tag: 1.4.3.1
+Tested up to: 2.9.0
+Stable tag: 1.4.3.2
 
 This plugin adds Woopra's real-time analytics to any WordPress installation.
 
@@ -70,6 +70,11 @@ A. Make sure your site is registered exactly like it should be in the Woopra Mem
 
 == Changelog ==
 
+= 1.4.3.2 (12-21-09) =
+
+* [SECRUITY UPDATE] Removed 'ofc_upload_image.php' from the Open Flash Directory. Remove this file if you do upgrading manually.
+* [SVN CHANGE] Made a 1.4 branch and moved 'trunk' to the new development version of '1.5.x'
+
 = 1.4.3.1 (10-15-09) =
 
 * [ADDED] New Visitor Percentage
@@ -80,7 +85,7 @@ A. Make sure your site is registered exactly like it should be in the Woopra Mem
 * [NEW] Adding Error Handling Code
 * [ACTIVATED] Uncommented code for events to work now! (Posting Comment, Searching)
 * [BUG] Javascript for the Frontend again is updated to work with the new Woopra.js master file.
-* [BUG] Fixed 'Site not part of...'. In most cases the XML data returned was not being inturpted correctly.
+* [BUG] Fixed 'Site not part of...'. In most cases the XML data returned was not being interpreted correctly.
 * [CHANGE] Events code re-written from scratch.
 * [CHANGE] No more dropdown for the 'Timeout' feild. This value must be a whole number. Numbers will round down to the lower number if it's set a fraction. Setting it to '0' (Zero) will remove the override timeout.
 
