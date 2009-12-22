@@ -3,8 +3,8 @@ Contributors: eliekhoury, markjaquith, ShaneF
 Web site: http://www.woopra.com
 Tags: statistics, analytics, stats, real-time
 Requires at least: 2.7.0
-Tested up to: 2.8.4
-Stable tag: 1.4.3.1
+Tested up to: 2.9.0
+Stable tag: 1.4.3.2
 
 This plugin adds Woopra's real-time analytics to any WordPress installation.
 
@@ -69,6 +69,11 @@ Q. I can not see anything under 'Woopra Analytics' even though I have an API Key
 A. Make sure your site is registered exactly like it should be in the Woopra Members area that matches your WordPress SiteUrl. (A fix will be along shortly.)
 
 == Changelog ==
+
+= 1.4.3.2 (12-21-09) =
+
+* [SECRUITY UPDATE] Removed 'ofc_upload_image.php' from the Open Flash Directory
+* [SVN CHANGE] Made a 1.4 branch and moved 'trunk' to the new development version of '1.5.x'
 
 = 1.4.3.1 (10-15-09) =
 
