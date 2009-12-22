@@ -49,52 +49,8 @@ class WoopraAnalytics extends WoopraAdmin {
 	 * @return none
 	 */
 	function analytics_warn($item) {
-		$message[1]	=	'<div class="error"><p>' . sprintf(__( 'Your site (%s) must be part of Woopra in order for this plugin to work correctly.', 'woopra' ), $this->woopra_host(), get_option('siteurl')) . "</p></div>\n";
-		$message[2]	=	'<div class="error"><p>' . sprintf( __( 'You must fill in your API Key in order to view Analytics. Please fill it out on the <a href="%s">settings page</a> in order for you to view your analytics.', 'woopra' ), admin_url('options-general.php?page=woopra') ) . "</p></div>\n";
+		$message[1]	=	'<div class="error"><p>' . sprintf( __( 'You must fill in your API Key in order to view Analytics. Please fill it out on the <a href="%s">settings page</a> in order for you to view your analytics.', 'woopra' ), admin_url('options-general.php?page=woopra') ) . "</p></div>\n";
 		echo $message[$item];
-	}
-	
-	/**
-	 * Checking site status.
-	 * 
-	 * This will check to see if the site based on get_option('siteurl') is vaild. If it
-	 * is not, we will tell the user and stop functioning.
-	 * 
-	 * @since 1.4.2
-	 * @return 
-	 */
-	function check_site_status() {
-		
-		$xml = new WoopraXML;
-		
-		$xml->hostname = trim($this->woopra_host());
-	
-		$entries = null;
-		if ($xml->set_xml("status")) {
-			if ($xml->process_data()) {
-				$entries = $xml->data[0];
-			}
-		}
-		
-		$xml->clear_data();
-		unset($xml);
-		
-		if ($entries['status'] == "true")
-			return true;
-		
-		return false;
-	}
-	
-	/**
-	 * Return a pretty version of the hostname.
-	 * @since 1.4.2
-	 * @return string
-	 */
-	function woopra_host() {
-		$site = get_option('siteurl');
-		preg_match('@^(?:http://)?([^/]+)@i', $site, $matches);
-		$host = $matches[1];
-		return preg_replace('!^www\.!i', '', $host);
 	}
 	
 	/**
@@ -109,10 +65,8 @@ class WoopraAnalytics extends WoopraAdmin {
 			<h2><?php _e( 'Woopra Analytics', 'woopra' ); ?></h2>	
 		<?php
 		
-		if (!$this->check_site_status()) {
+		if (empty($this->api_key)) {
 			$this->analytics_warn(1);
-		} else if (empty($this->api_key)) {
-			$this->analytics_warn(2);
 		} else {
 			/** HTML CODE START **/
 		?>

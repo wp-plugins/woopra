@@ -147,7 +147,7 @@ class WoopraXML {
 	 * @param object $xml_data
 	 * @return 
 	 */
-	function set_xml($area, $xml_data = null) {
+	function set_xml($area, $xml_data) {
 		
 		$this->area = $area;
 		
@@ -157,9 +157,6 @@ class WoopraXML {
 				$this->url = "http://".$this->hostname.".woopra-ns.com/apiv2/website=".$this->hostname."&api_key=".$this->api_key."&key=".$key."&date_format=".$date_format."&start_day=".$start_date."&end_day=".$end_date."&limit=".$limit."&offset=".$offset;
 				break;
 			}
-			case 'status':
-				$this->url = "http://api.woopra.com/api/function=isactive&website=".$this->hostname;
-				break;
 		}
 		return true;
 	}
