@@ -89,7 +89,7 @@ class WoopraAnalytics extends WoopraAdmin {
 	});
 //]]>
 </script>
-<div id="woopra_analytics_box">
+<div id="woopra-analytics-box">
 	<div class="woopra_options">
 	<a id="refreshdate" href="#" title="<?php _e('Refresh', 'woopra') ?>"><?php _e('Refresh', 'woopra') ?></a>
 	&nbsp;-&nbsp;
@@ -119,26 +119,8 @@ class WoopraAnalytics extends WoopraAdmin {
 		<!-- All Tabs -->
 	</ul>
 </div>
-<!-- Woopra Javascript Code Starts Here -->
-<script type="text/javascript">
-//<![CDATA[
-
-addSuperTab('<?php _e("Visitors", 'woopra') ?>','visitors');
-addSuperTab('<?php _e("Systems", 'woopra') ?>','systems');
-addSuperTab('<?php _e("Pages", 'woopra') ?>','pages');
-addSuperTab('<?php _e("Referrers", 'woopra') ?>','referrers');
-addSuperTab('<?php _e("Searches", 'woopra') ?>','searches');
-addSuperTab('<?php _e("Tagged Vistors", 'woopra') ?>','tagvisitors');
-
-addSubTab('<?php _e("Overview", 'woopra') ?>', 'overview', 'visitors', 'GLOBALS');
-addSubTab('<?php _e("Countries", 'woopra') ?>', 'countries', 'visitors', 'COUNTRIES');
-addSubTab('<?php _e("Bounce Rate", 'woopra') ?>', 'bounces', 'visitors', 'VISITBOUNCES');
-addSubTab('<?php _e("Visit Durations", 'woopra') ?>', 'durations', 'visitors', 'VISITDURATIONS');
-
-addSubTab('<?php _e("Browsers", 'woopra') ?>', 'browsers', 'systems', 'BROWSERS');
-addSubTab('<?php _e("Platforms", 'woopra') ?>', 'platforms', 'systems', 'PLATFORMS');
-addSubTab('<?php _e("Screen Resolutions", 'woopra') ?>', 'resolutions', 'systems', 'RESOLUTIONS');
-addSubTab('<?php _e("Languages", 'woopra') ?>', 'languages', 'systems', 'LANGUAGES');
+<?php
+/*
 
 addSubTab('<?php _e("Pageviews", 'woopra') ?>', 'pageviews', 'pages', 'PAGEVIEWS');
 addSubTab('<?php _e("Landing Pages", 'woopra') ?>', 'landing', 'pages', 'PAGELANDINGS');
@@ -161,10 +143,9 @@ addSubTab('<?php _e("Keywords", 'woopra') ?>', 'keywords', 'searches', 'KEYWORDS
 
 addSubTab('<?php _e("By Name", 'woopra') ?>', 'taggedvisitors_byname', 'tagvisitors', 'CUSTOMVISITORDATA&aggregate_by=name');
 
-setCurrentSuperTab('visitors');
-//]]>
-</script>
-<!-- Woopra Javascript Code Ends Here -->
+*/
+
+?>
 <!-- Woopra Analytics Ends Here -->
 			<?php
 			/** HTML CODE END **/

@@ -189,14 +189,27 @@ class WoopraAdmin extends Woopra {
 	function enqueue($hook_action) {
 		$plugin_url = $this->plugin_url();
 		if (('dashboard_page_woopra-analytics' == $hook_action) || ('toplevel_page_woopra' == $hook_action)) {
-			wp_enqueue_script( 'woopra-analytics',	$plugin_url. '/js/analytics.js'	);
-			wp_localize_script( 'woopra-analytics', 'woopradefaultL10n', array(
-									'apikey'		=>	$this->get_option('api_key'),
-									'siteurl'		=>	get_option('siteurl'),
-									'baseurl'		=>	$plugin_url,
-									'dateformat'	=>	$this->get_option('date_format'),
-									'error'			=>	__('An javascript error has happened. Please try again later.', 'woopra'),
-				)
+			wp_enqueue_script( 'woopra-analytics',	$plugin_url. '/js/jquery.analytics.js',		array('jquery')	);
+			wp_localize_script( 'woopra-analytics', 
+				'woopraL10n', 
+					array(
+						//	Text Strings
+						'error'			=>	__('An javascript error has happened. Please try again later.', 'woopra'),
+						'loading'		=>	__('Loading...'),
+						//	Tabs Strings
+						'visitors'		=>	__('Visitors'),
+						'systems'		=>	__('Systems'),
+						'pages'			=>	__('Pages'),
+						'referrers'		=>	__('Referrers'),
+						'searches'		=>	__('Searches'),
+						'tagvisitors'	=>	__('Tagged Vistors'),
+						//	Data Settings
+						'apikey'		=>	$this->get_option('api_key'),
+						'dateformat'	=>	$this->get_option('date_format'),
+						//	WordPress Needed Things
+						'siteurl'		=>	get_option('siteurl'),
+						'baseurl'		=>	$plugin_url,
+					)
 			);
 			wp_enqueue_script( 'woopra-swfobject',	$plugin_url . '/js/swfobject.js'							);
 			// ** jQuery Datepicker **/
