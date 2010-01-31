@@ -71,38 +71,20 @@ class WoopraAnalytics extends WoopraAdmin {
 			/** HTML CODE START **/
 		?>
 <!-- Woopra Analytics Starts Here -->
-<script type="text/javascript">
-//<![CDATA[
-	jQuery(document).ready(function() {
-		//	Show Date Picker
-		jQuery("#daterange").click(function() {
-			jQuery("#datepickerdiv").toggle();
-		});
-		
-		jQuery("#refreshdate").click(function() {
-			refreshCurrent();
-		});	
-		
-		jQuery("#woopra_from").datepicker({ dateFormat: 'yy-mm-dd' });
-		jQuery("#woopra_to").datepicker({ dateFormat: 'yy-mm-dd' });
-		
-	});
-//]]>
-</script>
 <div id="woopra-analytics-box">
 	<div class="woopra_options">
-	<a id="refreshdate" href="#" title="<?php _e('Refresh', 'woopra') ?>"><?php _e('Refresh', 'woopra') ?></a>
+	<a id="woopra-refreshdate" href="#" title="<?php _e('Refresh', 'woopra') ?>"><?php _e('Refresh', 'woopra') ?></a>
 	&nbsp;-&nbsp;
-	<a id="daterange" href="#" title="<?php _e('Click here to change the date range', 'woopra') ?>"><script type="text/javascript">document.write(getDateLinkText())</script></a>
+	<a id="woopra-daterange" href="#" title="<?php _e('Click here to change the date range', 'woopra') ?>"><script type="text/javascript">document.write(getDateLinkText())</script></a>
 	<!-- Date Picker -->
-	<div id="datepickerdiv" style="visibiliy:hidden">
+	<div id="woopra-datepickerdiv" style="visibiliy:hidden">
 		<table>
 			<tr>
 				<td align="center">
-					<?php _e('From', 'woopra') ?>: <input type="text" id="woopra_from" name="woopra_from" value="" maxlength="10" />
+					<?php _e('From', 'woopra') ?>: <input type="text" id="woopra-from" name="woopra_from" value="" maxlength="10" />
 				</td>
 				<td align="center">
-					<?php _e('To', 'woopra') ?>: <input type="text" id="woopra_to" name="woopra_to" value="" maxlength="10" />
+					<?php _e('To', 'woopra') ?>: <input type="text" id="woopra-to" name="woopra_to" value="" maxlength="10" />
 				</td>
 			</tr>
 		<tr>
@@ -115,37 +97,8 @@ class WoopraAnalytics extends WoopraAdmin {
 	</div>
 	<!-- Date Picker -->
 	</div>
-	<ul id="woopra-super-tabs">
-		<!-- All Tabs -->
-	</ul>
+	<ul id="woopra-super-tabs"></ul>
 </div>
-<?php
-/*
-
-addSubTab('<?php _e("Pageviews", 'woopra') ?>', 'pageviews', 'pages', 'PAGEVIEWS');
-addSubTab('<?php _e("Landing Pages", 'woopra') ?>', 'landing', 'pages', 'PAGELANDINGS');
-addSubTab('<?php _e("Exit Pages", 'woopra') ?>', 'exit', 'pages', 'PAGEEXITS');
-addSubTab('<?php _e("Outgoing Links", 'woopra') ?>', 'outgoing', 'pages', 'OUTGOINGLINKS');
-addSubTab('<?php _e("Downloads", 'woopra') ?>', 'downloads', 'pages', 'DOWNLOADS');
-
-addSubTab('<?php _e("Referrer Types", 'woopra') ?>', 'reftypes', 'referrers', 'REFERRERTYPES');
-addSubTab('<?php _e("Regular Referrers", 'woopra') ?>', 'refdefault', 'referrers', 'REFERRERS&type=BACKLINK');
-addSubTab('<?php _e("Search Engines", 'woopra') ?>', 'refsearch', 'referrers', 'REFERRERS&type=SEARCH');
-addSubTab('<?php _e("Feed Readers", 'woopra') ?>', 'reffeeds', 'referrers', 'REFERRERS&type=FEEDS');
-addSubTab('<?php _e("Emails", 'woopra') ?>', 'refmails', 'referrers', 'REFERRERS&type=EMAIL');
-addSubTab('<?php _e("Social Bookmarks", 'woopra') ?>', 'refbookmarks', 'referrers', 'REFERRERS&type=SOCIALBOOKMARKS');
-addSubTab('<?php _e("Social Networks", 'woopra') ?>', 'refnetworks', 'referrers', 'REFERRERS&type=SOCIALNETWORK');
-addSubTab('<?php _e("Media", 'woopra') ?>', 'refmedia', 'referrers', 'REFERRERS&type=MEDIA');
-addSubTab('<?php _e("News", 'woopra') ?>', 'refnews', 'referrers', 'REFERRERS&type=NEWS');
-
-addSubTab('<?php _e("Search Queries", 'woopra') ?>', 'queries', 'searches', 'QUERIES');
-addSubTab('<?php _e("Keywords", 'woopra') ?>', 'keywords', 'searches', 'KEYWORDS');
-
-addSubTab('<?php _e("By Name", 'woopra') ?>', 'taggedvisitors_byname', 'tagvisitors', 'CUSTOMVISITORDATA&aggregate_by=name');
-
-*/
-
-?>
 <!-- Woopra Analytics Ends Here -->
 			<?php
 			/** HTML CODE END **/
