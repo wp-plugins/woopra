@@ -41,7 +41,7 @@ Plugin Name:  Woopra
 Plugin URI:   http://wordpress.org/extend/plugins/woopra/
 Version:      1.5.0
 Description:  This plugin adds Woopra's real-time analytics to any WordPress installation.  Simply sign up at Woopra.com, then activate the plugin!
-Author:       <a href="http://www.ekhoury.com">Elie El Khoury</a>, <a href="http://bugssite.org">Shane Froebel</a>
+Author:       <a href="http://bugssite.org">Shane Froebel</a>, Formaly <a href="http://www.ekhoury.com">Elie El Khoury</a>
 Author URI:   http://www.woopra.com/
 
 **************************************************************************/
@@ -66,14 +66,7 @@ class Woopra {
 	 * @var string 
 	 */
 	var $woopra_vistor;
-
-	/**
-	 * Holding the error object.
-	 * @since 1.4.4
-	 * @var object
-	 */
-	var $error;
-
+	
 	/**
 	 * Compatability for PHP 4.
 	 * @since 1.4.1
@@ -90,7 +83,6 @@ class Woopra {
 	 * @constructor
 	 */
 	function __construct() {
-		$this->error = new WP_Error();
 		//	Load Options
 		$this->options = get_option('woopra');		
 	}
@@ -117,60 +109,7 @@ class Woopra {
 		else
 			return false;
 	}
-	
-	/**
-	 * Fire Error
-	 * @param object $code [optional]
-	 * @param object $args [optional]
-	 * @return 
-	 */
-	function fire_error($code = '', $args = '') {
-		$defaults = array(
-			'code' => 'generic_error', 'message' => _('An unknown error occured.'), 
-			'values' => null, 'debug' => 0
-		);
-		$r = wp_parse_args( $args, $defaults );
-		extract( $r, EXTR_SKIP );
-
-		$this->error->add($code, sprintf( _($message), $values), $debug );
-	}
-	
-	/**
-	 * Check to see if an error exists.
-	 * @return 
-	 */
-	function check_error($code = 'generic_error') {
-		if ( (is_wp_error($this->error) && (count($this->error->get_error_messages()) > 0)) ) {
-			foreach ($this->error->get_error_messages() as $message) {
-				$output .= _('Woopra: ') . $message . "<br/>";
-			}
-			$this->display_error($output, $this->error->error_data[$code]);
-		}
-	}
-	
-	/**
-	 * 
-	 * @param object $output
-	 * @param object $hide_debug [optional]
-	 * @return 
-	 */
-	function display_error($output, $show_debug) {
 		
-		ob_start();
-        debug_print_backtrace();
-        $trace = ob_get_contents();
-        ob_end_clean(); 
-		
-		$trace = preg_replace ('/^#0\s+' . __FUNCTION__ . "[^\n]*\n/", '', $trace, 1); 
-		$trace = preg_replace ('/^#(\d+)/me', '\'<br/><strong>#</strong>\' . ($1 - 1)', $trace);
-		
-		if ($show_debug)
-			$trace_output = '<br />Please report the following as well on the forums: <br/> <small>' . $trace . '</small>';
-		
-		wp_die($output . $trace_output);
-		
-	}
-	
 }
 
 /**
