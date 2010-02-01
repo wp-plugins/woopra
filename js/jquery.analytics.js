@@ -1,7 +1,27 @@
 jQuery(document).ready(function() {
 	
 	//	Exists Function
-	jQuery.fn.exists = function(){return jQuery(this).length>0;}
+	jQuery.fn.exists = function () { return jQuery(this).length>0; }
+	
+	//	Get Days Previous
+	jQuery.fn.dateprev = function (value) {
+		var date = new Date();
+		date.setDate(date.getDate()-value);
+		text = date.getFullYear() + '-';
+		m = date.getMonth() + 1;
+		
+		if (m < 10)
+			text += '0';
+		
+		text += m + '-';
+		d = date.getDate();
+		
+		if (d <10)
+			text += '0';
+		
+		text += d;
+		return text;
+	}
 	
 	//	Variables
 	var currentSuperView = null;
@@ -49,7 +69,7 @@ jQuery(document).ready(function() {
 	/**
 	 * Add Super Sub Tab
 	 */
-	function addSubTab(name, id, superid, apipage) {
+	function addSubTab(name, id, superid, keys) {
 		
 		//	Create the Sub Tab!
 		jQuery("#woopra-sub-tab-ui-" + superid).append("<li><a href='#' id='woopra-sub-tab-li-" + id + "'>" + name + "</a></li>");
@@ -58,8 +78,8 @@ jQuery(document).ready(function() {
 				function() { setSubView(superid, id); }
 			);
 		
-		//	Add to API Key to Array
-		pageKeys[superid + '-' + id] = apipage;
+		//	Create API Key Array
+		pageKeys[superid + '-' + id] = keys;
 		
 		//	If the 'defaultSubTab' tab is null for this super id, set it to the id.
 		if ( defaultSubTab[superid] == null )
@@ -132,6 +152,9 @@ jQuery(document).ready(function() {
 		
 	}
 	
+	/**
+	 * 
+	 */
 	function showWoopraAnalytics(superid, id) {
 		
 		//	Make it a block!
@@ -151,20 +174,35 @@ jQuery(document).ready(function() {
 		requestData(superid + '-' + id, pageKeys[superid + '-' + id]);
 	}
 	
-
+	/**
+	 * Request the Data From the API. Calls admin-ajax.php which will process allow xml.php
+	 * to query the database correctly.
+	 * 
+	 * area - ID name that will show all the data.
+	 * key - Array holding possiable three bits of information. 
+	 * 			* apipage - The page that we are querying.
+	 * 			* type (For getreferrers.jsp)
+	 * 			* aggregate_by (getcustomvisitordata.jsp)
+	 * 
+	 */
 	function requestData(area, key) {
 		
 		//	Get the data requested!
 		jQuery.get(
 			woopraL10n.siteurl + '/wp-admin/admin-ajax.php',	//	The admin ajax file
-			{ 
+			{
+				//	Stuff needed for WordPress. Not part of the Query API Call
 				action: "woopra",
 				datatype: "regular",
+				//	Part of the Woopra API Call
+				apipage: key[0],
 				apikey: woopraL10n.apikey,
-				wkey: escape(key),
 				date_format: woopraL10n.dateformat,
-				from: jQuery('#woopra_from').val(),
-				to: jQuery('#woopra_to').val()
+				from: jQuery('#woopra-from').val(),
+				to: jQuery('#woopra-to').val(),
+				//	Special Queries
+				type: (key[1]) ? key[1] : '',
+				aggregate_by: (key[2]) ? key[2] : ''
 			},
 			function(returned_data) {
 				if (returned_data != null)
@@ -176,6 +214,23 @@ jQuery(document).ready(function() {
 		
 	}
 	
+	//	Show Date Picker
+	jQuery("#woopra-daterange").click(function() {
+		jQuery("#woopra-datepickerdiv").toggle();
+	});
+	
+	//	Refresh the date!
+	jQuery("#woopra-refreshdate").click(function() {
+		refreshCurrent();
+	});	
+	
+	//	Set the 'from' and 'to' date.
+	jQuery("#woopra-from").attr('value', jQuery(this).dateprev(30) ).datepicker({ dateFormat: 'yy-mm-dd' });
+	jQuery("#woopra-to").attr('value', jQuery(this).dateprev(0) ).datepicker({ dateFormat: 'yy-mm-dd' });
+	
+	//	Set the link for the date-range selector <a>
+	jQuery("#woopra-daterange").html('<strong>' + woopraL10n.from + '</strong>: ' + jQuery("#woopra-from").val() + ' - <strong>' + woopraL10n.to + '</strong>: ' + jQuery("#woopra-to").val());
+	
 	//	Create Super Tabs
 	addSuperTab(woopraL10n.visitors,	'visitors');
 	addSuperTab(woopraL10n.systems,		'systems');
@@ -185,7 +240,7 @@ jQuery(document).ready(function() {
 	addSuperTab(woopraL10n.tagvisitors,	'tagvisitors');
 	
 	//	Create Visitors Sub Tabs
-	addSubTab( 'Overview',				'overview',		'visitors',	'GLOBALS' );
+	addSubTab( 'Overview',				'overview',		'visitors',	new Array('getglobals.jsp') );
 	addSubTab( 'Countries',				'countries',	'visitors',	'COUNTRIES' );
 	addSubTab( 'Bounce Rate',			'bounces',		'visitors',	'VISITBOUNCES' );
 	addSubTab( 'Visit Durations',		'durations',	'visitors',	'VISITDURATIONS' );
@@ -196,6 +251,27 @@ jQuery(document).ready(function() {
 	addSubTab( 'Screen Resolutions',	'resolutions',	'systems',	'RESOLUTIONS' );
 	addSubTab( 'Languages',				'languages',	'systems',	'LANGUAGES' );
 
+	addSubTab('Pageviews', 'pageviews', 'pages', 'PAGEVIEWS');
+	addSubTab('Landing Pages', 'landing', 'pages', 'PAGELANDINGS');
+	addSubTab('Exit Pages', 'exit', 'pages', 'PAGEEXITS');
+	addSubTab('Outgoing Links', 'outgoing', 'pages', 'OUTGOINGLINKS');
+	addSubTab('Downloads', 'downloads', 'pages', 'DOWNLOADS');
+
+	addSubTab('Referrer Types', 'reftypes', 'referrers', 'REFERRERTYPES');
+	addSubTab('Regular Referrers', 'refdefault', 'referrers', 'REFERRERS&type=BACKLINK');
+	addSubTab('Search Engines', 'refsearch', 'referrers', 'REFERRERS&type=SEARCH');
+	addSubTab('Feed Readers', 'reffeeds', 'referrers', 'REFERRERS&type=FEEDS');
+	addSubTab('Emails', 'refmails', 'referrers', 'REFERRERS&type=EMAIL');
+	addSubTab('Social Bookmarks', 'refbookmarks', 'referrers', 'REFERRERS&type=SOCIALBOOKMARKS');
+	addSubTab('Social Networks', 'refnetworks', 'referrers', 'REFERRERS&type=SOCIALNETWORK');
+	addSubTab('Media', 'refmedia', 'referrers', 'REFERRERS&type=MEDIA');
+	addSubTab('News', 'refnews', 'referrers', 'REFERRERS&type=NEWS');
+
+	addSubTab('Search Queries', 'queries', 'searches', 'QUERIES');
+	addSubTab('Keywords', 'keywords', 'searches', 'KEYWORDS');
+
+	addSubTab('By Name', 'taggedvisitors_byname', 'tagvisitors', 'CUSTOMVISITORDATA&aggregate_by=name');
+
 	//	By Default Set The Current View
 	//	@todo Make this confirgurable!
 	setCurrentSuperTab('visitors');
@@ -205,17 +281,9 @@ jQuery(document).ready(function() {
 
 /************************ 
  * 
- * I am changing this code code.
+ * I am changing this code to jQuery Syle.
  * 
  ************************/
-
-var woopra_website;
-
-date = new Date();
-var date_to = getDateText(date);
-date.setDate(date.getDate()-30);
-var date_from = getDateText(date);
-var date_format = woopraL10n.dateformat;
 
 function initDatePicker() {
 	document.getElementById('woopra_from').value = date_from;
@@ -286,21 +354,6 @@ function applyDatePicker() {
 	refreshCurrent();
 	closeDatePicker();
 	return false;
-}
-
-function getDateText(date) {
-	text = date.getFullYear() + '-';
-	m = date.getMonth() + 1;
-	if (m < 10) { text += '0'; }
-	text += m + '-';
-	d = date.getDate();
-	if (d <10) { text += '0'; }
-	text += d;
-	return text;
-}
-
-function getDateLinkText() {
-	return '<strong>From:</strong> ' + date_from + ' <strong>To:</strong> ' + date_to;
 }
 
 function refreshDateLinkText() {
