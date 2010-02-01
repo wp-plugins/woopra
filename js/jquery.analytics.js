@@ -132,9 +132,11 @@ jQuery(document).ready(function() {
 		//	Set the Current Sub Tab ID
 		currentSubTabId = selectedSubTabs[superid];
 		
-		//	If the current view is what we are at... we should not need to run?
-		if (currentSubTabId == id)
+		//	If the user is clicking on me again, we should just refresh the data.
+		if (currentSubTabId == id) {
+			showWoopraAnalytics(superid, id);	
 			return false;
+		}
 
 		if (currentSubTabId != null) {
 			//	Remove the class.
@@ -224,12 +226,45 @@ jQuery(document).ready(function() {
 		refreshCurrent();
 	});	
 	
+	//	Close Date Picker!
+	jQuery("#woopra-closepicker").click(function() {
+		jQuery("#woopra-datepickerdiv").toggle();
+	});
+	
+	//	Apply Date Range
+	jQuery("#woopra-applydaterange").click(function() {
+		
+		//	Set values!
+		jQuery("#woopra-from").attr('value', jQuery("#woopra-from").val());
+		jQuery("#woopra-to").attr('value', jQuery("#woopra-to").val());
+		
+		//	Refresh Link Text!
+		refreshDateLinkText();
+		
+		//	Refresh Current Data!
+		refreshCurrent();
+		
+		//	Hide the Date Picker!
+		jQuery("#woopra-datepickerdiv").toggle();
+		
+	});
+	
+	function refreshCurrent() {
+		//	Set the current view! This double makes sure everything is visable.
+		setSuperView(currentSuperView);
+		setSubView(currentSuperView, selectedSubTabs[currentSuperView]);
+	}
+	
+	
 	//	Set the 'from' and 'to' date.
 	jQuery("#woopra-from").attr('value', jQuery(this).dateprev(30) ).datepicker({ dateFormat: 'yy-mm-dd' });
 	jQuery("#woopra-to").attr('value', jQuery(this).dateprev(0) ).datepicker({ dateFormat: 'yy-mm-dd' });
 	
 	//	Set the link for the date-range selector <a>
-	jQuery("#woopra-daterange").html('<strong>' + woopraL10n.from + '</strong>: ' + jQuery("#woopra-from").val() + ' - <strong>' + woopraL10n.to + '</strong>: ' + jQuery("#woopra-to").val());
+	function refreshDateLinkText() {
+		jQuery("#woopra-daterange").html('<strong>' + woopraL10n.from + '</strong>: ' + jQuery("#woopra-from").val() + ' - <strong>' + woopraL10n.to + '</strong>: ' + jQuery("#woopra-to").val());
+	}
+	refreshDateLinkText();	//	Run!
 	
 	//	Create Super Tabs
 	addSuperTab(woopraL10n.visitors,	'visitors');
@@ -285,11 +320,6 @@ jQuery(document).ready(function() {
  * 
  ************************/
 
-function initDatePicker() {
-	document.getElementById('woopra_from').value = date_from;
-	document.getElementById('woopra_to').value = date_to;
-}
-
 function expandByDay(key, hashid, id, index) {
 	var row = document.getElementById('wlc-' + hashid + '-' + id);
 	if (row.style.display == 'table-row') {
@@ -333,39 +363,3 @@ function expandReferrer(key, hashid) {
 	return false;
 }
 
-function showDatePicker() {
-	initDatePicker();
-	dp = document.getElementById("datepickerdiv");
-	dp.style.display = 'block';
-	return false;
-}
-
-function closeDatePicker() {
-	dp = document.getElementById("datepickerdiv");
-	dp.style.display = 'none';
-	return false;
-}
-
-function applyDatePicker() {
-	date_from = document.getElementById('woopra_from').value;
-	date_to = document.getElementById('woopra_to').value;
-	//pageObjects = new Array();
-	refreshDateLinkText();
-	refreshCurrent();
-	closeDatePicker();
-	return false;
-}
-
-function refreshDateLinkText() {
-	document.getElementById("daterange").innerHTML = getDateLinkText();
-}
-
-function refreshCurrent() {
-	superid = currentSuperView;
-	subid = selectedSubTabs[currentSuperView];
-	pageObjects[superid + '-' + subid] == null;
-	pageid = superid + '-' + subid;
-	setPageLoading(pageid);
-	requestData(pageid, pageKeys[pageid]);
-	return false;
-}
