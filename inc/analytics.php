@@ -75,9 +75,9 @@ class WoopraAnalytics extends WoopraAdmin {
 	<div class="woopra_options">
 	<a id="woopra-refreshdate" href="#" title="<?php _e('Refresh', 'woopra') ?>"><?php _e('Refresh', 'woopra') ?></a>
 	&nbsp;-&nbsp;
-	<a id="woopra-daterange" href="#" title="<?php _e('Click here to change the date range', 'woopra') ?>"><script type="text/javascript">document.write(getDateLinkText())</script></a>
+	<a id="woopra-daterange" href="#" title="<?php _e('Click here to change the date range', 'woopra') ?>"></a>
 	<!-- Date Picker -->
-	<div id="woopra-datepickerdiv" style="visibiliy:hidden">
+	<div id="woopra-datepickerdiv" style="visibiliy: hidden">
 		<table>
 			<tr>
 				<td align="center">

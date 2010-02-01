@@ -196,6 +196,8 @@ class WoopraAdmin extends Woopra {
 						//	Text Strings
 						'error'			=>	__('An javascript error has happened. Please try again later.', 'woopra'),
 						'loading'		=>	__('Loading...'),
+						'from'			=> 	__('From'),
+						'to'			=> 	__('To'),
 						//	Tabs Strings
 						'visitors'		=>	__('Visitors'),
 						'systems'		=>	__('Systems'),
@@ -204,7 +206,8 @@ class WoopraAdmin extends Woopra {
 						'searches'		=>	__('Searches'),
 						'tagvisitors'	=>	__('Tagged Vistors'),
 						//	Data Settings
-						'apikey'		=>	$this->get_option('api_key'),
+						//'apikey'		=>	$this->get_option('api_key'),
+						'apikey'		=>	'ZFR7SKDH65',
 						'dateformat'	=>	$this->get_option('date_format'),
 						//	WordPress Needed Things
 						'siteurl'		=>	get_option('siteurl'),
