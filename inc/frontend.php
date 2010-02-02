@@ -56,6 +56,23 @@ class WoopraFrontend extends Woopra {
 	function init() {
 		
 		/**
+		 * WordPress Woopra Event Tracking
+		 */
+		if ( $this->get_option('track_events') ) {
+			//	Set jQuery Events Options
+			if ( $this->enabled_event('image') )
+				$this->create_localize( array('trackImage' => 'true', 'trackImageTitle' => __('Image Viewed')),	'woopra-events'	);
+			
+			if ( $this->enabled_event('comments') )
+				$this->create_localize( array('trackComments' => 'true', 'trackCommentsTitle' => __('Comment Posted')),	'woopra-events'	);
+						
+				
+			if ( is_array($this->local['woopra-events']) )
+				wp_enqueue_script( 'woopra-events',	$this->plugin_url() . '/js/jquery.events.js',		array('jquery', 'woopra-tracking'), '20100201', true );
+			wp_localize_script( 'woopra-events', 'woopraEventsL10n', $this->local['woopra-events'] );
+		}		
+		
+		/**
 		 * Tracking User Information
 		 */
 		wp_enqueue_script( 'woopra-tracking',	$this->plugin_url() . '/js/jquery.tracking.js',		array('jquery'), '20100201', true );
@@ -69,18 +86,7 @@ class WoopraFrontend extends Woopra {
 		$this->create_localize( array('email'		=>	'email'),	'woopra-tracking'	);
 		wp_localize_script( 'woopra-tracking', 'woopraFrontL10n', $this->local['woopra-tracking'] );
 		
-		/**
-		 * WordPress Woopra Event Tracking
-		 */
-		if ( $this->get_option('track_events') ) {
-			//	Set jQuery Events Options
-			if ( $this->enabled_event('image') )
-				$this->create_localize( array('trackImage' => 'true', 'trackImageTitle' => __('Image Viewed')),	'woopra-events'	);
-			
-			if ( is_array($this->local['woopra-events']) )
-				wp_enqueue_script( 'woopra-events',	$this->plugin_url() . '/js/jquery.events.js',		array('jquery', 'woopra-tracking'), '20100201', true );
-			wp_localize_script( 'woopra-events', 'woopraEventsL10n', $this->local['woopra-events'] );
-		}
+
 	}
 	
 	/**
@@ -104,6 +110,9 @@ class WoopraFrontend extends Woopra {
 	 * @param object $event
 	 */
 	function enabled_event($event) {
+		
+		return true;
+		
 		if ( !empty($this->options['events'][$event]) )
 			return $this->options['events'][$event];
 		else

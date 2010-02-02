@@ -26,10 +26,20 @@
 
 (function($) {
 
+	
+	/**
+	 * Debug Information
+	 */
+	$.woopraDebug = function (message) {
+		if (typeof console != 'undefined' && typeof console.debug != 'undefined' && $.fn.trackEvent.defaults.debug) {
+			console.debug(message);
+		}
+	};	
+	
 	/**
 	 * 
 	 */
-	$.trackWoopra = function(woopra_data) {
+	$.trackWoopra = function (woopra_data) {
 		var script;
 		var src  = 'http://static.woopra.com/js/woopra.v2.js';
 		
@@ -53,7 +63,7 @@
 			}
 		}
 		
-		_load_woopra = function() {
+		_load_woopra = function () {
 			$.ajax({
 				type: "GET",
 				url: src,
@@ -106,7 +116,7 @@
 		/**
 		 * 
 		 */
-		return this.each( function() {
+		return this.each( function () {
 			var element = $(this);
 			var parent = $(element).parent();
 		  
@@ -173,16 +183,15 @@
 			}
 			return text_or_function;
 		};
+		
 	};
 	
-	/**
-	 * Debug Information
+	/*
+	 * Alias for $.woopraDebug
 	 */
 	function debug(message) {
-		if (typeof console != 'undefined' && typeof console.debug != 'undefined' && $.fn.trackEvent.defaults.debug) {
-			console.debug(message);
-		}
-	};
+		$.woopraDebug(message);
+	}
 	
 	/**
 	 * Default Settings
