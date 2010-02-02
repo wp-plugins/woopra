@@ -85,7 +85,7 @@ class WoopraFrontend extends Woopra {
 		
 		//	For showing in the Woopra Desktop Application
 		$this->create_localize( array('name'		=>	__('Name'))		);
-		$this->create_localize( array('email'		=>	__('Email')) 	);
+		$this->create_localize( array('email'		=>	__('email')) 	);
 		
 		//	Output jQuery Options
 		wp_localize_script( 'woopra-tracking', 'woopraFrontL10n', $this->local );

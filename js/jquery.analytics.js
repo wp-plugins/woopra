@@ -281,29 +281,29 @@ jQuery(document).ready(function() {
 	
 	//	Create Systems Sub Tabs
 	addSubTab( woopraL10n.browsers,		'browsers',		'systems',		new Array('getBrowsers') );
-	addSubTab( 'Platforms',				'platforms',	'systems',		new Array('getPlatforms') );
-	addSubTab( 'Screen Resolutions',	'resolutions',	'systems',		new Array('getResolutions') );
-	addSubTab( 'Languages',				'languages',	'systems',		new Array('getLanguages') );
+	addSubTab( woopraL10n.platforms,	'platforms',	'systems',		new Array('getPlatforms') );
+	addSubTab( woopraL10n.screenres,	'resolutions',	'systems',		new Array('getResolutions') );
+	addSubTab( woopraL10n.languages,	'languages',	'systems',		new Array('getLanguages') );
 	
-	addSubTab( 'Pageviews', 			'pageviews',	'pages',		new Array('getPageviews') );
-	addSubTab( 'Landing Pages',			'landing',		'pages',		new Array('getPageLandings') );
-	addSubTab( 'Exit Pages',			'exit',			'pages',		new Array('getPageExits') );
-	addSubTab( 'Outgoing Links',		'outgoing',		'pages',		new Array('getOutgoingLinks') );
-	addSubTab( 'Downloads',				'downloads',	'pages', 		new Array('getDownloads') );
+	addSubTab( woopraL10n.pageview, 	'pageviews',	'pages',		new Array('getPageviews') );
+	addSubTab( woopraL10n.landingpage,	'landing',		'pages',		new Array('getPageLandings') );
+	addSubTab( woopraL10n.exitpage,		'exit',			'pages',		new Array('getPageExits') );
+	addSubTab( woopraL10n.outgoinglink,	'outgoing',		'pages',		new Array('getOutgoingLinks') );
+	addSubTab( woopraL10n.downloads,	'downloads',	'pages', 		new Array('getDownloads') );
 	
-	addSubTab( 'Referrer Types',		'reftypes',		'referrers', 	new Array('getReferrerTypes') );
-	addSubTab( 'Search Engines',		'refsearch',	'referrers',	new Array('getReferrers', 'search') );
-	addSubTab( 'Feed Readers',			'reffeeds',		'referrers',	new Array('getReferrers', 'feeds') );
-	addSubTab( 'Emails',				'refmails', 	'referrers',	new Array('getReferrers', 'email') );
-	addSubTab( 'Social Bookmarks',		'refbookmarks', 'referrers',	new Array('getReferrers', 'socialbookmarks') );
-	addSubTab( 'Social Networks',		'refnetworks',	'referrers',	new Array('getReferrers', 'socialnetwork') );
-	addSubTab( 'Media',					'refmedia',		'referrers',	new Array('getReferrers', 'media') );
-	addSubTab( 'News',					'refnews',		'referrers',	new Array('getReferrers', 'news') );
-	addSubTab( 'Community',				'refcomm',		'referrers',	new Array('getReferrers', 'community') );
-	addSubTab( 'All Links',				'reflinks',		'referrers',	new Array('getReferrers', 'alllinks') );
+	addSubTab( woopraL10n.referrer_ty,	'reftypes',		'referrers', 	new Array('getReferrerTypes') );
+	addSubTab( woopraL10n.referrer_se,	'refsearch',	'referrers',	new Array('getReferrers', 'search') );
+	addSubTab( woopraL10n.referrer_fr,	'reffeeds',		'referrers',	new Array('getReferrers', 'feeds') );
+	addSubTab( woopraL10n.referrer_em,	'refmails', 	'referrers',	new Array('getReferrers', 'email') );
+	addSubTab( woopraL10n.referrer_sb,	'refbookmarks', 'referrers',	new Array('getReferrers', 'socialbookmarks') );
+	addSubTab( woopraL10n.referrer_sn,	'refnetworks',	'referrers',	new Array('getReferrers', 'socialnetwork') );
+	addSubTab( woopraL10n.referrer_me,	'refmedia',		'referrers',	new Array('getReferrers', 'media') );
+	addSubTab( woopraL10n.referrer_ne,	'refnews',		'referrers',	new Array('getReferrers', 'news') );
+	addSubTab( woopraL10n.referrer_co,	'refcomm',		'referrers',	new Array('getReferrers', 'community') );
+	addSubTab( woopraL10n.referrer_al,	'reflinks',		'referrers',	new Array('getReferrers', 'alllinks') );
 	
-	addSubTab( 'Search Queries',		'queries',		'searches',		new Array('getQueries') );
-	addSubTab( 'Keywords',				'keywords',		'searches',		new Array('getKeywords') );
+	addSubTab( woopraL10n.search_quer,	'queries',		'searches',		new Array('getQueries') );
+	addSubTab( woopraL10n.keywords,		'keywords',		'searches',		new Array('getKeywords') );
 	
 	//	By Default Set The Current View
 	//	@todo Make this confirgurable!

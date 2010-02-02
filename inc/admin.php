@@ -211,7 +211,7 @@ class WoopraAdmin extends Woopra {
 				'woopraL10n', 
 					array(
 						//	Text Strings
-						'error'			=>	__('An javascript error has happened. Please try again later.', 'woopra'),
+						'error'			=>	__('An jQuery error has happened. Please try again later.', 'woopra'),
 						'loading'		=>	__('Loading...'),
 						'from'			=> 	__('From'),
 						'to'			=> 	__('To'),
@@ -221,12 +221,32 @@ class WoopraAdmin extends Woopra {
 						'pages'			=>	__('Pages'),
 						'referrers'		=>	__('Referrers'),
 						'searches'		=>	__('Searches'),
-						'tagvisitors'	=>	__('Tagged Vistors'),
+						//'tagvisitors'	=>	__('Tagged Vistors'),
 						'overview'		=>	__('Overview'),
 						'countries'		=>	__('Countries'),
 						'bouncerate'	=>	__('Bounce Rate'),
 						'visitdura'		=>	__('Visit Durations'),
 						'browsers'		=>	__('Browsers'),
+						'platforms'		=>	__('Platforms'),
+						'screenres'		=>	__('Screen Resolutions'),
+						'languages'		=>	__('Languages'),
+						'pageview'		=>	__('Page Views'),
+						'landingpage'	=>	__('Landing Pages'),
+						'exitpage'		=>	__('Exit Pages'),
+						'outgoinglink'	=>	__('Outgoing Links'),
+						'downloads'		=>	__('Downloads'),
+						'referrer_ty'	=>	__('Referrer Types'),
+						'referrer_se'	=>	__('Search Engines'),
+						'referrer_fr'	=>	__('Feed Readers'),
+						'referrer_em'	=>	__('Emails'),
+						'referrer_sb'	=>	__('Social Bookmarks'),
+						'referrer_sn'	=>	__('Social Networks'),
+						'referrer_me'	=>	__('Media'),
+						'referrer_ne'	=>	__('News'),
+						'referrer_co'	=>	__('Community'),
+						'referrer_al'	=>	__('All Links'),
+						'search_quer'	=>	__('Search Queries'),
+						'keywords'		=>	__('Keywords'),
 						//	Data Settings
 						'apikey'		=>	$this->get_option('api_key'),
 						'dateformat'	=>	$this->get_option('date_format'),
@@ -264,6 +284,8 @@ class WoopraAdmin extends Woopra {
 			$this->upgrade('1.4.2');
 		else if ($this->version_compare(array( '1.4.2' => '>' , '1.4.3' => '<' )))
 			$this->upgrade('1.4.3');
+		else if ($this->version_compare(array( '1.4.3' => '>' , '1.5.0' => '<' )))
+			$this->upgrade('1.5.0');
 	}
 
 	/**
@@ -367,7 +389,18 @@ class WoopraAdmin extends Woopra {
 			
 			unset($woopra['version']);
 			update_option( 'woopra', array_merge($woopra, $newopts) );
-		} 
+		} else if ( $ver == '1.5.0' ) {
+			
+			$woopra = get_option('woopra');
+
+			$newopts = array (
+				'use_subdomain'			=>	0,
+			);
+			
+			unset($woopra['version']);
+			update_option( 'woopra', array_merge($woopra, $newopts) );
+		
+		}
 	}
 
 	/**
@@ -377,7 +410,7 @@ class WoopraAdmin extends Woopra {
 	 */
 	function defaults() {
 		$defaults = array(
-			'version'			=> '',
+			'version'			=> WOOPRA_VERSION,
 			'activated'			=> 1,
 			'api_key'			=> '',
 			'analytics_tab'		=> 'dashboard',
@@ -388,7 +421,7 @@ class WoopraAdmin extends Woopra {
 			'ignore_admin'		=> 0,
 			'track_admin'		=> 0,
 			'use_timeout'		=> 0,
-			'process_events'	=> 1,
+			'use_subdomain'		=>	0,
 			'timeout'			=> 600,
 		);
 		return $defaults;
@@ -495,6 +528,12 @@ class WoopraAdmin extends Woopra {
 			<th scope="row"><?php _e('Auto Tagging', 'woopra') ?></th>
 			<td>
 				<input type="checkbox" value="1"<?php checked('1', $this->get_option('auto_tagging')); ?> id="auto_tagging" name="woopra[auto_tagging]"/> <label for="auto_tagging"><?php _e("Automatically Tag Members &amp; Commentators", 'woopra'); ?></label><br /><?php _e("Enable this check box if you want Woopra to auto-tag visitors.", 'woopra'); ?>
+			</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><?php _e('Sub Domains', 'woopra') ?></th>
+			<td>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('use_subdomain')); ?> id="use_subdomain" name="use_subdomain"/> <label for="use_subdomain"><?php _e("Track Sub Domains"); ?></label><br /><small><?php printf( __('Enabled this if you want to track subdomains. Note: You must have an account that allows subdomain tracking. Please refer to the <a href="%s">account information</a> page for more information.', 'woopra'), 'https://www.woopra.com/members/'); ?></small>
 			</td>
 		</tr>
 	</table>
