@@ -510,12 +510,6 @@ class WoopraAdmin extends Woopra {
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><?php _e('Event Tracking', 'woopra') ?></th>
-			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_events')); ?> id="track_events" name="woopra[track_events]"/> <label for="track_events"><?php _e("Enable WordPress Tracking.", 'woopra'); ?></label><br /><?php _e("More options are below to enable/disable certain events from being tracked for both the frontend and the admin area.", 'woopra'); ?>
-			</td>
-		</tr>
-		<tr valign="top">
 			<th scope="row"><?php _e('Ignore Administrator', 'woopra') ?></th>
 			<td>
 				<input type="checkbox" value="1"<?php checked('1', $this->get_option('ignore_admin')); ?> id="ignore_admin" name="woopra[ignore_admin]"/> <label for="ignore_admin"><?php _e("Ignore Administrator Visits", 'woopra'); ?></label><br /><?php _e("Enable this check box if you want Woopra to ignore <strong>your visits</strong> or any other administrator visits.", 'woopra'); ?>
@@ -525,6 +519,17 @@ class WoopraAdmin extends Woopra {
 			<th scope="row"><?php _e('Sub Domains', 'woopra') ?></th>
 			<td>
 				<input type="checkbox" value="1"<?php checked('1', $this->get_option('use_subdomain')); ?> id="use_subdomain" name="woopra[use_subdomain]"/> <label for="use_subdomain"><?php _e("Track Sub Domains"); ?></label><br /><small><?php printf( __('Enabled this if you want to track subdomains. Note: You must have an account that allows subdomain tracking. Please refer to the <a href="%s">account information</a> page for more information.', 'woopra'), 'https://www.woopra.com/members/'); ?></small>
+			</td>
+		</tr>
+	</table>
+	<br/>
+	
+	<h3><? _e('Event Tracking', 'woopra'); ?></h3>
+	<table class="form-table">
+		<tr valign="top">
+			<th scope="row"><?php _e('Enable', 'woopra') ?></th>
+			<td>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_events')); ?> id="track_events" name="woopra[track_events]"/> <label for="track_events"><?php _e("Enable WordPress Event Tracking.", 'woopra'); ?></label><br /><?php _e("More options are below to enable/disable certain events from being tracked for both the frontend and the admin area. This only controls Woopra Built-In WordPress Event Tracking.", 'woopra'); ?>
 			</td>
 		</tr>
 	</table>
