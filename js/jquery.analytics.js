@@ -255,7 +255,6 @@ jQuery(document).ready(function() {
 		setSubView(currentSuperView, selectedSubTabs[currentSuperView]);
 	}
 	
-	
 	//	Set the 'from' and 'to' date.
 	jQuery("#woopra-from").attr('value', jQuery(this).dateprev(30) ).datepicker({ dateFormat: 'yy-mm-dd' });
 	jQuery("#woopra-to").attr('value', jQuery(this).dateprev(0) ).datepicker({ dateFormat: 'yy-mm-dd' });
@@ -267,46 +266,45 @@ jQuery(document).ready(function() {
 	refreshDateLinkText();	//	Run!
 	
 	//	Create Super Tabs
-	addSuperTab(woopraL10n.visitors,	'visitors');
-	addSuperTab(woopraL10n.systems,		'systems');
-	addSuperTab(woopraL10n.pages,		'pages');
-	addSuperTab(woopraL10n.referrers,	'referrers');
-	addSuperTab(woopraL10n.searches,	'searches');
-	addSuperTab(woopraL10n.tagvisitors,	'tagvisitors');
+	addSuperTab( woopraL10n.visitors,		'visitors');
+	addSuperTab( woopraL10n.systems,		'systems');
+	addSuperTab( woopraL10n.pages,			'pages');
+	addSuperTab( woopraL10n.referrers,		'referrers');
+	addSuperTab( woopraL10n.searches,		'searches');
+	//addSuperTab( woopraL10n.tagvisitors,	'tagvisitors');
 	
 	//	Create Visitors Sub Tabs
-	addSubTab( 'Overview',				'overview',		'visitors',	new Array('getglobals.jsp') );
-	addSubTab( 'Countries',				'countries',	'visitors',	'COUNTRIES' );
-	addSubTab( 'Bounce Rate',			'bounces',		'visitors',	'VISITBOUNCES' );
-	addSubTab( 'Visit Durations',		'durations',	'visitors',	'VISITDURATIONS' );
+	addSubTab( woopraL10n.overview,		'overview',		'visitors',		new Array('getGlobals') );
+	addSubTab( woopraL10n.countries,	'countries',	'visitors',		new Array('getCountries') );
+	addSubTab( woopraL10n.bouncerate,	'bounces',		'visitors',		new Array('getVisitBounces') );
+	addSubTab( woopraL10n.visitdura,	'durations',	'visitors',		new Array('getVisitDurations') );
 	
 	//	Create Systems Sub Tabs
-	addSubTab( 'Browsers',				'browsers',		'systems',	'BROWSERS' );
-	addSubTab( 'Platforms',				'platforms',	'systems',	'PLATFORMS' );
-	addSubTab( 'Screen Resolutions',	'resolutions',	'systems',	'RESOLUTIONS' );
-	addSubTab( 'Languages',				'languages',	'systems',	'LANGUAGES' );
-
-	addSubTab('Pageviews', 'pageviews', 'pages', 'PAGEVIEWS');
-	addSubTab('Landing Pages', 'landing', 'pages', 'PAGELANDINGS');
-	addSubTab('Exit Pages', 'exit', 'pages', 'PAGEEXITS');
-	addSubTab('Outgoing Links', 'outgoing', 'pages', 'OUTGOINGLINKS');
-	addSubTab('Downloads', 'downloads', 'pages', 'DOWNLOADS');
-
-	addSubTab('Referrer Types', 'reftypes', 'referrers', 'REFERRERTYPES');
-	addSubTab('Regular Referrers', 'refdefault', 'referrers', 'REFERRERS&type=BACKLINK');
-	addSubTab('Search Engines', 'refsearch', 'referrers', 'REFERRERS&type=SEARCH');
-	addSubTab('Feed Readers', 'reffeeds', 'referrers', 'REFERRERS&type=FEEDS');
-	addSubTab('Emails', 'refmails', 'referrers', 'REFERRERS&type=EMAIL');
-	addSubTab('Social Bookmarks', 'refbookmarks', 'referrers', 'REFERRERS&type=SOCIALBOOKMARKS');
-	addSubTab('Social Networks', 'refnetworks', 'referrers', 'REFERRERS&type=SOCIALNETWORK');
-	addSubTab('Media', 'refmedia', 'referrers', 'REFERRERS&type=MEDIA');
-	addSubTab('News', 'refnews', 'referrers', 'REFERRERS&type=NEWS');
-
-	addSubTab('Search Queries', 'queries', 'searches', 'QUERIES');
-	addSubTab('Keywords', 'keywords', 'searches', 'KEYWORDS');
-
-	addSubTab('By Name', 'taggedvisitors_byname', 'tagvisitors', 'CUSTOMVISITORDATA&aggregate_by=name');
-
+	addSubTab( woopraL10n.browsers,		'browsers',		'systems',		new Array('getBrowsers') );
+	addSubTab( 'Platforms',				'platforms',	'systems',		new Array('getPlatforms') );
+	addSubTab( 'Screen Resolutions',	'resolutions',	'systems',		new Array('getResolutions') );
+	addSubTab( 'Languages',				'languages',	'systems',		new Array('getLanguages') );
+	
+	addSubTab( 'Pageviews', 			'pageviews',	'pages',		new Array('getPageviews') );
+	addSubTab( 'Landing Pages',			'landing',		'pages',		new Array('getPageLandings') );
+	addSubTab( 'Exit Pages',			'exit',			'pages',		new Array('getPageExits') );
+	addSubTab( 'Outgoing Links',		'outgoing',		'pages',		new Array('getOutgoingLinks') );
+	addSubTab( 'Downloads',				'downloads',	'pages', 		new Array('getDownloads') );
+	
+	addSubTab( 'Referrer Types',		'reftypes',		'referrers', 	new Array('getReferrerTypes') );
+	addSubTab( 'Search Engines',		'refsearch',	'referrers',	new Array('getReferrers', 'search') );
+	addSubTab( 'Feed Readers',			'reffeeds',		'referrers',	new Array('getReferrers', 'feeds') );
+	addSubTab( 'Emails',				'refmails', 	'referrers',	new Array('getReferrers', 'email') );
+	addSubTab( 'Social Bookmarks',		'refbookmarks', 'referrers',	new Array('getReferrers', 'socialbookmarks') );
+	addSubTab( 'Social Networks',		'refnetworks',	'referrers',	new Array('getReferrers', 'socialnetwork') );
+	addSubTab( 'Media',					'refmedia',		'referrers',	new Array('getReferrers', 'media') );
+	addSubTab( 'News',					'refnews',		'referrers',	new Array('getReferrers', 'news') );
+	addSubTab( 'Community',				'refcomm',		'referrers',	new Array('getReferrers', 'community') );
+	addSubTab( 'All Links',				'reflinks',		'referrers',	new Array('getReferrers', 'alllinks') );
+	
+	addSubTab( 'Search Queries',		'queries',		'searches',		new Array('getQueries') );
+	addSubTab( 'Keywords',				'keywords',		'searches',		new Array('getKeywords') );
+	
 	//	By Default Set The Current View
 	//	@todo Make this confirgurable!
 	setCurrentSuperTab('visitors');
