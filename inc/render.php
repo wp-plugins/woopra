@@ -100,8 +100,7 @@ class WoopraRender extends WoopraAdmin {
 		if ( !empty($_GET['apipage']) ) {
 			
 			//	Set Hostname
-			//$this->hostname = get_option('siteurl');
-			$this->hostname = "http://bugssite.org";	// temp
+			$this->hostname = get_option('siteurl');
 			
 			/**
 			 * Process the $_GET

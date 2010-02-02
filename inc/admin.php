@@ -472,6 +472,7 @@ class WoopraAdmin extends Woopra {
 	
 	<input type="hidden" name="woopra[version]" value="<?php echo $this->version; ?>" />
 	<input type="hidden" name="woopra[activated]" value="<?php echo $this->get_option('activated'); ?>" />
+	<input type="hidden" name="woopra[sub_domain]" value="<?php echo $this->woopra_host(); ?>" />
 	<input type="hidden" name="woopra[date_format]" value="yyyy-MM-dd" />
 		
 	<h3><? _e('Main Settings', 'woopra'); ?></h3>
@@ -560,6 +561,18 @@ class WoopraAdmin extends Woopra {
 	
 	<?php }
 
+	/**
+	 * Return a pretty version of the hostname.
+	 * @since 1.5.0
+	 * @return string
+	 */
+	function woopra_host() {
+		$site = get_option('siteurl');
+		preg_match('@^(?:http://)?([^/]+)@i', $site, $matches);
+		$host = $matches[1];
+		return preg_replace('!^www\.!i', '', $host);
+	}
+	
 	/**
 	 * The content page.
 	 * @since 1.4.1
