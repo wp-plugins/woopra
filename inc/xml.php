@@ -143,10 +143,10 @@ class WoopraXML {
 	 */
 	function init() {
 		if (!$this->api_key)	//	Check to see if site key has not been set.
-			return new WP_Error('apikey-empty', sprintf( __('%s: Sorry. The API Key was not filled out correctly.'), 'WoopraXML::process_data(215)' ) );
+			return new WP_Error('apikey-empty', sprintf( __('%s: Sorry. The API Key was not filled out correctly.'), 'WoopraXML::process_data(146)' ) );
 		
 		if (!$this->api_page)	//	Check to see if api page has not been set.
-			return new WP_Error('apipage-empty', sprintf( __('%s: Sorry. The API Page was not filled out correctly. '), 'WoopraXML::process_data(215)' ) );
+			return new WP_Error('apipage-empty', sprintf( __('%s: Sorry. The API Page was not filled out correctly.'), 'WoopraXML::process_data(149)' ) );
 			
 		return true;
 	}
@@ -202,7 +202,7 @@ class WoopraXML {
 		$woopra_soap = new SoapClient('http://api.woopra.com/v0/Analytics?WSDL', array('trace' => 1));
 		//	** POST THE RESPONSE **/
 		if ( is_soap_fault( $woopra_soap->{$this->api_page}($this->args) ) ) {
-			return new WP_Error('soap-error', sprintf( __('%s: Sorry. There was a SOAP connection error to the Woopra API. Please try again later.'), 'WoopraXML::process_data(215)' ) );
+			return new WP_Error('soap-error', sprintf( __('%s: Sorry. There was a SOAP connection error to the Woopra API. Please try again later.'), 'WoopraXML::process_data(205)' ) );
 		}
 		//	** STORE THE DATA **/
 		$woopra_request_data = $woopra_soap->__getLastResponse();
@@ -219,7 +219,7 @@ class WoopraXML {
 		//	** READ THE XML RETURN! **/
 		if ( !xml_parse($this->parser, $woopra_request_data) ) {
 			unset($woopra_request_data, $this->parser);
-			return new WP_Error('xml-parse-error', sprintf(__('%s: XML error at line %d column %d', 'woopra'), 'WoopraXML::process_data(232)', xml_get_current_line_number($this->parser), xml_get_current_column_number($this->parser) ) );
+			return new WP_Error('xml-parse-error', sprintf(__('%s: XML error at line %d column %d', 'woopra'), 'WoopraXML::process_data(222)', xml_get_current_line_number($this->parser), xml_get_current_column_number($this->parser) ) );
 		}
 		//	** REMOVE THE DATA FROM THE SYSTEM TO FREE UP RESOURCES **/
 		unset($woopra_request_data, $this->parser);
