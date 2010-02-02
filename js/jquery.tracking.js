@@ -70,8 +70,8 @@
 						debug('Woopra Idle Timeout: ' +  woopraFrontL10n.setTimeoutValue + 'ms');
 					}
 				}
-				woopraTracker.addVisitorProperty( woopraFrontL10n.name, woopra_data.name );
-				woopraTracker.addVisitorProperty( woopraFrontL10n,email, woopra_data.email );
+				woopraTracker.addVisitorProperty( woopraFrontL10n.name , woopra_data.name );
+				woopraTracker.addVisitorProperty( woopraFrontL10n.email , woopra_data.email );
 				woopraTracker.addVisitorProperty( 'avatar', woopra_data.avatar );
 				woopraTracker.track();
 				debug('Woopra is loaded.');

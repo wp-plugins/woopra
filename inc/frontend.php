@@ -98,7 +98,7 @@ class WoopraFrontend extends Woopra {
 	 * @return none
 	 */
 	function create_localize($array) {
-		$this->local = array_merge($array , $this->local );
+		$this->local = array_merge($array, $this->local );
 	}
 	
 	/**
@@ -119,7 +119,6 @@ class WoopraFrontend extends Woopra {
 		echo "<script type=\"text/javascript\">\r\n";
 		echo "jQuery.trackWoopra({ name : '" . js_escape($this->woopra_visitor['name']) . "', email : '" . js_escape($this->woopra_visitor['email']) . "', avatar : '" . urlencode("http://www.gravatar.com/avatar/" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http://static.woopra.com/images/avatar.png") . "' } );\r\n";
 		echo "</script>\r\n";
-		
 		echo "<!-- End of Woopra Analytics Code -->\r\n\r\n";
 		/*** JQUERY CODE -- DO NOT MODFIY ***/
 		
