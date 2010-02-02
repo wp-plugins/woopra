@@ -10,28 +10,7 @@
  * @subpackage admin
  */
 class WoopraAdmin extends Woopra {
-
-	/**
-	 * Current Event
-	 * @since 1.4.1
-	 * @var array
-	 */
-	var $event;
-	
-	/**
-	 * All the events.
-	 * @since 1.4.1
-	 * @var array
-	 */
-	var $_events;
-	
-	/**
-	 * Initlize Test Error Code
-	 * @since 1.5.0
-	 * @var string
-	 */
-	var $init_error;
-	
+		
 	/**
 	 * The plugin file.
 	 * @since 1.4.1
@@ -113,7 +92,7 @@ class WoopraAdmin extends Woopra {
 	/**
 	 * Test to see if we can even initilize
 	 * @since 1.5.0
-	 * @return boolean
+	 * @return object
 	 */
 	function init_test() {
 		/** Soap Test **/
@@ -393,6 +372,7 @@ class WoopraAdmin extends Woopra {
 			
 			$newopts = array (
 				'use_subdomain'	=>	0,
+				'track_evemts'	=>	1,
 				'root_domain'	=>	$this->woopra_host(),
 			);
 			
@@ -409,16 +389,20 @@ class WoopraAdmin extends Woopra {
 	 */
 	function defaults() {
 		$defaults = array(
+			/** DO NOT MODIFY THIS AT ALL! I MEAN IT! **/
 			'version'			=> WOOPRA_VERSION,
 			'activated'			=> 1,
+			/** INFORMATION NEEDED TO RUN BACKEND PART OF WOOPRA **/
 			'api_key'			=> '',
 			'analytics_tab'		=> 'dashboard',
 			'run_status'		=> 'on',
-			'date_format'		=> 'yyyy-MM-dd',	// hardcoded for now
+			'date_format'		=> 'yyyy-MM-dd',	// This still has to be hard-coded.
 			'limit'				=> 50,
+			/** SETTING DEFAULTS **/
 			'auto_tagging'		=> 1,
 			'ignore_admin'		=> 0,
 			'track_admin'		=> 0,
+			'track_events'		=> 1,
 			'use_timeout'		=> 0,
 			'use_subdomain'		=> 0,
 			'root_domain'		=> $this->woopra_host(),
@@ -520,15 +504,21 @@ class WoopraAdmin extends Woopra {
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><?php _e('Ignore Administrator', 'woopra') ?></th>
-			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('ignore_admin')); ?> id="ignore_admin" name="woopra[ignore_admin]"/> <label for="ignore_admin"><?php _e("Ignore Administrator Visits", 'woopra'); ?></label><br /><?php _e("Enable this check box if you want Woopra to ignore <strong>your visits</strong> or any other administrator visits.", 'woopra'); ?>
-			</td>
-		</tr>
-		<tr valign="top">
 			<th scope="row"><?php _e('Auto Tagging', 'woopra') ?></th>
 			<td>
 				<input type="checkbox" value="1"<?php checked('1', $this->get_option('auto_tagging')); ?> id="auto_tagging" name="woopra[auto_tagging]"/> <label for="auto_tagging"><?php _e("Automatically Tag Members &amp; Commentators", 'woopra'); ?></label><br /><?php _e("Enable this check box if you want Woopra to auto-tag visitors.", 'woopra'); ?>
+			</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><?php _e('Event Tracking', 'woopra') ?></th>
+			<td>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_events')); ?> id="track_events" name="woopra[track_events]"/> <label for="track_events"><?php _e("Enable WordPress Tracking.", 'woopra'); ?></label><br /><?php _e("More options are below to enable/disable certain events from being tracked for both the frontend and the admin area.", 'woopra'); ?>
+			</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><?php _e('Ignore Administrator', 'woopra') ?></th>
+			<td>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('ignore_admin')); ?> id="ignore_admin" name="woopra[ignore_admin]"/> <label for="ignore_admin"><?php _e("Ignore Administrator Visits", 'woopra'); ?></label><br /><?php _e("Enable this check box if you want Woopra to ignore <strong>your visits</strong> or any other administrator visits.", 'woopra'); ?>
 			</td>
 		</tr>
 		<tr valign="top">

@@ -1,10 +1,7 @@
 /*
-* jquery-woopra-analytics plugin
+* jQuery Woopra Analytics Plugin
 *
 * A jQuery plugin that makes it easier to implement Woopra tracking for your site.
-* I've ported this from Christian Hellsten's excellent jQuery Google Analytics plugin.
-*
-* His plugin can be found at http://github.com/christianhellsten/jquery-google-analytics.
 *
 * Adds the following methods to jQuery:
 *   - $.trackWoopra() - Adds Woopra tracking on the page from which it's called.
@@ -13,9 +10,9 @@
 *
 * See here for more: http://www.woopra.com/docs/customization/
 *
-*
 * Copyright (c) 2009 Pranshu Arya
-*
+* Modifed by Shane <shane@bugssite.org> to work for the WordPress Woopra Plugin
+* 
 * Version 1.1
 **
 * Licensed under the MIT license:
@@ -24,36 +21,14 @@
 * Credits:
 *   - http://woopra.com
 *   - http://github.com/christianhellsten/jquery-google-analytics
-*   
-* Modifed by Shane <shane@bugssite.org> to work for the WordPress Woopra Plugin
-* 
+*   - http://pranshuarya.com/jaal/Development/jquery-woopra-plugin.html
 */
 
 (function($) {
 
-  /**
-   * Enables Woopra tracking on the page from which it's called. 
-   *
-   * Usage:
-   *
-   *  <script type="text/javascript">
-   *    $.trackWoopra();
-   *  </script>
-   *
-   *  -or-
-   *
-   *  <script type="text/javascript">
-   *    $.trackWoopra({domain : 'http://www.mydomain.com', url : 'http://www.myurl.com', title : 'My page', cookie : 'exclude_cookie'});
-   *  </script>
-   * 
-   * domain parameter is optional - use it to specify root domain (to track sub-domains)
-   * 
-   * url and title parameters are optional (but must be passed in together),
-   * in case you want to give pages custom names in Woopra
-   *
-   * use the cookie parameter to exclude visitors, including yourself, based on a cookie
-   *
-   */
+	/**
+	 * 
+	 */
 	$.trackWoopra = function(woopra_data) {
 		var script;
 		var src  = 'http://static.woopra.com/js/woopra.v2.js';
@@ -112,48 +87,36 @@
   $.woopraEvent = function(title, woopra_options) {
 		if ( woopraTracker == 'undefined' ) {
 			debug('FATAL: woopraTracker is not defined'); // blocked by whatever
-		}
-		else if(excludeCookie == 'noCookie') {
+		} else {
 			var w_event = new WoopraEvent(title);
-			
 			// For each property pair passed to woopraEvent, add it to w_event
 			$.each(woopra_options, function(i,val){
 				w_event.addProperty(i,val);
-			//	debug('w_event.addProperty(' + i + ', ' + val + ')');
 			});
 			w_event.fire();
 		}
 	};
-
-  /**
-   * Adds click tracking to elements. Usage:
-   *
-   *  $('a').trackEvent({title : 'title', var1 : 'value1', var2: 'value2', var3 : 'value3', ..., event_name: 'mouseover'});
-   *
-   *  title parameter is required, all others are optional
-   *  add as many property pairs as you want (as shown above) on your webpage
-   */
-  $.fn.trackEvent = function(woopra_options) {
-
+	
+	$.fn.trackEvent = function(woopra_options) {
+		
 		// Add event handler to all matching elements
 		return this.each(function() {
 			var element = $(this);
 			var parent = $(element).parent();
 		  
 			// Prevent an element from being tracked multiple times.
-			if (element.hasClass('w_tracked')) {
+			if ( element.hasClass('w_tracked') ) {
 				return false;
-			} 
-			else {
+			} else {
 				element.addClass('w_tracked');
 			}
-			if(woopra_options){
+			if (woopra_options) {
 				// Use default woopra_options, if necessary
-				var woop_settings = $.extend({}, $.fn.trackEvent.defaults, woopra_options);
+				var woopra_settings = $.extend({}, $.fn.trackEvent.defaults, woopra_options);
 
 				// Merge custom woopra_options with defaults.
-				var title = evaluate(element, woop_settings.title);
-				var event_name = evaluate(element, woop_settings.event_name);
+				var title = evaluate(element, woopra_settings.title);
+				var event_name = evaluate(element, woopra_settings.event_name);
 				
 				// Iterate over the other property pairs in 'woopra_options'.  Leave them alone if they are
 				// text, evaluate them if they are functions.
@@ -177,30 +140,19 @@
 				// Get index of item that was clicked
 				var index = $(parent).find('> *').index(this);
 				// Should we skip internal links? REFACTOR
-				var skip = woop_settings.skip_internal && (element[0].hostname == location.hostname);
+				var skip = woopra_settings.skip_internal && (element[0].hostname == location.hostname);
 				// Get title and other property pair values for item that was clicked
 				// and pass them to $.woopraEvent
-				if(!skip) {
-					var title = evaluate($(parent).children().eq(index), woop_settings.title);
+				if( !skip ) {
+					var title = evaluate($(parent).children().eq(index), woopra_settings.title);
 					options = {}
 					$.each(woopra_options, function(i,val){
 						options[i] = evaluate($(parent).children().eq(index), val);
 					});
 					$.woopraEvent(title, options);
-					// Display item that was tracked when event_name was triggered
-					if(excludeCookie == 'noCookie'){
-						debug('Tracked ' + message);
-					}
-					else {
-						debug('Tracking ' + message + ' skipped due to exclude cookie');
-					}
+					debug('Tracked ' + message);
 				} else {
-					if(excludeCookie == 'noCookie'){
-						debug('Skipped ' + message);
-					}
-					else {
-						debug('Skipped ' + message + ' due to exclude cookie');
-					}
+					debug('Skipped ' + message);
 				}
 				return true;
 			});

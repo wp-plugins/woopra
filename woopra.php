@@ -99,7 +99,7 @@ class Woopra {
 	 * @param object $option
 	 */
 	function get_option($option) {
-		if (isset($this->options[$option]))
+		if ( !empty($this->options[$option]) )
 			return $this->options[$option];
 		else
 			return false;
