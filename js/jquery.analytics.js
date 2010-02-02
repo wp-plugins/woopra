@@ -183,8 +183,8 @@ jQuery(document).ready(function() {
 	 * area - ID name that will show all the data.
 	 * key - Array holding possiable three bits of information. 
 	 * 			* apipage - The page that we are querying.
-	 * 			* type (For getreferrers.jsp)
-	 * 			* aggregate_by (getcustomvisitordata.jsp)
+	 * 			* type (For getReferrers Method)
+	 * 			* aggregate_by ()
 	 * 
 	 */
 	function requestData(area, key) {

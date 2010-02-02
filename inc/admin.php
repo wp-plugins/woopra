@@ -351,7 +351,7 @@ class WoopraAdmin extends Woopra {
 			$woopra = get_option('woopra');
 			
 			$newopts = array (
-				'version'		=>	'1.4.1.1'
+				'version'	=>	'1.4.1.1'
 			);
 			
 			unset($woopra['version']);
@@ -384,7 +384,7 @@ class WoopraAdmin extends Woopra {
 			$woopra = get_option('woopra');
 
 			$newopts = array (
-				'version'			=>	'1.4.3.1',
+				'version'	=>	'1.4.3.1',
 			);
 			
 			unset($woopra['version']);
@@ -394,7 +394,8 @@ class WoopraAdmin extends Woopra {
 			$woopra = get_option('woopra');
 
 			$newopts = array (
-				'use_subdomain'			=>	0,
+				'use_subdomain'	=>	0,
+				'root_domain'	=>	$this->woopra_host(),
 			);
 			
 			unset($woopra['version']);
@@ -421,7 +422,8 @@ class WoopraAdmin extends Woopra {
 			'ignore_admin'		=> 0,
 			'track_admin'		=> 0,
 			'use_timeout'		=> 0,
-			'use_subdomain'		=>	0,
+			'use_subdomain'		=> 0,
+			'root_domain'		=> $this->woopra_host(),
 			'timeout'			=> 600,
 		);
 		return $defaults;
@@ -472,7 +474,7 @@ class WoopraAdmin extends Woopra {
 	
 	<input type="hidden" name="woopra[version]" value="<?php echo $this->version; ?>" />
 	<input type="hidden" name="woopra[activated]" value="<?php echo $this->get_option('activated'); ?>" />
-	<input type="hidden" name="woopra[sub_domain]" value="<?php echo $this->woopra_host(); ?>" />
+	<input type="hidden" name="woopra[root_domain]" value="<?php echo $this->woopra_host(); ?>" />
 	<input type="hidden" name="woopra[date_format]" value="yyyy-MM-dd" />
 		
 	<h3><? _e('Main Settings', 'woopra'); ?></h3>

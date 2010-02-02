@@ -78,7 +78,7 @@ class WoopraFrontend extends Woopra {
 		
 		//	Set jQuery Options
 		if ( $this->get_option('use_subdomain') )
-			$this->create_localize( array('rootDomain'		=>	$this->get_option('sub_domain')		)		);
+			$this->create_localize( array('rootDomain'		=>	$this->get_option('root_domain') )			);
 		
 		if ( $this->get_option('use_timeout') )
 			$this->create_localize( array('setTimeoutValue'	=>	($this->get_option('timeout')*1000)	)		);
