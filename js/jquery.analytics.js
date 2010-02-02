@@ -140,7 +140,7 @@ jQuery(document).ready(function() {
 
 		if (currentSubTabId != null) {
 			//	Remove the class.
-			jQuery('#woopra-sub-tab-li' + currentSubTabId).removeAttr("class");
+			jQuery('#woopra-sub-tab-li-' + currentSubTabId).removeAttr("class");
 		}
 		
 		selectedSubTabs[superid] = id;
