@@ -11,9 +11,9 @@
 * See here for more: http://www.woopra.com/docs/customization/
 *
 * Copyright (c) 2009 Pranshu Arya
-* Modifed by Shane <shane@bugssite.org> to work for the WordPress Woopra Plugin
+* Modified by Shane <shane@bugssite.org> to work for the WordPress Woopra Plugin
 * 
-* Version 1.1
+* Version 1.2
 **
 * Licensed under the MIT license:
 * http://www.opensource.org/licenses/mit-license.php
@@ -69,38 +69,46 @@
 		
 		 _load_woopra();
 	}
-
-  /**
-   * Tracks an event using the given parameters. 
-   *
-   * The woopraEvent method takes as few or as many property pairs as you provide:
-   * http://www.woopra.com/forums/topic/how-do-i-title-a-custom-event)
-   *
-   * Defaults for title, event_name, and skip_internal are specified at the bottom
-   *
-   *  title - name of custom event
-   *  var1, var2, var3, ...
-   *  event_name - name of the event you want to track
-   *  skip_internal - optional boolean value. If true then internal links are not tracked.
-   *
-   */
-  $.woopraEvent = function(title, woopra_options) {
+	
+	/**
+	 * Process a Woopra Event Manually
+	 */
+	$.woopraEvent = function(title, woopra_options) {
 		if ( woopraTracker == 'undefined' ) {
 			debug('FATAL: woopraTracker is not defined'); // blocked by whatever
 		} else {
 			var w_event = new WoopraEvent(title);
 			// For each property pair passed to woopraEvent, add it to w_event
-			$.each(woopra_options, function(i,val){
-				w_event.addProperty(i,val);
+			$.each(woopra_options, function(i, val){
+				w_event.addProperty(i, val);
 			});
 			w_event.fire();
 		}
 	};
 	
+	/**
+	 * Track Event jQuery Hook
+	 * 
+	 * Example:
+	 * 
+	 * 	Trigger event: 	When user clicks on a link.
+	 * 	Code:			jQuery("a").trackEvent({ title: 'Click on link', label: 'A element.' });
+	 * 
+	 * This event is only fired by default, when the event is a 'click'. This can be
+	 * changed by passing a different 'event_name'.
+	 * 
+	 * Example:
+	 * 	
+	 * 	Trigger event: 	When user is over a link.	
+	 * 	Code:			jQuery("a").trackEvent({ title: 'Hovering over event.', label: 'A element hover.', event_name: 'mouseover' });
+	 * 
+	 */
 	$.fn.trackEvent = function(woopra_options) {
 		
-		// Add event handler to all matching elements
-		return this.each(function() {
+		/**
+		 * 
+		 */
+		return this.each( function() {
 			var element = $(this);
 			var parent = $(element).parent();
 		  
@@ -121,8 +129,8 @@
 				// Iterate over the other property pairs in 'woopra_options'.  Leave them alone if they are
 				// text, evaluate them if they are functions.
 				var options = {};
-				$.each(woopra_options, function(i,val){
-					options[i] = evaluate(element,val);
+				$.each(woopra_options, function(i, val){
+					options[i] = evaluate(element, val);
 				});  
 			}
 				
@@ -146,7 +154,7 @@
 				if( !skip ) {
 					var title = evaluate($(parent).children().eq(index), woopra_settings.title);
 					options = {}
-					$.each(woopra_options, function(i,val){
+					$.each(woopra_options, function(i, val){
 						options[i] = evaluate($(parent).children().eq(index), val);
 					});
 					$.woopraEvent(title, options);
@@ -158,12 +166,8 @@
 			});
 		});
 		
-		
 		/**
-		 * Checks whether a setting value is a string or a function.
 		 * 
-		 * If second parameter is a string: returns the value of the second parameter.
-		 * If the second parameter is a function: passes the element to the function and returns function's return value.
 		 */
 		function evaluate(element, text_or_function) {
 			if(typeof text_or_function == 'function') {
@@ -172,24 +176,24 @@
 			return text_or_function;
 		};
 	};
-
+	
 	/**
-	* Prints to Firebug console, if available. To enable:
-	*   $.fn.track.trackEvent.debug = true;
-	*/
+	 * Debug Information
+	 */
 	function debug(message) {
 		if (typeof console != 'undefined' && typeof console.debug != 'undefined' && $.fn.trackEvent.defaults.debug) {
 			console.debug(message);
 		}
 	};
-
+	
 	/**
-	* Default (overridable) settings.
-	*/
+	 * Default Settings
+	 */
 	$.fn.trackEvent.defaults = {
 		title			: function(element) { return (element[0].hostname == location.hostname) ? 'internal' : 'external'; },
 		skip_internal	: false,
 		event_name		: 'click',
 		debug			: true
 	};
+	
 })(jQuery);
