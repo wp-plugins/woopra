@@ -35,15 +35,13 @@
 		
 		function _woopra_track() {
 			if ( woopraTracker != undefined ) {
-				if ( woopraFrontL10n != undefined ) {
-					if ( woopraFrontL10n.rootDomain != null ) {
-						woopraTracker.setDomain( woopraFrontL10n.rootDomain );
-						debug('Woopra Root Domain: ' +  woopraFrontL10n.rootDomain);
-					}
-					if ( woopraFrontL10n.setTimeoutValue > 0 ) {
-						woopraTracker.setIdleTimeout( woopraFrontL10n.setTimeoutValue );
-						debug('Woopra Idle Timeout: ' +  woopraFrontL10n.setTimeoutValue + 'ms');
-					}
+				if ( woopraFrontL10n.rootDomain != null ) {
+					woopraTracker.setDomain( woopraFrontL10n.rootDomain );
+					debug('Woopra Root Domain: ' +  woopraFrontL10n.rootDomain);
+				}
+				if ( woopraFrontL10n.setTimeoutValue > 0 ) {
+					woopraTracker.setIdleTimeout( woopraFrontL10n.setTimeoutValue );
+					debug('Woopra Idle Timeout: ' +  woopraFrontL10n.setTimeoutValue + 'ms');
 				}
 				woopraTracker.addVisitorProperty( woopraFrontL10n.name , woopra_data.name );
 				woopraTracker.addVisitorProperty( woopraFrontL10n.email , woopra_data.email );
