@@ -11,18 +11,18 @@
 class WoopraRender extends WoopraAdmin {
 
 	/**
-	 * The Stats Area
-	 * @since 1.4.1
-	 * @var string
-	 */
-	var $key;
-	
-	/**
 	 * Site API Key
 	 * @since 1.4.1
 	 * @var string
 	 */
 	var $api_key;
+	
+	/**
+	 * API Page
+	 * @since 1.5.0
+	 * @var string
+	 */
+	var $api_page;
 	
 	/**
 	 * Are we doing a flash data or reg.?
@@ -32,28 +32,11 @@ class WoopraRender extends WoopraAdmin {
 	var $data_type;
 	
 	/**
-	 * Starting Date
-	 * @since 1.4.1
-	 * @var string
-	 */
-	var $date_from;
-	
-	/**
-	 * Ending Date
-	 * @since 1.4.1
-	 * @var string
-	 */
-	var $date_to;
-	
-	/**
 	 * Number of items
-	 * 
-	 * Note: Soon to be @decrepeted
-	 * 
 	 * @since 1.4.1
 	 * @var int
 	 */
-	var $limit = 50;	// hardcoded now...
+	var $limit = 50;
 	
 	/**
 	 * Current offset for more than one page.
@@ -63,7 +46,7 @@ class WoopraRender extends WoopraAdmin {
 	var $offset = 0;
 	
 	/**
-	 * What is the hostname
+	 * What is the hostname?
 	 * @since 1.4.1
 	 * @var string
 	 */
@@ -82,7 +65,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @var array
 	 */
 	var $countries;
-
+	
 	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
 	 * @since 1.4.1
@@ -113,36 +96,58 @@ class WoopraRender extends WoopraAdmin {
 	 * @return 
 	 */
 	function generate_data() {
-		if (isset($_GET['wkey'])) {
+		// @todo $_GET == bad. There must be something else.
+		if ( !empty($_GET['apipage']) ) {
+			
+			//	Set Hostname
+			//$this->hostname = get_option('siteurl');
+			$this->hostname = "http://bugssite.org";	// temp
+			
+			/**
+			 * Process the $_GET
+			 */
+			
+			//	Regular or Flash - Depending on Data is "Rendered"
 			$this->data_type = $_GET['datatype'];
+			//	API Query Page File
+			$this->api_page = $_GET['apipage'];
+			//	Website's API Key
 			$this->api_key = $_GET['apikey'];
-			$this->key = str_replace("&amp;", "&", $_GET['wkey']);
 			
-			if ($_GET['type'])
-				$this->key = $this->key . "&type=" . $_GET['type'];
-				
-			if ($_GET['aggregate_by'])
-				$this->key = $this->key . "&aggregate_by=" . $_GET['aggregate_by'];
-			
-			$this->hostname = get_option('siteurl');
-			
+			if ( !empty($_GET['type']) || !empty($_GET['aggregate_by']) ) {
+				$xml_data_append = array(
+					'type'			=> !empty($_GET['type']) ? $_GET['type'] : '',
+					'aggregate_by'	=> !empty($_GET['aggregate_by']) ? $_GET['aggregate_by'] : '',
+				);
+			}
+						
 			$date_format = $_GET['date_format'];
 			$start_date = $_GET['from'];
 			$end_date = $_GET['to'];
 			
 			$xml_data = array(
-				'key'			=> 	$this->key,
-				'date_format'	=>	$date_format,
-				'start_date'	=>	$start_date,
-				'end_date'		=>	$end_date,
+				'dateFormat'	=>	$date_format,
+				'startDay'		=>	$start_date,
+				'endDay'		=>	$end_date,
 				'limit'			=>	$this->limit,
 				'offset'		=>	$this->offset
 			);
 			
-			/** LAST LINES **/
-			if ($this->process_xml("render", $xml_data)) {
-				$this->render_results();
-			}
+			//	Do we need to add anything to the data field?
+			if ( is_array($xml_data_append) && !empty($xml_data_append) )
+				$xml_data = array_merge($xml_data, $xml_data_append);
+			
+			/** Process XML Class **/
+			$xml_process = $this->process_xml("render", $xml_data);
+			if ( is_wp_error($xml_process) )
+				wp_die($xml_process->get_error_message());
+
+			// Clear up memory!
+			unset($xml_data, $xml_data_append);
+			
+			// Render Results
+			$this->render_results();
+
 		}
 		exit;
 	}
@@ -158,35 +163,34 @@ class WoopraRender extends WoopraAdmin {
 	 */
 	function process_xml($area, $xml_data) {
 		
-		$xml = new WoopraXML;
+		if ( empty($area) )
+			return new WP_Error('process-xml',sprintf( __('%s: Sorry. Where are we displaying this data? '), 'WoopraRender::process_xml(193)' ) );
 		
+		//	Set the Woopra XML Object
+		$xml = new WoopraXML();
+		
+		//	Set XML Vars
+		$xml->api_page = $this->api_page;
 		$xml->api_key = $this->api_key;
 		$xml->hostname = $this->woopra_host();
-	
+		
+		//	Clear the Entries
 		$this->entries = null;
-		if ($xml->init()) {
-			if ($xml->set_xml($area, $xml_data)) {
-				if ($xml->process_data()) {
-					$this->entries = $xml->data;
-				}
-			}
-		}
 		
-		if ($xml->connection_error != null || $xml->error_msg != null || !$xml->init()) {
-			if ($this->data_type != "flash")
-				echo '<div class="error"><p>' . sprintf(__('The Woopra Plugin was not able to request your analytics data from the Woopra Engines. 
-				<br/> Key %s / Error Code: %s
-				<br/> <small><a href="http://www.woopra.com/forums/">Report this error onto the forums!</a><small>
-				<br/>', 'woopra'), $xml_data['key'], $xml->connection_error . $xml->error_msg) . '</small></p></div>';
-			else
-				echo $xml->connection_error . $xml->error_msg;
-			return false;
-		}
+		//	Start the XML Initilization		
+		$xml_init = $xml->init();
+		if ( is_wp_error($xml_init) )
+			return is_wp_error($xml_init);
 		
-		if (($this->entries == null) || (count($this->entries) == 0)) {
-			echo '<p align="center">' . _('Your query returned 0 results.<br/>Click <a href="#" onclick="refreshCurrent(); return false;">here</a> to retry again!') . '</p>';
-			return;
+		//	Set and Query SOAP connection
+		if ( $xml->set_xml($area, $xml_data) ) {
+			//	Process the SOAP!
+			$xml_process_data = $xml->process_data();
+			if ( is_wp_error($xml_process_data) )
+				return is_wp_error($xml_process_data);
 		}
+		//	 We do not need the index information here!
+		$this->entries = $xml->data['data'];
 		
 		$xml->clear_data();
 		unset($xml);
@@ -200,6 +204,9 @@ class WoopraRender extends WoopraAdmin {
 	 */
 	function render_results() {
 
+		if ( !is_array($this->entries) )
+			return;
+		
 		$this->sort_analytics_response();
 		
 		if ($this->data_type != "regular") {
@@ -207,20 +214,12 @@ class WoopraRender extends WoopraAdmin {
 			exit;
 		}
 		
-		if ($this->woopra_contains($this->key, 'REFERRERS')) {
-			$this->render_referrers($this->entries, $this->key);
-			exit;
-		}
-		
-		switch ($this->key) {
-			case 'GLOBALS':
+		switch ($this->api_page) {
+			case 'getGlobals':
 				$this->render_overview($this->entries);
 				break;
-			case 'COUNTRIES':
-				$this->render_default_model($this->entries, 'COUNTRIES');
-				break;
 			default:
-				$this->render_default_model($this->entries, $this->key);
+				$this->render_default_model($this->entries, $this->api_page);
 				break;
 		}
 	}
@@ -244,16 +243,15 @@ class WoopraRender extends WoopraAdmin {
 				<th>&nbsp;</th>
 			</tr>
 			<?php
-			
 			$counter = 0;
-			$max = $this->woopra_max($entries, 'pvs');
+			$max = $this->woopra_max($entries, 'totalPageviews');
 			foreach($entries as $entry) {
 				
 				//	Time Code
-				$timespentstring = $this->woopra_ms_to_string((int) $entry['timespent']);
+				//$timespentstring = $this->woopra_ms_to_string((int) $entry['totalTimeSpent']);
 				//	Vistor Code
-				$newvisitors = (int) $entry['newvtrs'];
-				$visitors = (int) $entry['vts'];
+				$newvisitors = (int) $entry['totalNewVisitors'];
+				$visitors = (int) $entry['totalVisitors'];
 				
 				$visitorsstring = "-";
 				if ($newvisitors <= $visitors && $visitors != 0) {
@@ -261,10 +259,9 @@ class WoopraRender extends WoopraAdmin {
 				}
 				
 				//	Page Views Code
-				$pageviews = (int) $entry['pvs'];
+				$pageviews = (int) $entry['totalPageviews'];
 				//	Percent Code
 				$percent = round($pageviews*100/$max);
-				
 				
 				$hashid = $this->woopra_friendly_hash('GLOBALS');
 				
@@ -296,7 +293,11 @@ class WoopraRender extends WoopraAdmin {
 	 */
 	function render_default_model($entries, $key) {
 		
+		//	Show data from highest to lowest.
+		$this->sort_analytics_response();
+		
 		?>
+		
 		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
 			<tr>
 				<th>&nbsp;</th>
@@ -307,16 +308,17 @@ class WoopraRender extends WoopraAdmin {
 			<?php
 			
 			$counter = 0;
-			$sum = $this->woopra_sum($entries, 'vts');
+			$sum = $this->woopra_sum($entries, 'totalVisits');
 			
-			foreach($entries as $index => $entry) {
+			foreach ($entries as $entry) {
 				$name = urldecode($entry['name']);
-				$hits = (int) $entry['vts'];
+				$hits = (int) $entry['totalVisits'];
 				$meta = urldecode($entry['meta']);
 				$percent = 0;
 				if ($sum != 0) {
 					$percent = round($hits*100/$sum);
 				}
+			
 				$hashid = $this->woopra_friendly_hash($key);
 				?>
 				<tr<?php echo (($counter++%2==0) ? " class=\"even_row\"" : ""); ?>>
@@ -328,9 +330,7 @@ class WoopraRender extends WoopraAdmin {
 				<tr id="wlc-<?php echo $hashid; ?>-<?php echo $counter; ?>" style=" height: 120px; display: none;">
 					<td class="wlinechart" id="linecharttd-<?php echo $hashid; ?>-<?php echo $counter ?>" colspan="4"></td>
 				</tr>
-			<?php
-		}
-		?>
+			<?php } ?>				
 		</table>
 		<?php
 	}
@@ -384,25 +384,21 @@ class WoopraRender extends WoopraAdmin {
 	
 	/**
 	 * Render the chart data format. Using Open-Flash-2 PHP Librarys
+	 * @since 1.4.3
 	 * @param object $entries
 	 * @return 
 	 */
 	function render_chart_data($entries) {
-	
-		$chart = new WoopraChart;
-
+		$chart = new WoopraChart();
 		if ((!isset($_GET['id'])) || (!is_numeric($_GET['id']))) {
 			unset($chart);
 			exit;
 		}
-		
 		foreach ($entries as $index => $entry) {
 			if ($entry['index'] == $_GET['id'])
 				$chart->data = $entry;
 		}
-		
 		echo $chart->render();
-
 		unset($chart);
 		exit;
 	}
@@ -432,41 +428,43 @@ class WoopraRender extends WoopraAdmin {
 	function woopra_render_name($key, $name = null, $meta = null) {
 		if (is_null($name)) {
 			switch ($key) {
-				case 'COUNTRIES':
+				case 'getCountries':
 					return __('Country', 'woopra');
-				case 'VISITBOUNCES':
+				case 'getVisitBounces':
 					return __('Pageviews per Visit', 'woopra');
-				case 'VISITDURATIONS':
+				case 'getVisitDurations':
 					return __('Durations', 'woopra');
-				case 'BROWSERS':
+				case 'getBrowsers':
 					return __('Browser', 'woopra');
-				case 'PLATFORMS':
+				case 'getPlatforms':
 					return __('Platform', 'woopra');
-				case 'RESOLUTIONS':
+				case 'getResolutions':
 					return __('Resolution', 'woopra');
-				case 'LANGUAGES':
+				case 'getLanguages':
 					return __('Language', 'woopra');
-				case 'PAGEVIEWS':
+				case 'getPageviews':
 					return __('Pages', 'woopra');
-				case 'PAGELANDINGS':
+				case 'getPageLandings':
 					return __('Landing Pages', 'woopra');
-				case 'PAGEEXITS':
+				case 'getPageExits':
 					return __('Exit Pages', 'woopra');
-				case 'OUTGOINGLINKS':
+				case 'getOutgoingLinks':
 					return __('Outgoing Links', 'woopra');
-				case 'DOWNLOADS':
+				case 'getDownloads':
 					return __('Downloads', 'woopra');
-				case 'QUERIES':
+				case 'getQueries':
 					return __('Search Queries', 'woopra');
-				case 'KEYWORDS':
+				case 'getKeywords':
 					return __('Keywords', 'woopra');
 				default:
 					return __('Name', 'woopra');
 			}
 		} else {
 			switch ($key) {
-				case 'COUNTRIES':
-					return $this->woopra_country_flag($name) . " " . $this->countries[$name];
+				case 'getCountries':
+					return $this->country_flag($name) . " " . $this->countries[$name];
+					
+				/**  Ummm... do we do this anymore anyway? **/
 				case 'SPECIALVISITORS':
 					$vars = Array();
 					parse_str($meta, $vars);
@@ -480,28 +478,23 @@ class WoopraRender extends WoopraAdmin {
 						$toreturn .= '<br/><small>(<a href="mailto:'.$vars['email'].'">'.$vars['email'].'</a>)</small>';
 					}
 					return $toreturn;
-				case 'VISITBOUNCES':
-					$post_text = 'pageviews';
-					if ($name == '1') {
-						$post_text = 'pageview';
-					}
-					return $name . " " . $post_text;
-				case 'VISITDURATIONS':
-					$name = str_replace('-', ' to ', $name);
-					return $name . ' minutes';
-				case 'BROWSERS':
-					return $this->woopra_browser_icon($name) . "&nbsp;&nbsp;" . $name;
-				case 'PLATFORMS':
-					return $this->woopra_platform_icon($name) . "&nbsp;&nbsp;" . $name;
-				case 'PAGEVIEWS':
+					
+					
+				case 'getVisitBounces':
+					return sprintf(_n("%s pageview", "%s pageviews", $name), $name);
+				case 'getBrowsers':
+					return $this->browser_icon($name) . "&nbsp;&nbsp;" . $name;
+				case 'getPlatforms':
+					return $this->platform_icon($name) . "&nbsp;&nbsp;" . $name;
+				case 'getPageviews':
 					return $meta . "<br/>" . "<small><a href=\"http://".$this->woopra_host()."$name\" target=\"_blank\">$name</a></small>";
-				case 'PAGELANDINGS':
+				case 'getPageLandings':
 					return $meta . "<br/>" . "<small><a href=\"http://".$this->woopra_host()."$name\" target=\"_blank\">$name</a></small>";
-				case 'PAGEEXITS':
+				case 'getPageExits':
 					return $meta . "<br/>" . "<small><a href=\"http://".$this->woopra_host()."$name\" target=\"_blank\">$name</a></small>";
-				case 'OUTGOINGLINKS':
+				case 'getOutgoingLinks':
 					return "<a href=\"$name\" target=\"_blank\">$name</a>";
-				case 'DOWNLOADS':
+				case 'getDownloads':
 					return "<a href=\"$name\" target=\"_blank\">$name</a>";
 				default:
 					return $name;
@@ -554,48 +547,25 @@ class WoopraRender extends WoopraAdmin {
 		return $max;
 	}
 	
+	/** IMAGE FUNCTIONS **/
+	
 	/**
 	 * Create Flag
 	 * @since 1.4.1
 	 * @return 
 	 * @param object $country
 	 */
-	function woopra_country_flag($country) {
+	function country_flag($country) {
 		return "<img src=\"http://static.woopra.com/images/flags/$country.png\" />";
 	}
 
-	/**
-	 * Create Woopra Image
-	 * @since 1.4.1
-	 * @return 
-	 * @param object $name
-	 */
-	function woopra_image($name) {
-		return "<img src=\"http://static.woopra.com/images/$name.png\" />";
-	}
-	
-	/**
-	 * Create BAR Parcent
-	 * @return 
-	 * @param object $percent
-	 */	
-	function woopra_bar($percent) {
-		//	@todo Add more colors!
-		$barurl = $this->plugin_url() . '/images/bar.png';
-		$width = $percent . "%";
-		if ($percent < 1)
-			$width = "1";
-		
-		return '<img src="'.$barurl.'" width="'.$width.'" height="16" />';
-	}
-	
 	/**
 	 * Get the broswer image.
 	 * @since 1.4.1
 	 * @return string
 	 * @param object $browser
 	 */
-	function woopra_browser_icon($browser) {
+	function browser_icon($browser) {
 		$browser = strtolower($browser);
 	    if (stripos($browser, "firefox") !== false) {
 	        return $this->woopra_image("browsers/firefox");
@@ -627,6 +597,9 @@ class WoopraRender extends WoopraAdmin {
 	    if (stripos($browser, "konqueror") !== false) {
 	        return $this->woopra_image("browsers/konqueror");
 	    }
+		if (stripos($browser, "iphone") !== false) {
+			return $this->woopra_image("os/mac");
+	    }
 	    if (stripos($browser, "unknown") !== false || stripos($browser, "other") !== false) {
 	        return $this->woopra_image("browsers/unknown");
 	    }
@@ -639,7 +612,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @return string
 	 * @param object $platform
 	 */
-	function woopra_platform_icon($platform) {
+	function platform_icon($platform) {
 		$platform = strtolower($platform);
 	    if (stripos($platform, "windows") !== false) {
 	        return $this->woopra_image("os/windows");
@@ -668,14 +641,44 @@ class WoopraRender extends WoopraAdmin {
 	    if (stripos($platform, "linux") !== false) {
 	        return $this->woopra_image("os/linux");
 	    }
-	    if (stripos($platform, "playstation") !== false) {
+		if (stripos($platform, "playstation") !== false) {
 	        return $this->woopra_image("os/playstation");
+	    }
+		if (stripos($platform, "nokia mobile") !== false) {
+	        return $this->woopra_image("browsers/unknown");
 	    }
 	    if (stripos($platform, "unknown") !== false || stripos($platform, "other") !== false) {
 	        return $this->woopra_image("browsers/unknown");
 	    }
 	    return "";
 	}
+	
+	/**
+	 * Create Woopra Image
+	 * @since 1.4.1
+	 * @return 
+	 * @param object $name
+	 */
+	function woopra_image($name) {
+		return "<img src=\"http://static.woopra.com/images/$name.png\" />";
+	}
+	
+	/**
+	 * Create BAR Parcent
+	 * @return 
+	 * @param object $percent
+	 */	
+	function woopra_bar($percent) {
+		//	@todo Add more colors!
+		$barurl = $this->plugin_url() . '/images/bar.png';
+		$width = $percent . "%";
+		if ($percent < 1)
+			$width = "1";
+		
+		return '<img src="'.$barurl.'" width="'.$width.'" height="16" />';
+	}
+	
+	/** INITILIZED FUNCTIONS ONLY!!! **/
 	
 	/**
 	 * Return the country list.
@@ -950,7 +953,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @users sort_analytics_response
 	 */
 	function compare_analytics_entries($entry1, $entry2) {
-		$sort_by = (isset($entry1['day'])?'day':'vts');
+		$sort_by = (isset($entry1['day'])?'day':'totalVisits');
 		
 		$v1 = (int)$entry1[$sort_by];
 		$v2 = (int)$entry2[$sort_by];

@@ -17,6 +17,17 @@ class WoopraAnalytics extends WoopraAdmin {
 	 * @var string
 	 */
 	var $api_key;
+		
+	/**
+	 * Display a notice telling the user to fill in their Woopra details
+	 * @since 1.4.1
+	 * @param object $item
+	 * @return none
+	 */
+	function analytics_warn($item) {
+		$message[0]	=	'<div class="error"><p>' . sprintf( __( 'You must fill in your API Key in order to view Analytics. Please fill it out on the <a href="%s">settings page</a> in order for you to view your analytics.', 'woopra' ), admin_url('options-general.php?page=woopra') ) . "</p></div>\n";
+		echo $message[$item];
+	}
 	
 	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
@@ -40,26 +51,7 @@ class WoopraAnalytics extends WoopraAdmin {
 		//	Load the API key into this Class
 		$this->api_key = $this->get_option('api_key');
 		
-	}
-	
-	/**
-	 * Display a notice telling the user to fill in their Woopra details
-	 * @since 1.4.1
-	 * @param object $item
-	 * @return none
-	 */
-	function analytics_warn($item) {
-		$message[0]	=	'<div class="error"><p>' . sprintf( __( 'You must fill in your API Key in order to view Analytics. Please fill it out on the <a href="%s">settings page</a> in order for you to view your analytics.', 'woopra' ), admin_url('options-general.php?page=woopra') ) . "</p></div>\n";
-		echo $message[$item];
-	}
-	
-	/**
-	 * Display the Analytics
-	 * @since 1.4.1
-	 * @return none
-	 */
-	function main() { ?>
-		
+		?>
 		<div class="wrap">
 		<?php screen_icon(); ?>
 			<h2><?php _e( 'Woopra Analytics', 'woopra' ); ?></h2>	
@@ -89,8 +81,8 @@ class WoopraAnalytics extends WoopraAdmin {
 			</tr>
 		<tr>
 			<td colspan="2" style="padding-top: 5px; text-align: right;">
-				<input value="<?php _e('Cancel', 'woopra') ?>" name="approveit" class="button-secondary" type="submit" onclick="return closeDatePicker();" />
-				<input value="<?php _e('Apply Date Range', 'woopra') ?>" name="approveit" class="button-secondary" type="submit" onclick="return applyDatePicker();" />
+				<input id="woopra-closepicker" value="<?php _e('Cancel', 'woopra') ?>" name="approveit" class="button-secondary" type="submit" />
+				<input id="woopra-applydaterange" value="<?php _e('Apply Date Range', 'woopra') ?>" name="approveit" class="button-secondary" type="submit" />
 			</td>
 		</tr>
 		</table>
@@ -110,5 +102,4 @@ class WoopraAnalytics extends WoopraAdmin {
 	}
 	
 }
-
 ?>
