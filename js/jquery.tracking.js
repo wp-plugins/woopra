@@ -54,16 +54,26 @@
    * use the cookie parameter to exclude visitors, including yourself, based on a cookie
    *
    */
-  $.trackWoopra = function() {
+  $.trackWoopra = function(woopra_data) {
 		var script;
+		var woopraFrontL10n;
 		var src  = 'http://static.woopra.com/js/woopra.v2.js';
-
+		
 		function _woopra_track() {
 			if ( woopraTracker != undefined ) {
-				if ( woopraFrontL10n.subDomainTracking ) {
-					woopraTracker.setDomain( woopraFrontL10n.rootDomain );
-					debug('Woopra Root Domain: ' +  woopraFrontL10n.rootDomain);
+				if ( woopraFrontL10n != undefined ) {
+					if ( woopraFrontL10n.rootDomain != null ) {
+						woopraTracker.setDomain( woopraFrontL10n.rootDomain );
+						debug('Woopra Root Domain: ' +  woopraFrontL10n.rootDomain);
+					}
+					if ( woopraFrontL10n.setTimeoutValue > 0 ) {
+						woopraTracker.setIdleTimeout( woopraFrontL10n.setTimeoutValue );
+						debug('Woopra Idle Timeout: ' +  woopraFrontL10n.setTimeoutValue + 'ms');
+					}
 				}
+				woopraTracker.addVisitorProperty('name', woopra_data.name );
+				woopraTracker.addVisitorProperty('email', woopra_data.email );
+				woopraTracker.addVisitorProperty('avatar', woopra_data.avatar );
 				woopraTracker.track();
 				debug('Woopra is loaded.');
 			} else { 

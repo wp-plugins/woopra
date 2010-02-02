@@ -68,10 +68,16 @@ class WoopraFrontend extends Woopra {
 	
 	function init() {
 		wp_enqueue_script( 'woopra-tracking',	$this->plugin_url() . '/js/jquery.tracking.js',		array('jquery'), '20100201', true );
-		wp_localize_script( 'woopra-tracking', 'woopraFrontL10n', array(
-				'subDomainTracking'	=>	$this->get_option('sub_domain'),
-			)
-		);
+		
+		//	Set jQuery Options
+		if ( $this->get_option('use_subdomain') )
+			$_woopra_localize[] = array('rootDomain'	=>	$this->get_option('sub_domain')		);
+		
+		if ( $this->get_option('use_timeout') )
+			$_woopra_localize[] = array('setTimeoutValue'	=>	($this->get_option('timeout')*1000)	);
+		
+		//	Output jQuery Options
+		wp_localize_script( 'woopra-tracking', 'woopraFrontL10n', $_woopra_localize );
 	}
 	
 	/**
@@ -102,7 +108,7 @@ class WoopraFrontend extends Woopra {
 		*/
 		echo "\r\n<!-- Woopra Analytics Code -->\r\n";
 		echo "<script type=\"text/javascript\">\r\n";
-		echo "jQuery.trackWoopra();\r\n";
+		echo "jQuery.trackWoopra({ name : '" . js_escape($this->woopra_visitor['name']) . "', email : '" . js_escape($this->woopra_visitor['email']) . "', avatar : '" . urlencode("http://www.gravatar.com/avatar/" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http://static.woopra.com/images/avatar.png") . "' } );\r\n";
 		echo "</script>\r\n";
 		
 		echo "<!-- End of Woopra Analytics Code -->\r\n\r\n";
