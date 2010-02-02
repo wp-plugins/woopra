@@ -93,26 +93,14 @@ class WoopraFrontend extends Woopra {
 		if ($this->woopra_admin())
 			return;
 
-		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
-		/*
-		echo "<script type=\"text/javascript\" src=\"//static.woopra.com/js/woopra.v2.js\"></script>\r\n";
-		
-		if ($this->get_option('auto_tagging') && !empty($this->woopra_visitor['name'])) {
-			$woopra_tracker .= "woopraTracker.addVisitorProperty('name','" . js_escape($this->woopra_visitor['name']) . "');\r\n";
-			$woopra_tracker .= "woopraTracker.addVisitorProperty('email','" . js_escape($this->woopra_visitor['email']) . "');\r\n";
-			$woopra_tracker .= "woopraTracker.addVisitorProperty('avatar','". urlencode("http://www.gravatar.com/avatar/" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http://static.woopra.com/images/avatar.png") . "');\r\n";
-		}
-		if ($this->get_option('use_timeout')) {
-			$woopra_tracker .= "woopraTracker.setIdleTimeout(".($this->get_option('timeout')*1000).");\r\n";
-		}
-		*/
+		/*** JQUERY CODE -- DO NOT MODFIY ***/
 		echo "\r\n<!-- Woopra Analytics Code -->\r\n";
 		echo "<script type=\"text/javascript\">\r\n";
 		echo "jQuery.trackWoopra({ name : '" . js_escape($this->woopra_visitor['name']) . "', email : '" . js_escape($this->woopra_visitor['email']) . "', avatar : '" . urlencode("http://www.gravatar.com/avatar/" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http://static.woopra.com/images/avatar.png") . "' } );\r\n";
 		echo "</script>\r\n";
 		
 		echo "<!-- End of Woopra Analytics Code -->\r\n\r\n";
-		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
+		/*** JQUERY CODE -- DO NOT MODFIY ***/
 		
 	}
 
