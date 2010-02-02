@@ -49,23 +49,18 @@ Author URI:   http://www.woopra.com/
 class Woopra {
 
 	/**
+	 * Woopra Offical Version
 	 * @since 1.4.1
 	 * @var string
 	 */
 	var $version = WOOPRA_VERSION;
 
 	/**
+	 * All the Woopra Plugin Options
 	 * @since 1.4.1
 	 * @var string
 	 */
 	var $options;
-
-	/**
-	 * 
-	 * @since 1.4.1
-	 * @var string 
-	 */
-	var $woopra_vistor;
 	
 	/**
 	 * Compatability for PHP 4.
