@@ -310,12 +310,14 @@ jQuery(document).ready(function() {
 	addSubTab( woopraL10n.screenres,	'resolutions',	'systems',		new Array('getResolutions') );
 	addSubTab( woopraL10n.languages,	'languages',	'systems',		new Array('getLanguages') );
 	
+	//	Create Pages Sub Tabs
 	addSubTab( woopraL10n.pageview, 	'pageviews',	'pages',		new Array('getPageviews') );
 	addSubTab( woopraL10n.landingpage,	'landing',		'pages',		new Array('getPageLandings') );
 	addSubTab( woopraL10n.exitpage,		'exit',			'pages',		new Array('getPageExits') );
 	addSubTab( woopraL10n.outgoinglink,	'outgoing',		'pages',		new Array('getOutgoingLinks') );
 	addSubTab( woopraL10n.downloads,	'downloads',	'pages', 		new Array('getDownloads') );
 	
+	//	Create Referrer Sub Tabs
 	addSubTab( woopraL10n.referrer_ty,	'reftypes',		'referrers', 	new Array('getReferrerTypes') );
 	addSubTab( woopraL10n.referrer_se,	'refsearch',	'referrers',	new Array('getReferrers', 'search') );
 	addSubTab( woopraL10n.referrer_fr,	'reffeeds',		'referrers',	new Array('getReferrers', 'feeds') );
@@ -327,6 +329,7 @@ jQuery(document).ready(function() {
 	addSubTab( woopraL10n.referrer_co,	'refcomm',		'referrers',	new Array('getReferrers', 'community') );
 	addSubTab( woopraL10n.referrer_al,	'reflinks',		'referrers',	new Array('getReferrers', 'alllinks') );
 	
+	//	Create Searches Sub Tab
 	addSubTab( woopraL10n.search_quer,	'queries',		'searches',		new Array('getQueries') );
 	addSubTab( woopraL10n.keywords,		'keywords',		'searches',		new Array('getKeywords') );
 	
