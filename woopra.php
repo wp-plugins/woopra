@@ -20,7 +20,7 @@
  * It is licenced as LGPL. You can view the terms of the object helper files and the flash file
  * itself here: http://teethgrinder.co.uk/open-flash-chart-2/
  *
- * @author Elie El Khoury <elie@woopra.com> and Shane Froebel <shane@woopra.com>
+ * @author Shane Froebel <shane@bugssite.org> and Elie El Khoury <elie@woopra.com>
  * @version 1.5.0
  * @copyright 2007-2010
  * @package woopra
@@ -41,7 +41,7 @@ Plugin Name:  Woopra
 Plugin URI:   http://wordpress.org/extend/plugins/woopra/
 Version:      1.5.0
 Description:  This plugin adds Woopra's real-time analytics to any WordPress installation.  Simply sign up at Woopra.com, then activate the plugin!
-Author:       <a href="http://bugssite.org">Shane Froebel</a>, Formaly <a href="http://www.ekhoury.com">Elie El Khoury</a>
+Author:       <a href="http://bugssite.org">Shane Froebel</a>, <a href="http://www.ekhoury.com">Elie El Khoury</a>
 Author URI:   http://www.woopra.com/
 
 **************************************************************************/
@@ -118,7 +118,6 @@ class Woopra {
  * we add the ability to track administrators in the admin section.
  */
 require_once( dirname(__FILE__) . '/inc/frontend.php' 		);
-require_once( dirname(__FILE__) . '/inc/events.php' 		);
 if (is_admin()) {
 	require_once( dirname(__FILE__) . '/inc/admin.php' 		);
 	require_once( dirname(__FILE__) . '/inc/xml.php' 		);
