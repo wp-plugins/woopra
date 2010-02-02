@@ -15,7 +15,7 @@ class WoopraAnalytics extends WoopraAdmin {
 	 * Display a notice telling the user to fill in their Woopra details
 	 * @since 1.4.1
 	 * @param mixed $item
-	 * @param string $item
+	 * @param string $custom
 	 * @return none
 	 */
 	function analytics_warn($item, $custom = '') {
