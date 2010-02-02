@@ -10,22 +10,22 @@
  * @subpackage analytics
  */
 class WoopraAnalytics extends WoopraAdmin {
-	
-	/**
-	 * Your Site API Key
-	 * @since 1.4.1
-	 * @var string
-	 */
-	var $api_key;
-	
+		
 	/**
 	 * Display a notice telling the user to fill in their Woopra details
 	 * @since 1.4.1
-	 * @param object $item
+	 * @param mixed $item
+	 * @param string $item
 	 * @return none
 	 */
-	function analytics_warn($item) {
-		$message[0]	=	'<div class="error"><p>' . sprintf( __( 'You must fill in your API Key in order to view Analytics. Please fill it out on the <a href="%s">settings page</a> in order for you to view your analytics.', 'woopra' ), admin_url('options-general.php?page=woopra') ) . "</p></div>\n";
+	function analytics_warn($item, $custom = '') {
+		if ($item == false) {
+			echo '<div class="error"><p>' . $custom[0] . "</p></div>\n";
+			return;
+		} else {
+			$message[0]	= '<div class="error"><p>' . sprintf( __( 'You must fill in your API Key in order to view Analytics. Please fill it out on the <a href="%s">settings page</a> in order for you to view your analytics.', 'woopra' ), admin_url('options-general.php?page=woopra') ) . "</p></div>\n";
+		}
+		
 		echo $message[$item];
 	}
 	
@@ -44,12 +44,12 @@ class WoopraAnalytics extends WoopraAdmin {
 	 * @return none
 	 * @constructor
 	 */
-	function __construct() {
+	function __construct($_woopra_tests) {
 		WoopraAdmin::__construct();
 		Woopra::__construct();
 					
 		//	Load the API key into this Class
-		$this->api_key = $this->get_option('api_key');
+		$api_key = $this->get_option('api_key');
 		
 		?>
 		<div class="wrap">
@@ -57,8 +57,10 @@ class WoopraAnalytics extends WoopraAdmin {
 			<h2><?php _e( 'Woopra Analytics', 'woopra' ); ?></h2>	
 		<?php
 		
-		if (empty($this->api_key)) {
+		if (empty($api_key)) {
 			$this->analytics_warn(0);
+		} else if ( is_wp_error($_woopra_tests) ) {
+			$this->analytics_warn(false, $_woopra_tests->get_error_messages('soap-needed'));
 		} else {
 			/** HTML CODE START **/
 		?>

@@ -534,7 +534,7 @@ class WoopraAdmin extends Woopra {
 		<tr valign="top">
 			<th scope="row"><?php _e('Sub Domains', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('use_subdomain')); ?> id="use_subdomain" name="use_subdomain"/> <label for="use_subdomain"><?php _e("Track Sub Domains"); ?></label><br /><small><?php printf( __('Enabled this if you want to track subdomains. Note: You must have an account that allows subdomain tracking. Please refer to the <a href="%s">account information</a> page for more information.', 'woopra'), 'https://www.woopra.com/members/'); ?></small>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('use_subdomain')); ?> id="use_subdomain" name="woopra[use_subdomain]"/> <label for="use_subdomain"><?php _e("Track Sub Domains"); ?></label><br /><small><?php printf( __('Enabled this if you want to track subdomains. Note: You must have an account that allows subdomain tracking. Please refer to the <a href="%s">account information</a> page for more information.', 'woopra'), 'https://www.woopra.com/members/'); ?></small>
 			</td>
 		</tr>
 	</table>
@@ -579,7 +579,8 @@ class WoopraAdmin extends Woopra {
 	 * @return none
 	 */
 	function content_page() {
-		$WoopraAnalytics = new WoopraAnalytics();
+		$_woopra_tests = $this->init_test();		
+		$WoopraAnalytics = new WoopraAnalytics($_woopra_tests);
 		unset($WoopraAnalytics);
 	}
 	
