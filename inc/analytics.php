@@ -10,14 +10,14 @@
  * @subpackage analytics
  */
 class WoopraAnalytics extends WoopraAdmin {
-
+	
 	/**
 	 * Your Site API Key
 	 * @since 1.4.1
 	 * @var string
 	 */
 	var $api_key;
-		
+	
 	/**
 	 * Display a notice telling the user to fill in their Woopra details
 	 * @since 1.4.1

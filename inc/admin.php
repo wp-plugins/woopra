@@ -45,8 +45,7 @@ class WoopraAdmin extends Woopra {
 	 * @var string
 	 */
 	var $plugin_basename;
-
-
+	
 	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
 	 * @since 1.4.1
@@ -185,7 +184,7 @@ class WoopraAdmin extends Woopra {
 			}
 		}
 	}
-
+	
 	/**
 	 * Whitelist the 'woopra' options
 	 * @since 1.4.1
@@ -267,7 +266,6 @@ class WoopraAdmin extends Woopra {
 		}
 	}
 	
-	
 	/*** OTHER FUNCTIONS ***/
 	
 	/**
@@ -302,7 +300,7 @@ class WoopraAdmin extends Woopra {
 		}
 		return $response;
 	}
-
+	
 	/**
 	 * Upgrade options
 	 * @return none
@@ -324,7 +322,7 @@ class WoopraAdmin extends Woopra {
 			
 			$api_key = (!empty($api_key)) ? $api_key : '';
 			$tab = (!empty($tab)) ? $tab : 'dashboard';
-
+			
 			$newopts = array (
 				'version'		=>	'1.4.1',
 				'activated'		=>	1,
@@ -335,7 +333,7 @@ class WoopraAdmin extends Woopra {
 				'ignore_admin'	=>	$ignoreadmin,
 				'track_admin'	=>	$trackadmin,
 			);
-
+			
 			/* Delete old options */
 			delete_option('woopra_api_key');
 			delete_option('woopra_analytics_tab');
@@ -359,7 +357,7 @@ class WoopraAdmin extends Woopra {
 		} else if ( $ver == '1.4.2' ) {
 			
 			$woopra = get_option('woopra');
-
+			
 			$newopts = array (
 				'version'		=>	'1.4.2',
 				'use_timeout'	=>	0,
@@ -371,7 +369,7 @@ class WoopraAdmin extends Woopra {
 		} else if ( $ver == '1.4.3' ) {
 			
 			$woopra = get_option('woopra');
-
+			
 			$newopts = array (
 				'version'			=>	'1.4.3',
 				'process_events'	=>	1,
@@ -382,7 +380,7 @@ class WoopraAdmin extends Woopra {
 		} else if ( $ver == '1.4.3.1' ) {
 			
 			$woopra = get_option('woopra');
-
+			
 			$newopts = array (
 				'version'	=>	'1.4.3.1',
 			);
@@ -392,7 +390,7 @@ class WoopraAdmin extends Woopra {
 		} else if ( $ver == '1.5.0' ) {
 			
 			$woopra = get_option('woopra');
-
+			
 			$newopts = array (
 				'use_subdomain'	=>	0,
 				'root_domain'	=>	$this->woopra_host(),
@@ -403,7 +401,7 @@ class WoopraAdmin extends Woopra {
 		
 		}
 	}
-
+	
 	/**
 	 * Return the default options
 	 * @since 1.4.1
@@ -428,7 +426,7 @@ class WoopraAdmin extends Woopra {
 		);
 		return $defaults;
 	}
-
+	
 	/**
 	 * Update/validate the options in the options table from the POST
 	 * @since 1.4.1
@@ -441,7 +439,7 @@ class WoopraAdmin extends Woopra {
 			return $this->defaults();
 		} else {
 			unset($options['delete'], $options['default']);
-
+			
 			if ( !is_numeric( $options['timeout'] ) )
 				$woopra_error = new WP_Error( 'timeout_not_numeric' , sprintf( __('You entred (<strong>%s</strong>) as a timeout value. This is not a vaild entry. Please enter whole numbers only!') , $options['timeout']) );
 			
@@ -476,7 +474,7 @@ class WoopraAdmin extends Woopra {
 	<input type="hidden" name="woopra[activated]" value="<?php echo $this->get_option('activated'); ?>" />
 	<input type="hidden" name="woopra[root_domain]" value="<?php echo $this->woopra_host(); ?>" />
 	<input type="hidden" name="woopra[date_format]" value="yyyy-MM-dd" />
-		
+	
 	<h3><? _e('Main Settings', 'woopra'); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
@@ -562,7 +560,7 @@ class WoopraAdmin extends Woopra {
 	</div>
 	
 	<?php }
-
+	
 	/**
 	 * Return a pretty version of the hostname.
 	 * @since 1.5.0

@@ -123,7 +123,7 @@ class WoopraFrontend extends Woopra {
 		/*** JQUERY CODE -- DO NOT MODFIY ***/
 		
 	}
-
+	
 	/**
 	 * How Woopra Detects Vistors
 	 * @since 1.4.1
@@ -144,3 +144,4 @@ class WoopraFrontend extends Woopra {
 	}
 	
 }
+?>

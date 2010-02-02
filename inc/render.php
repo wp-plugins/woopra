@@ -9,7 +9,7 @@
  * @subpackage render
  */
 class WoopraRender extends WoopraAdmin {
-
+	
 	/**
 	 * Site API Key
 	 * @since 1.4.1
@@ -119,7 +119,7 @@ class WoopraRender extends WoopraAdmin {
 					'aggregate_by'	=> !empty($_GET['aggregate_by']) ? $_GET['aggregate_by'] : '',
 				);
 			}
-						
+			
 			$date_format = $_GET['date_format'];
 			$start_date = $_GET['from'];
 			$end_date = $_GET['to'];
@@ -140,7 +140,7 @@ class WoopraRender extends WoopraAdmin {
 			$xml_process = $this->process_xml("render", $xml_data);
 			if ( is_wp_error($xml_process) )
 				wp_die($xml_process->get_error_message());
-
+			
 			// Clear up memory!
 			unset($xml_data, $xml_data_append);
 			
@@ -195,14 +195,14 @@ class WoopraRender extends WoopraAdmin {
 		unset($xml);
 		return true;
 	}
-
+	
 	/**
 	 * Render the Results
 	 * @since 1.4.1
 	 * @return none
 	 */
 	function render_results() {
-
+		
 		if ( !is_array($this->entries) )
 			return;
 		
@@ -329,7 +329,7 @@ class WoopraRender extends WoopraAdmin {
 				<tr id="wlc-<?php echo $hashid; ?>-<?php echo $counter; ?>" style=" height: 120px; display: none;">
 					<td class="wlinechart" id="linecharttd-<?php echo $hashid; ?>-<?php echo $counter ?>" colspan="4"></td>
 				</tr>
-			<?php } ?>				
+			<?php } ?>
 		</table>
 		<?php
 	}
@@ -403,7 +403,7 @@ class WoopraRender extends WoopraAdmin {
 	}
 	
 	/** PRIVATE FUNCTIONS **/
-
+	
 	/**
 	 * Milliseconds to Mintues and Seconds
 	 * @since 1.4.1
@@ -557,7 +557,7 @@ class WoopraRender extends WoopraAdmin {
 	function country_flag($country) {
 		return "<img src=\"http://static.woopra.com/images/flags/$country.png\" />";
 	}
-
+	
 	/**
 	 * Get the broswer image.
 	 * @since 1.4.1
@@ -566,43 +566,43 @@ class WoopraRender extends WoopraAdmin {
 	 */
 	function browser_icon($browser) {
 		$browser = strtolower($browser);
-	    if (stripos($browser, "firefox") !== false) {
-	        return $this->woopra_image("browsers/firefox");
-	    }
-	    if (stripos($browser, "explorer 7") !== false) {
-	        return $this->woopra_image("browsers/ie7");
-	    }
-	    if (stripos($browser, "explorer 8") !== false) {
-	        return $this->woopra_image("browsers/ie7");	//	should this me updated?
-	    }
-	    if (stripos($browser, "explorer") !== false) {
-	        return $this->woopra_image("browsers/ie");
-	    }
-	    if (stripos($browser, "safari") !== false) {
-	        return $this->woopra_image("browsers/safari");
-	    }
-	    if (stripos($browser, "chrome") !== false) {
-	        return $this->woopra_image("browsers/chrome");
-	    }
-	    if (stripos($browser, "opera") !== false) {
-	        return $this->woopra_image("browsers/opera");
-	    }
-	    if (stripos($browser, "mozilla") !== false) {
-	        return $this->woopra_image("browsers/mozilla");
-	    }
-	    if (stripos($browser, "netscape") !== false) {
-	        return $this->woopra_image("browsers/netscape");
-	    }
-	    if (stripos($browser, "konqueror") !== false) {
-	        return $this->woopra_image("browsers/konqueror");
-	    }
-		if (stripos($browser, "iphone") !== false) {
+		if ( stripos($browser, "firefox") !== false ) {
+			return $this->woopra_image("browsers/firefox");
+		}
+		if ( stripos($browser, "explorer 7") !== false ) {
+			return$this->woopra_image("browsers/ie7");
+		}
+		if ( stripos($browser, "explorer 8") !== false ) {
+			return$this->woopra_image("browsers/ie7");	//	should this me updated?
+		}
+		if ( stripos($browser, "explorer") !== false ) {
+			return$this->woopra_image("browsers/ie");
+		}
+		if ( stripos($browser, "safari") !== false ) {
+			return$this->woopra_image("browsers/safari");
+		}
+		if ( stripos($browser, "chrome") !== false ) {
+			return$this->woopra_image("browsers/chrome");
+		}
+		if ( stripos($browser, "opera") !== false ) {
+			return$this->woopra_image("browsers/opera");
+		}
+		if ( stripos($browser, "mozilla") !== false ) {
+			return$this->woopra_image("browsers/mozilla");
+		}
+		if ( stripos($browser, "netscape") !== false ) {
+			return$this->woopra_image("browsers/netscape");
+		}
+		if ( stripos($browser, "konqueror") !== false ) {
+			return$this->woopra_image("browsers/konqueror");
+		}
+		if ( stripos($browser, "iphone") !== false ) {
 			return $this->woopra_image("os/mac");
-	    }
-	    if (stripos($browser, "unknown") !== false || stripos($browser, "other") !== false) {
-	        return $this->woopra_image("browsers/unknown");
-	    }
-	    return "";
+		}
+		if ( stripos($browser, "unknown") !== false || stripos($browser, "other") !== false ) {
+			return$this->woopra_image("browsers/unknown");
+		}
+		return "";
 	}
 	
 	/**
@@ -613,43 +613,43 @@ class WoopraRender extends WoopraAdmin {
 	 */
 	function platform_icon($platform) {
 		$platform = strtolower($platform);
-	    if (stripos($platform, "windows") !== false) {
-	        return $this->woopra_image("os/windows");
-	    }
-	    if (stripos($platform, "mac") !== false) {
-	        return $this->woopra_image("os/mac");
-	    }
-	    if (stripos($platform, "apple") !== false) {
-	        return $this->woopra_image("os/mac");
-	    }
-	    if (stripos($platform, "ubuntu") !== false) {
-	        return $this->woopra_image("os/ubuntu");
-	    }
-	    if (stripos($platform, "redhat") !== false) {
-	        return $this->woopra_image("os/redhat");
-	    }
-	    if (stripos($platform, "suse") !== false) {
-	        return $this->woopra_image("os/suse");
-	    }
-	    if (stripos($platform, "fedora") !== false) {
-	        return $this->woopra_image("os/fedora");
-	    }
-	    if (stripos($platform, "debian") !== false) {
-	        return $this->woopra_image("os/debian");
-	    }
-	    if (stripos($platform, "linux") !== false) {
-	        return $this->woopra_image("os/linux");
-	    }
-		if (stripos($platform, "playstation") !== false) {
-	        return $this->woopra_image("os/playstation");
-	    }
-		if (stripos($platform, "nokia mobile") !== false) {
-	        return $this->woopra_image("browsers/unknown");
-	    }
-	    if (stripos($platform, "unknown") !== false || stripos($platform, "other") !== false) {
-	        return $this->woopra_image("browsers/unknown");
-	    }
-	    return "";
+		if ( stripos($platform, "windows") !== false ) {
+			return$this->woopra_image("os/windows");
+		}
+		if ( stripos($platform, "mac") !== false ) {
+			return$this->woopra_image("os/mac");
+		}
+		if ( stripos($platform, "apple") !== false ) {
+			return$this->woopra_image("os/mac");
+		}
+		if ( stripos($platform, "ubuntu") !== false ) {
+			return$this->woopra_image("os/ubuntu");
+		}
+		if ( stripos($platform, "redhat") !== false ) {
+			return$this->woopra_image("os/redhat");
+		}
+		if ( stripos($platform, "suse") !== false ) {
+			return$this->woopra_image("os/suse");
+		}
+		if ( stripos($platform, "fedora") !== false ) {
+			return$this->woopra_image("os/fedora");
+		}
+		if ( stripos($platform, "debian") !== false ) {
+			return$this->woopra_image("os/debian");
+		}
+		if ( stripos($platform, "linux") !== false ) {
+			return$this->woopra_image("os/linux");
+		}
+		if ( stripos($platform, "playstation") !== false ) {
+			return$this->woopra_image("os/playstation");
+		}
+		if ( stripos($platform, "nokia mobile") !== false ) {
+			return$this->woopra_image("browsers/unknown");
+		}
+		if ( stripos($platform, "unknown") !== false || stripos($platform, "other") !== false ) {
+			return$this->woopra_image("browsers/unknown");
+		}
+		return "";
 	}
 	
 	/**
@@ -934,7 +934,7 @@ class WoopraRender extends WoopraAdmin {
 	function woopra_friendly_hash($value) {
 		return substr(md5($value),0,4);
 	}
-
+	
 	/**
 	 * Sort Analytics
 	 * @since 1.4.1

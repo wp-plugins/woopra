@@ -54,7 +54,7 @@
    * use the cookie parameter to exclude visitors, including yourself, based on a cookie
    *
    */
-  $.trackWoopra = function(woopra_data) {
+	$.trackWoopra = function(woopra_data) {
 		var script;
 		var src  = 'http://static.woopra.com/js/woopra.v2.js';
 		
@@ -215,9 +215,9 @@
 		 */
 		function evaluate(element, text_or_function) {
 			if(typeof text_or_function == 'function') {
-			text_or_function = text_or_function(element);
-		}
-		return text_or_function;
+				text_or_function = text_or_function(element);
+			}
+			return text_or_function;
 		};
 	};
 
@@ -227,17 +227,17 @@
 	*/
 	function debug(message) {
 		if (typeof console != 'undefined' && typeof console.debug != 'undefined' && $.fn.trackEvent.defaults.debug) {
-		console.debug(message);
-		}	
+			console.debug(message);
+		}
 	};
 
 	/**
 	* Default (overridable) settings.
 	*/
 	$.fn.trackEvent.defaults = {
-		title      : function(element) { return (element[0].hostname == location.hostname) ? 'internal':'external'; },
-		skip_internal : false,
-		event_name    : 'click',
-		debug         : true
+		title			: function(element) { return (element[0].hostname == location.hostname) ? 'internal' : 'external'; },
+		skip_internal	: false,
+		event_name		: 'click',
+		debug			: true
 	};
 })(jQuery);

@@ -1,7 +1,7 @@
 jQuery(document).ready(function() {
 	
 	//	Exists Function
-	jQuery.fn.exists = function () { return jQuery(this).length>0; }
+	jQuery.fn.exists = function () { return jQuery(this).length > 0; }
 	
 	//	Get Days Previous
 	jQuery.fn.dateprev = function (value) {
@@ -35,6 +35,7 @@ jQuery(document).ready(function() {
 	
 	/**
 	 * Set Current Super Tab
+	 * @param {Object} id
 	 */
 	function setCurrentSuperTab(id) {
 		if (id == currentSuperView)
@@ -54,6 +55,8 @@ jQuery(document).ready(function() {
 	
 	/**
 	 * Add Super Tab
+	 * @param {Object} name
+	 * @param {Object} id
 	 */
 	function addSuperTab(name, id) {
 		
@@ -68,6 +71,10 @@ jQuery(document).ready(function() {
 	
 	/**
 	 * Add Super Sub Tab
+	 * @param {Object} name
+	 * @param {Object} id
+	 * @param {Object} superid
+	 * @param {Object} keys
 	 */
 	function addSubTab(name, id, superid, keys) {
 		
@@ -89,6 +96,7 @@ jQuery(document).ready(function() {
 	
 	/**
 	 * Change Super View
+	 * @param {Object} id
 	 */
 	function setSuperView(id) {
 		
@@ -126,6 +134,8 @@ jQuery(document).ready(function() {
 	
 	/**
 	 * Set Sub View
+	 * @param {Object} superid
+	 * @param {Object} id
 	 */
 	function setSubView(superid, id) {
 		
@@ -137,7 +147,7 @@ jQuery(document).ready(function() {
 			showWoopraAnalytics(superid, id);	
 			return false;
 		}
-
+		
 		if (currentSubTabId != null) {
 			//	Remove the class.
 			jQuery('#woopra-sub-tab-li-' + currentSubTabId).removeAttr("class");
@@ -155,7 +165,9 @@ jQuery(document).ready(function() {
 	}
 	
 	/**
-	 * 
+	 * Show the Analytics!
+	 * @param {Object} superid
+	 * @param {Object} id
 	 */
 	function showWoopraAnalytics(superid, id) {
 		
@@ -185,7 +197,8 @@ jQuery(document).ready(function() {
 	 * 			* apipage - The page that we are querying.
 	 * 			* type (For getReferrers Method)
 	 * 			* aggregate_by ()
-	 * 
+	 * @param {Object} area
+	 * @param {Object} key
 	 */
 	function requestData(area, key) {
 		
@@ -215,6 +228,18 @@ jQuery(document).ready(function() {
 		);
 		
 	}
+	
+	/**
+	 * Debug Function!
+	 * @param {Object} message
+	 */
+	function debug(message) {
+		if (typeof console != 'undefined' && typeof console.debug != 'undefined' && $.fn.trackEvent.defaults.debug) {
+			console.debug(message);
+		}
+	};
+	
+	/** Non "Global" Functions **/
 	
 	//	Show Date Picker
 	jQuery("#woopra-daterange").click(function() {
@@ -360,4 +385,3 @@ function expandReferrer(key, hashid) {
 	requestData('refexptd-' + hashid, key);
 	return false;
 }
-

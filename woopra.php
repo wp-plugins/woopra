@@ -54,7 +54,7 @@ class Woopra {
 	 * @var string
 	 */
 	var $version = WOOPRA_VERSION;
-
+	
 	/**
 	 * All the Woopra Plugin Options
 	 * @since 1.4.1
@@ -70,7 +70,7 @@ class Woopra {
 	function Woopra() {
 		$this->__construct();
 	}
-
+	
 	/**
 	 * Main Contructor Class
 	 * @since 1.4.1
@@ -104,7 +104,7 @@ class Woopra {
 		else
 			return false;
 	}
-		
+	
 }
 
 /**

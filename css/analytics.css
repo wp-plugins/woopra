@@ -1,3 +1,5 @@
+/** We are going to go 'tableless' at one point. Just not now. **/
+
 /*
  * Global
  */
@@ -6,10 +8,6 @@
 	margin: 0 auto;
 	text-align: left;
 }
-
-/*
- * 
- */
 
 .woopra_options {
 	float: right;
@@ -94,6 +92,10 @@
 	outline: 0 none;
 }
 
+.woopra_subtabs a.current {
+	color: #ff2222;
+}
+
 .woopra_subtabs li {
 	font-size: 14px;
 }
@@ -153,18 +155,17 @@
 }
 
 span.ellipsis {
-   white-space:nowrap;
-   text-overflow:ellipsis;
-   overflow:hidden;
-   width: 450px;
-   display:block;
+	white-space:nowrap;
+	text-overflow:ellipsis;
+	overflow:hidden;
+	width: 450px;
+	display:block;
 }
 
 .wlinechart {
 	text-align: center;
 	padding: 5px !important;
 }
-
 
 .tagged_renderer {
 	height: 32px;

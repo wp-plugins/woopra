@@ -8,7 +8,6 @@
  * @package woopra
  * @subpackage xml
  */
-
 class WoopraXML {
 	
 	/** GLOBALS NEED TO BE SET BEFORE QUERY **/
@@ -50,7 +49,7 @@ class WoopraXML {
 	 */
 	var $area = null;
 	
-	/** DATA **/	
+	/** DATA **/
 	
 	/**
 	 * Holding Args
@@ -58,7 +57,7 @@ class WoopraXML {
 	 * @var array
 	 */
 	var $args = null;
-
+	
 	/**
 	 * Data from XML
 	 * @since 1.4.1
@@ -79,8 +78,6 @@ class WoopraXML {
 	 * @var string
 	 */
 	var $current_tag = null;
-	
-	
 	
 	/**
 	 * Index created
@@ -125,7 +122,7 @@ class WoopraXML {
 	function WoopraXML() {
 		$this->__construct();
 	}
-
+	
 	/**
 	 * Woopra XML
 	 * @since 1.4.1
@@ -161,7 +158,6 @@ class WoopraXML {
 	 * @return 
 	 */
 	function set_xml($area, $xml_data) {
-		
 		//	Where are we processing the data?
 		$this->area = $area;
 		switch ($area) {
@@ -215,7 +211,7 @@ class WoopraXML {
 		xml_set_element_handler($this->parser, 'start_xml', 'end_xml');
 		xml_set_character_data_handler($this->parser, 'char_xml');
 		xml_parser_set_option($this->parser, XML_OPTION_CASE_FOLDING, false);
-
+		
 		//	** READ THE XML RETURN! **/
 		if ( !xml_parse($this->parser, $woopra_request_data) ) {
 			unset($woopra_request_data, $this->parser);
@@ -243,17 +239,17 @@ class WoopraXML {
 	 * @return none
 	 */
 	function start_xml($parser, $name, $attribs) {
-						
+		
 		if (($name == "return") && (!$this->record)) {
 			$this->record = true;
 		}
 		
 		if ( !$this->record )
 			return;
-			
+		
 		if ( ( !$this->index_created ) && ( $name == 'items' ) )
 			$this->index_created = true;	//	Index is done!
-			
+		
 		$_data_global_types = array("hourElements");
 		$_data_other_types = array("dayElements");
 		
@@ -264,7 +260,7 @@ class WoopraXML {
 			$this->day_Childern = true;
 		
 		$this->current_tag = $name;
-				
+		
 	}
 	
 	/**
@@ -287,10 +283,10 @@ class WoopraXML {
 		
 		if ( in_array($name, $_data_other_types) )
 			$this->day_Childern = false;
-			
+		
 		if ( $name == "items" )
 			$this->counter++;
-
+		
 	}
 	
 	/**
@@ -304,10 +300,9 @@ class WoopraXML {
 	function char_xml($parser, $data) {
 		global $_current_hour, $_current_day;
 		
-		
 		if ( !$this->record )
 			return;
-			
+		
 		if ( $this->current_tag == 'success')
 			if ( !$data )
 				return;	//	@todo trigger error.
@@ -335,7 +330,6 @@ class WoopraXML {
 		
 		if ( !$this->found_data && count($this->data) )
 			$this->found_data = true;
-				
 	}
 	
 	/**
