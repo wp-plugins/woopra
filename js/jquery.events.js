@@ -1,8 +1,5 @@
 jQuery(document).ready(function() {
-	
-	if ( woopraEventsL10n == undefined )
-		return;
-	
+		
 	if ( woopraEventsL10n.trackImage ) {
 		/**
 		 * When we click on an 'link' that is surrording
