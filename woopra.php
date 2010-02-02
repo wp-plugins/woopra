@@ -39,7 +39,7 @@ DEFINE ('WOOPRA_VERSION', '1.5.0-alpha');		// MAKE SURE THIS MATCHES THE VERSION
 
 Plugin Name:  Woopra
 Plugin URI:   http://wordpress.org/extend/plugins/woopra/
-Version:      1.5.0
+Version:      1.4.3.2
 Description:  This plugin adds Woopra's real-time analytics to any WordPress installation.  Simply sign up at Woopra.com, then activate the plugin!
 Author:       <a href="http://bugssite.org">Shane Froebel</a>, <a href="http://www.ekhoury.com">Elie El Khoury</a>
 Author URI:   http://www.woopra.com/
