@@ -56,7 +56,6 @@
    */
   $.trackWoopra = function(woopra_data) {
 		var script;
-		var woopraFrontL10n;
 		var src  = 'http://static.woopra.com/js/woopra.v2.js';
 		
 		function _woopra_track() {
@@ -71,9 +70,9 @@
 						debug('Woopra Idle Timeout: ' +  woopraFrontL10n.setTimeoutValue + 'ms');
 					}
 				}
-				woopraTracker.addVisitorProperty('name', woopra_data.name );
-				woopraTracker.addVisitorProperty('email', woopra_data.email );
-				woopraTracker.addVisitorProperty('avatar', woopra_data.avatar );
+				woopraTracker.addVisitorProperty( woopraFrontL10n.name, woopra_data.name );
+				woopraTracker.addVisitorProperty( woopraFrontL10n,email, woopra_data.email );
+				woopraTracker.addVisitorProperty( 'avatar', woopra_data.avatar );
 				woopraTracker.track();
 				debug('Woopra is loaded.');
 			} else { 

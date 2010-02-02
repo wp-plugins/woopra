@@ -11,6 +11,13 @@
 class WoopraFrontend extends Woopra {
 	
 	/**
+	 * Hold the FrontEnd Localized Data String
+	 * @since 1.5.0
+	 * @var array
+	 */
+	var $local = array();
+	
+	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
 	 * @since 1.4.1
 	 * @return none
@@ -71,13 +78,27 @@ class WoopraFrontend extends Woopra {
 		
 		//	Set jQuery Options
 		if ( $this->get_option('use_subdomain') )
-			$_woopra_localize[] = array('rootDomain'	=>	$this->get_option('sub_domain')		);
+			$this->create_localize( array('rootDomain'		=>	$this->get_option('sub_domain')		)		);
 		
 		if ( $this->get_option('use_timeout') )
-			$_woopra_localize[] = array('setTimeoutValue'	=>	($this->get_option('timeout')*1000)	);
+			$this->create_localize( array('setTimeoutValue'	=>	($this->get_option('timeout')*1000)	)		);
+		
+		//	For showing in the Woopra Desktop Application
+		$this->create_localize( array('name'		=>	__('Name'))		);
+		$this->create_localize( array('email'		=>	__('Email')) 	);
 		
 		//	Output jQuery Options
-		wp_localize_script( 'woopra-tracking', 'woopraFrontL10n', $_woopra_localize );
+		wp_localize_script( 'woopra-tracking', 'woopraFrontL10n', $this->local );
+	}
+	
+	/**
+	 * Create the localized array string.
+	 * @since 1.5.0
+	 * @param $array
+	 * @return none
+	 */
+	function create_localize($array) {
+		$this->local = array_merge($array , $this->local );
 	}
 	
 	/**
