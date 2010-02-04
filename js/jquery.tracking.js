@@ -1,7 +1,8 @@
 /*
-* jQuery Woopra Analytics Plugin
+* jQuery Woopra Analytics Plugin (jquery.tracking.js)
 *
-* A jQuery plugin that makes it easier to implement Woopra tracking for your site.
+* A jQuery plugin that makes it easier to implement Woopra tracking for your site
+* and allows you to add your own Woopra Tracking Events to the system to follow.
 *
 * Adds the following methods to jQuery:
 *   - $.trackWoopra() - Adds Woopra tracking on the page from which it's called.
@@ -11,9 +12,9 @@
 * See here for more: http://www.woopra.com/docs/customization/
 *
 * Copyright (c) 2009 Pranshu Arya
-* Modified by Shane <shane@bugssite.org> to work for the WordPress Woopra Plugin
+* Modified by Shane <shane@bugssite.org> to work for WordPress
 * 
-* Version 1.2
+* Version 1.0
 **
 * Licensed under the MIT license:
 * http://www.opensource.org/licenses/mit-license.php
@@ -23,7 +24,6 @@
 *   - http://github.com/christianhellsten/jquery-google-analytics
 *   - http://pranshuarya.com/jaal/Development/jquery-woopra-plugin.html
 */
-
 (function($) {
 
 	
@@ -45,17 +45,22 @@
 		
 		function _woopra_track() {
 			if ( woopraTracker != undefined ) {
-				if ( woopraFrontL10n.rootDomain != null ) {
-					woopraTracker.setDomain( woopraFrontL10n.rootDomain );
-					debug('Woopra Root Domain: ' +  woopraFrontL10n.rootDomain);
+				if ( typeof woopraFrontL10n != "undefined" ) {
+					if ( woopraFrontL10n.rootDomain != null ) {
+						woopraTracker.setDomain( woopraFrontL10n.rootDomain );
+						debug('Woopra Root Domain: ' +  woopraFrontL10n.rootDomain);
+					}
+					if ( woopraFrontL10n.setTimeoutValue > 0 ) {
+						woopraTracker.setIdleTimeout( woopraFrontL10n.setTimeoutValue );
+						debug('Woopra Idle Timeout: ' +  woopraFrontL10n.setTimeoutValue + 'ms');
+					}
 				}
-				if ( woopraFrontL10n.setTimeoutValue > 0 ) {
-					woopraTracker.setIdleTimeout( woopraFrontL10n.setTimeoutValue );
-					debug('Woopra Idle Timeout: ' +  woopraFrontL10n.setTimeoutValue + 'ms');
+				//	Only run when we have data.
+				if ( woopra_data.name != null ) {
+					woopraTracker.addVisitorProperty( 'name' , woopra_data.name );
+					woopraTracker.addVisitorProperty( 'email' , woopra_data.email );
+					woopraTracker.addVisitorProperty( 'avatar', woopra_data.avatar );
 				}
-				woopraTracker.addVisitorProperty( woopraFrontL10n.name , woopra_data.name );
-				woopraTracker.addVisitorProperty( woopraFrontL10n.email , woopra_data.email );
-				woopraTracker.addVisitorProperty( 'avatar', woopra_data.avatar );
 				woopraTracker.track();
 				debug('Woopra is loaded.');
 			} else { 
@@ -113,13 +118,10 @@
 	 */
 	$.fn.trackEvent = function(woopra_options) {
 		
-		/**
-		 * 
-		 */
 		return this.each( function () {
 			var element = $(this);
 			var parent = $(element).parent();
-		  
+			
 			// Prevent an element from being tracked multiple times.
 			if ( element.hasClass('w_tracked') ) {
 				return false;
@@ -178,7 +180,7 @@
 		 * 
 		 */
 		function evaluate(element, text_or_function) {
-			if(typeof text_or_function == 'function') {
+			if ( typeof text_or_function == 'function' ) {
 				text_or_function = text_or_function(element);
 			}
 			return text_or_function;

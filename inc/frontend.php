@@ -55,6 +55,14 @@ class WoopraFrontend extends Woopra {
 	 */
 	function init() {
 		
+		//	Check to see if we should be running
+		if ( !$this->get_status() || $this->get_admin() )
+			return;
+		
+		//	Do not run if we are in admin and we are not going to track the data.
+		if ( is_admin() && !$this->get_option('track_admin') )
+			return;
+		
 		/**
 		 * WordPress Woopra Event Tracking
 		 */
@@ -64,11 +72,11 @@ class WoopraFrontend extends Woopra {
 				$this->create_localize( array('trackImage' => 'true', 'trackImageTitle' => __('Image Viewed')),	'woopra-events'	);
 			
 			if ( $this->enabled_event('comments') )
-				$this->create_localize( array('trackComments' => 'true', 'trackCommentsTitle' => __('Comment Posted')),	'woopra-events'	);
-						
+				$this->create_localize( array('trackComments' => 'true', 'trackCommentsTitle' => __('Comment Posted')),	'woopra-events'	);		
 				
 			if ( is_array($this->local['woopra-events']) )
 				wp_enqueue_script( 'woopra-events',	$this->plugin_url() . '/js/jquery.events.js',		array('jquery', 'woopra-tracking'), '20100201', true );
+			
 			wp_localize_script( 'woopra-events', 'woopraEventsL10n', $this->local['woopra-events'] );
 		}		
 		
@@ -82,8 +90,6 @@ class WoopraFrontend extends Woopra {
 		if ( $this->get_option('use_timeout') )
 			$this->create_localize( array('setTimeoutValue'	=>	($this->get_option('timeout')*1000)	),	'woopra-tracking'	);
 		
-		$this->create_localize( array('name'		=>	'Name'),	'woopra-tracking'	);
-		$this->create_localize( array('email'		=>	'email'),	'woopra-tracking'	);
 		wp_localize_script( 'woopra-tracking', 'woopraFrontL10n', $this->local['woopra-tracking'] );
 		
 
@@ -153,7 +159,12 @@ class WoopraFrontend extends Woopra {
 	 */
 	function widget() {
 		
+		//	Check to see if we should be running
 		if ( !$this->get_status() || $this->get_admin() )
+			return;
+		
+		//	Do not run if we are in admin and we are not going to track the data.
+		if ( is_admin() && !$this->get_option('track_admin') )
 			return;
 		
 		/*** JQUERY CODE -- DO NOT MODFIY ***/
