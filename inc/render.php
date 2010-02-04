@@ -113,13 +113,6 @@ class WoopraRender extends WoopraAdmin {
 			//	Website's API Key
 			$this->api_key = $_GET['apikey'];
 			
-			if ( !empty($_GET['type']) || !empty($_GET['aggregate_by']) ) {
-				$xml_data_append = array(
-					'type'			=> !empty($_GET['type']) ? $_GET['type'] : '',
-					'aggregate_by'	=> !empty($_GET['aggregate_by']) ? $_GET['aggregate_by'] : '',
-				);
-			}
-			
 			$date_format = $_GET['date_format'];
 			$start_date = $_GET['from'];
 			$end_date = $_GET['to'];
@@ -129,12 +122,12 @@ class WoopraRender extends WoopraAdmin {
 				'startDay'		=>	$start_date,
 				'endDay'		=>	$end_date,
 				'limit'			=>	$this->limit,
-				'offset'		=>	$this->offset
+				'offset'		=>	$this->offset,
 			);
 			
-			//	Do we need to add anything to the data field?
-			if ( is_array($xml_data_append) && !empty($xml_data_append) )
-				$xml_data = array_merge($xml_data, $xml_data_append);
+			//	Append TYPE to the XML Data Array -- Required in this order for the SOAP API Call
+			if ( !empty($_GET['type']) )
+				$xml_data = array_merge( array( 'type' => $_GET['type'] ), $xml_data );
 			
 			/** Process XML Class **/
 			$xml_process = $this->process_xml("render", $xml_data);
