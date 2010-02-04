@@ -117,6 +117,7 @@ class WoopraFrontend extends Woopra {
 	 */
 	function enabled_event($event) {
 		
+		//	Currently enabling all event tracking.
 		return true;
 		
 		if ( !empty($this->options['events'][$event]) )

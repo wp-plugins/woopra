@@ -1,3 +1,12 @@
+/*
+* jQuery Woopra Analytics Plugin (jquery.events.js)
+* 
+* Woopra WordPress Plugins Default WordPress Tracking Events.
+* 
+* These are all the tracking events that we cover. They can be turned on/off inside the WordPress Woopra
+* settings page.
+* 
+*/
 jQuery(document).ready(function() {
 	
 	//	Exists Function
