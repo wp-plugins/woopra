@@ -113,7 +113,7 @@ class Woopra {
  * we add the ability to track administrators in the admin section.
  */
 require_once( dirname(__FILE__) . '/inc/frontend.php' 		);
-if (is_admin()) {
+if ( is_admin() ) {
 	require_once( dirname(__FILE__) . '/inc/admin.php' 		);
 	require_once( dirname(__FILE__) . '/inc/xml.php' 		);
 	require_once( dirname(__FILE__) . '/inc/analytics.php' 	);
