@@ -41,7 +41,7 @@
 	 */
 	$.trackWoopra = function (woopra_data) {
 		var script;
-		var src  = 'http://static.woopra.com/js/woopra.v2.js';
+		var src  = (document.location.protocol == 'https:') ? "https://static.woopra.com/" : "http://static.woopra.com/";
 		
 		function _woopra_track() {
 			if ( woopraTracker != undefined ) {
@@ -71,7 +71,7 @@
 		_load_woopra = function () {
 			$.ajax({
 				type: "GET",
-				url: src,
+				url: src + "js/woopra.v2.js",
 				success: function() {
 					_woopra_track();
 				},
