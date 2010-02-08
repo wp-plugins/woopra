@@ -29,6 +29,7 @@ jQuery(document).ready(function() {
 	var currentSubTab = null;
 	
 	var pageKeys = new Array();
+	var pageKeyHash = new Array();
 	
 	var defaultSubTab = new Array();
 	var selectedSubTabs = new Array();
@@ -87,6 +88,10 @@ jQuery(document).ready(function() {
 		
 		//	Create API Key Array
 		pageKeys[superid + '-' + id] = keys;
+		//	Create API Key MD5 Hash
+		pageKeyHash[keys[0]] = jQuery.md5(keys[0]).substr(0,4);
+		
+		debug("HASH KEY (" + keys[0] + "): " + pageKeyHash[keys[0]]);
 		
 		//	If the 'defaultSubTab' tab is null for this super id, set it to the id.
 		if ( defaultSubTab[superid] == null )
@@ -220,24 +225,72 @@ jQuery(document).ready(function() {
 				aggregate_by: (key[2]) ? key[2] : ''
 			},
 			function(returned_data) {
-				if (returned_data != null)
+				if (returned_data != null) {
+					//	Return the data..
 					jQuery('#woopra-data-' + area).html(returned_data);
-				else
+				} else {
 					jQuery('#woopra-data-' + area).html(woopraL10n.error);
+				}
 			}
 		);
 		
 	}
 	
 	/**
-	 * Debug Function!
+	 * Expand Line Chart for Rendering the Flash Chart
+	 * @param {Object} key
+	 * @param {Object} hashid
+	 * @param {Object} id
+	 */
+	function expandLineChart(key, hashid, id) {
+		
+		if ( jQuery('#woopra-chart-line-tr-' + hashid + '-' + id).attr('class') == 'loaded' )
+		{
+			// Hide the 'tr'
+			jQuery('#woopra-chart-line-tr-' + hashid + '-' + id).attr("style", "display: none;").removeAttr("class");
+			// Clear the flash element. So it can be reloaded at a future time.
+			jQuery('#woopra-chart-line-td-' + hashid + '-' + id).html();
+			// Return False
+			return false;
+		}
+		
+		//	Show Chart Line 'tr'
+		jQuery('#woopra-chart-line-tr-' + hashid + '-' + id).attr("style", "display: table-row;").addClass("loaded");
+		
+		var phpfile = woopraL10n.siteurl + '/wp-admin/admin-ajax.php?action=woopra&datatype=flash&apikey=' + woopradefaultL10n.apikey + '&id=' + index + '&wkey=' + key + '&date_format=' + date_format + '&from=' + date_from + '&to=' + date_to;
+		
+		//	Flash jQuery Code
+		jQuery('#woopra-chart-line-td-' + hashid + '-' + id).flash({
+			src: woopraL10n.siteurl + '/flash/open-flash-chart.swf',
+			data-file: escape(phpfile),
+			width: 968,
+			height: 110,
+			quality: 'best',
+			bgcolor: '#FFFFFF',
+			allowFullScreen: 'false',
+			menu: 'false',
+			allowScriptAccess: 'sameDomain',
+			wmode: 'transparent',
+			expressInstall: true
+		}, {
+			version: 10
+		},
+		function(htmlOptions){
+			jQuery(this).html(jQuery.fn.flash.transform(htmlOptions));
+		});
+				
+		return false;
+	}
+	
+	/**
+	 * Debug
 	 * @param {Object} message
 	 */
 	function debug(message) {
-		if (typeof console != 'undefined' && typeof console.debug != 'undefined' && $.fn.trackEvent.defaults.debug) {
+		if (typeof console != 'undefined' && typeof console.debug != 'undefined') {
 			console.debug(message);
 		}
-	};
+	}
 	
 	/** Non "Global" Functions **/
 	
@@ -339,52 +392,3 @@ jQuery(document).ready(function() {
 	
 	
 });
-
-/************************ 
- * 
- * I am changing this code to jQuery Syle.
- * 
- ************************/
-
-function expandByDay(key, hashid, id, index) {
-	var row = document.getElementById('wlc-' + hashid + '-' + id);
-	if (row.style.display == 'table-row') {
-		row.style.display = 'none';
-	}
-	else {
-		row.style.display = 'table-row';
-	}
-	
-	if (row.className == 'loaded') {
-		return false;
-	}
-	row.className = 'loaded';
-	
-	var phpfile = woopraL10n.siteurl + '/wp-admin/admin-ajax.php?action=woopra&datatype=flash&apikey=' + woopradefaultL10n.apikey + '&id=' + index + '&wkey=' + key + '&date_format=' + date_format + '&from=' + date_from + '&to=' + date_to;
-	var so = new SWFObject(woopraL10n.baseurl + "/flash/open-flash-chart.swf", hashid, "968", "110", "9");
-	so.addVariable("data-file", escape(phpfile));
-	so.addParam("allowScriptAccess", "sameDomain");
-	so.addParam("wmode", "transparent");
-	so.addParam("bgcolor", "#FFFFFF");
-
-	so.write('linecharttd-' + hashid + '-' + id);
-	return false;
-}
-
-function expandReferrer(key, hashid) {
-	trref = document.getElementById('refexp-'+hashid);
-	if (trref.style.display == 'none') {
-		trref.style.display = 'table-row';
-	}
-	else {
-		trref.style.display = 'none';
-	}
-	if (trref.className == 'loaded') { return false; }
-	
-	trref.className = 'loaded';
-	
-	tdref = document.getElementById('refexptd-' + hashid);
-	setPageLoading('refexptd-' + hashid);
-	requestData('refexptd-' + hashid, key);
-	return false;
-}

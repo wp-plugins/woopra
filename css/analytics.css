@@ -122,12 +122,12 @@
  * Render View
  */
 
-.woopra_table {
+.woopra-table {
 	width: 100%;
 }
 
 
-.woopra_table td, .woopra_table th {
+.woopra-table td, .woopra-table th {
 	height: 20px;
 	padding: 5px;
 	border-bottom: 1px solid #dddddd;
@@ -162,7 +162,7 @@ span.ellipsis {
 	display:block;
 }
 
-.wlinechart {
+.woopra-chart-line {
 	text-align: center;
 	padding: 5px !important;
 }

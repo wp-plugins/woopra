@@ -184,7 +184,7 @@ class WoopraAdmin extends Woopra {
 		if (('dashboard_page_woopra-analytics' == $hook_action) || ('toplevel_page_woopra' == $hook_action)) {
 			
 			/** jQuery Scripts */
-			wp_enqueue_script( 'woopra-analytics',	$plugin_url. '/js/jquery.analytics.js',		array('jquery')	);
+			wp_enqueue_script( 'woopra-analytics',	$plugin_url. '/js/jquery.analytics.js',		array('jquery'), '20100208'	);
 			wp_localize_script( 'woopra-analytics', 
 				'woopraL10n', 
 					array(
@@ -233,12 +233,11 @@ class WoopraAdmin extends Woopra {
 						'baseurl'		=>	$plugin_url,
 					)
 			);
+			// ** jQuery Plugins Needed **/
+			wp_enqueue_script( 'woopra-md5',		$plugin_url . '/js/jquery.md5.js',			array('jquery', 'woopra-analytics')	);
+			wp_enqueue_script( 'woopra-flash',		$plugin_url . '/js/jquery.flash.js',		array('jquery', 'woopra-analytics')	);
+			wp_enqueue_script( 'woopra-datepicker',	$plugin_url . '/js/ui.datepicker.js',		array('jquery', 'woopra-analytics')	);
 			
-			// ** jQuery UI Datepicker **/
-			wp_enqueue_script( 'woopra-datepicker',	$plugin_url . '/js/ui.datepicker.js',		array('jquery')	);
-						
-			// @todo Update with Flash Version
-			wp_enqueue_script( 'woopra-swfobject',	$plugin_url . '/js/swfobject.js'							);
 			//	*** SYTLE SHEETS ***/
 			wp_enqueue_style( 'woopra-analytics',	$plugin_url . '/css/analytics.css'							);
 			wp_enqueue_style( 'woopra-datepicker',	$plugin_url . '/css/ui.datepicker.css'						);

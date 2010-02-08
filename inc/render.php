@@ -225,7 +225,7 @@ class WoopraRender extends WoopraAdmin {
 	function render_overview($entries) {
 		arsort($entries);	// force arsort.
 	?>
-		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
+		<table class="woopra-table" width="100%" cellpadding="0" cellspacing="0">
 			<tr>
 				<th class="text-header"><?php _e("Day", 'woopra') ?></th>
 				<th class="text-header"><?php _e("Avg Time Spent", 'woopra') ?></th>
@@ -240,11 +240,14 @@ class WoopraRender extends WoopraAdmin {
 			foreach($entries as $entry) {
 				
 				//	Time Code
+				// @todo fix me
 				//$timespentstring = $this->woopra_ms_to_string((int) $entry['totalTimeSpent']);
-				//	Vistor Code
+				
+				//	Visitors Code
 				$newvisitors = (int) $entry['totalNewVisitors'];
 				$visitors = (int) $entry['totalVisitors'];
 				
+				//	Visitors String
 				$visitorsstring = "-";
 				if ($newvisitors <= $visitors && $visitors != 0) {
 					$visitorsstring = (int) ($newvisitors*100/$visitors) . '%';
@@ -252,10 +255,12 @@ class WoopraRender extends WoopraAdmin {
 				
 				//	Page Views Code
 				$pageviews = (int) $entry['totalPageviews'];
+				
 				//	Percent Code
 				$percent = round($pageviews*100/$max);
 				
-				$hashid = $this->woopra_friendly_hash('GLOBALS');
+				//	Hash ID
+				$hashid = $this->woopra_friendly_hash($this->api_page);
 				
 				?>
 				<tr<?php echo (($counter++%2==0)?" class=\"even_row\"":""); ?>>
@@ -263,11 +268,11 @@ class WoopraRender extends WoopraAdmin {
 					<td class="text-item"><?php echo $timespentstring; ?></td>
 					<td class="text-item"><?php echo $visitorsstring; ?></td>
 					<td class="text-item"><?php echo number_format($visitors); ?></td>
-					<td class="text-item highlight"><a href="#" onclick="return expandByDay('GLOBALS', '<?php echo $hashid; ?>', <?php echo $counter; ?>, <?php echo $entry['index']; ?>)"><?php echo number_format($pageviews); ?></a></td>
+					<td class="text-item highlight"><a href="#" onclick="return expandLineChart('<?php echo $this->api_page; ?>', '<?php echo $hashid; ?>', <?php echo $counter; ?>)"><?php echo number_format($pageviews); ?></a></td>
 					<td class="bar"><?php echo $this->woopra_bar($percent); ?></td>
 				</tr>
-				<tr id="wlc-<?php echo $hashid; ?>-<?php echo $counter; ?>" style=" height: 120px; display: none;">
-					<td class="wlinechart" id="linecharttd-<?php echo $hashid; ?>-<?php echo $counter ?>" colspan="6"></td>
+				<tr id="woopra-chart-line-tr-<?php echo $hashid; ?>-<?php echo $counter; ?>" style=" height: 120px; display: none;">
+					<td class="woopra-chart-line" id="woopra-chart-line-td-<?php echo $hashid; ?>-<?php echo $counter ?>" colspan="6"></td>
 				</tr>
 			<?php
 			}
@@ -326,54 +331,7 @@ class WoopraRender extends WoopraAdmin {
 		</table>
 		<?php
 	}
-	
-	/**
-	 * Render Referrers Section
-	 * @return 
-	 * @param object $entries
-	 * @param object $key
-	 */
-	function render_referrers($entries, $key) {
 		
-		?>
-		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
-		<tr>
-			<th>&nbsp;</th>
-			<th class="text-header"><?php _e('Referrer', 'woopra'); ?></th>
-			<th class="text-header" width="100"><?php _e('Hits', 'woopra'); ?></th>
-			<th width="400">&nbsp;</th>
-		</tr>
-		<?php
-		
-		$counter = 0;
-		$sum = $this->woopra_sum($entries, 'vts');
-		
-		foreach($entries as $index => $entry) {
-			$name = urldecode($entry['name']);
-			$hits = (int) $entry['vts'];
-			$meta = urldecode($entry['meta']);
-			
-			$percent = 0;
-			if ($sum != 0)
-				$percent = round($hits*100/$sum);
-			
-			$hashid = $this->woopra_friendly_hash($key);
-			?>
-			<tr<?php echo (($counter++%2==0) ? " class=\"even_row\"" : "" ); ?>>
-				<td class="index"><?php echo $counter; ?></td>
-				<td><span class="ellipsis"><a href="<?php echo $name; ?>" target="_blank"><?php echo $this->woopra_render_name($key, $name, $meta); ?></a></span></td>
-				<td width="100" class="text-item highlight"><a href="#" onclick="return expandByDay('<?php echo $key; ?>', '<?php echo $hashid; ?>', <?php echo $counter; ?>, <?php echo $entry['index']; ?>)"><?php echo $hits; ?></a></td>
-				<td class="bar"><?php echo $this->woopra_bar($percent) ?></td>
-			</tr>
-			<tr id="wlc-<?php echo $hashid; ?>-<?php echo $counter ?>" style=" height: 120px; display: none;"><td class="wlinechart" id="linecharttd-<?php echo $hashid ?>-<?php echo $counter; ?>" colspan="4"></td></tr>
-			<tr id="refexp-<?php echo $hashid; ?>-<?php echo $counter; ?>" style="display: none;"><td colspan="4" style="padding: 0;"><div id="refexptd-<?php echo $hashid; ?>-<?php echo $counter; ?>"></div></td></tr>
-			<?php
-		}
-		?>
-		</table>
-		<?php
-	}
-	
 	/**
 	 * Render the chart data format. Using Open-Flash-2 PHP Librarys
 	 * @since 1.4.3
