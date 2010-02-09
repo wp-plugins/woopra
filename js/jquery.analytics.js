@@ -158,6 +158,7 @@ jQuery(document).ready(function() {
 			jQuery('#woopra-sub-tab-li-' + currentSubTabId).removeAttr("class");
 		}
 		
+		//	Selected Sub Tabs
 		selectedSubTabs[superid] = id;
 		
 		//	Add class 'current'
@@ -237,52 +238,6 @@ jQuery(document).ready(function() {
 	}
 	
 	/**
-	 * Expand Line Chart for Rendering the Flash Chart
-	 * @param {Object} key
-	 * @param {Object} hashid
-	 * @param {Object} id
-	 */
-	function expandLineChart(key, hashid, id) {
-		
-		if ( jQuery('#woopra-chart-line-tr-' + hashid + '-' + id).attr('class') == 'loaded' )
-		{
-			// Hide the 'tr'
-			jQuery('#woopra-chart-line-tr-' + hashid + '-' + id).attr("style", "display: none;").removeAttr("class");
-			// Clear the flash element. So it can be reloaded at a future time.
-			jQuery('#woopra-chart-line-td-' + hashid + '-' + id).html();
-			// Return False
-			return false;
-		}
-		
-		//	Show Chart Line 'tr'
-		jQuery('#woopra-chart-line-tr-' + hashid + '-' + id).attr("style", "display: table-row;").addClass("loaded");
-		
-		var phpfile = woopraL10n.siteurl + '/wp-admin/admin-ajax.php?action=woopra&datatype=flash&apikey=' + woopradefaultL10n.apikey + '&id=' + index + '&wkey=' + key + '&date_format=' + date_format + '&from=' + date_from + '&to=' + date_to;
-		
-		//	Flash jQuery Code
-		jQuery('#woopra-chart-line-td-' + hashid + '-' + id).flash({
-			src: woopraL10n.siteurl + '/flash/open-flash-chart.swf',
-			data-file: escape(phpfile),
-			width: 968,
-			height: 110,
-			quality: 'best',
-			bgcolor: '#FFFFFF',
-			allowFullScreen: 'false',
-			menu: 'false',
-			allowScriptAccess: 'sameDomain',
-			wmode: 'transparent',
-			expressInstall: true
-		}, {
-			version: 10
-		},
-		function(htmlOptions){
-			jQuery(this).html(jQuery.fn.flash.transform(htmlOptions));
-		});
-				
-		return false;
-	}
-	
-	/**
 	 * Debug
 	 * @param {Object} message
 	 */
@@ -332,17 +287,19 @@ jQuery(document).ready(function() {
 		setSuperView(currentSuperView);
 		setSubView(currentSuperView, selectedSubTabs[currentSuperView]);
 	}
+
+	//	Set the link for the date-range selector <a>
+	function refreshDateLinkText() {
+		jQuery("#woopra-daterange").html('<strong>' + woopraL10n.from + '</strong>: ' + jQuery("#woopra-from").val() + ' - <strong>' + woopraL10n.to + '</strong>: ' + jQuery("#woopra-to").val());
+	}
 	
 	//	Set the 'from' and 'to' date.
 	jQuery("#woopra-from").attr('value', jQuery(this).dateprev(30) ).datepicker({ dateFormat: 'yy-mm-dd' });
 	jQuery("#woopra-to").attr('value', jQuery(this).dateprev(0) ).datepicker({ dateFormat: 'yy-mm-dd' });
 	
-	//	Set the link for the date-range selector <a>
-	function refreshDateLinkText() {
-		jQuery("#woopra-daterange").html('<strong>' + woopraL10n.from + '</strong>: ' + jQuery("#woopra-from").val() + ' - <strong>' + woopraL10n.to + '</strong>: ' + jQuery("#woopra-to").val());
-	}
-	refreshDateLinkText();	//	Run!
-	
+	//	Run!	
+	refreshDateLinkText();
+		
 	//	Create Super Tabs
 	addSuperTab( woopraL10n.visitors,		'visitors');
 	addSuperTab( woopraL10n.systems,		'systems');
@@ -390,5 +347,58 @@ jQuery(document).ready(function() {
 	//	@todo Make this confirgurable!
 	setCurrentSuperTab('visitors');
 	
-	
 });
+
+/**
+ * Expand Line Chart for Rendering the Flash Chart
+ * @param {Object} id
+ */
+function expandLineChart(id) {
+	
+	var apipage = jQuery('#woopra-chart-data-apipage').val();
+	var hashid = jQuery('#woopra-chart-data-hashid').val();
+	var date_format = jQuery('#woopra-chart-data-dateformat').val();
+	var date_from = jQuery('#woopra-chart-data-startday').val();
+	var date_to = jQuery('#woopra-chart-data-endday').val();
+	
+	var type;
+	
+	/* Only needed if this is a refer area */
+	if ( apipage == "getReferrers" )
+		type = jQuery('#woopra-chart-data-type').val();
+	
+	if ( jQuery('#woopra-chart-line-tr-' + hashid + '-' + id).attr('class') == 'loaded' )
+	{
+		// Hide the 'tr'
+		jQuery('#woopra-chart-line-tr-' + hashid + '-' + id).attr("style", "display: none;").removeAttr("class");
+		// Clear the flash element. So it can be reloaded at a future time.
+		jQuery('#woopra-chart-line-td-' + hashid + '-' + id).html();
+		// Return False
+		return false;
+	}
+	
+	//	Show Chart Line 'tr'
+	jQuery('#woopra-chart-line-tr-' + hashid + '-' + id).attr("style", "display: table-row;").addClass("loaded");
+	
+	var phpFile = woopraL10n.siteurl + '/wp-admin/admin-ajax.php?action=woopra&datatype=flash&apikey=' + woopraL10n.apikey + '&type=' + type + '&date_format=' + date_format + '&from=' + date_from + '&to=' + date_to;
+	//	Show the Flash Chart!
+	jQuery('#woopra-chart-line-td-' + hashid + '-' + id).flash({
+		src : woopraL10n.baseurl + '/flash/open-flash-chart.swf',
+		'data-file' : escape(phpFile),
+		width : '968',
+		height : '110',
+		quality : 'best',
+		bgcolor : '#FFFFFF',
+		allowFullScreen : 'false',
+		menu : 'false',
+		allowScriptAccess : 'sameDomain',
+		expressInstall : true
+	}, {
+		version: 10
+	},
+	function (htmlOptions) {
+		jQuery(this).html(jQuery.fn.flash.transform(htmlOptions));
+	});
+	
+	return false;
+}

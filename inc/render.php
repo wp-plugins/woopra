@@ -67,6 +67,13 @@ class WoopraRender extends WoopraAdmin {
 	var $countries;
 	
 	/**
+	 * XML Data
+	 * @since 1.5.0
+	 * @var array
+	 */
+	var $xml_data;
+	
+	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
 	 * @since 1.4.1
 	 * @return none
@@ -134,6 +141,8 @@ class WoopraRender extends WoopraAdmin {
 			if ( is_wp_error($xml_process) )
 				wp_die($xml_process->get_error_message());
 			
+			//	Store the XML Data.
+			$this->xml_data = $xml_data;	
 			// Clear up memory!
 			unset($xml_data, $xml_data_append);
 			
@@ -225,6 +234,11 @@ class WoopraRender extends WoopraAdmin {
 	function render_overview($entries) {
 		arsort($entries);	// force arsort.
 	?>
+		<input id="woopra-chart-data-apipage" type="hidden" value="<?php echo $this->api_page; ?>" />
+		<input id="woopra-chart-data-hashid" type="hidden" value="<?php echo $this->woopra_friendly_hash($this->api_page); ?>" />
+		<input id="woopra-chart-data-dateformat" type="hidden" value="<?php echo $this->xml_data['dateFormat']; ?>" />
+		<input id="woopra-chart-data-startday" type="hidden" value="<?php echo $this->xml_data['startDay']; ?>" />
+		<input id="woopra-chart-data-endday" type="hidden" value="<?php echo $this->xml_data['endDay']; ?>" />
 		<table class="woopra-table" width="100%" cellpadding="0" cellspacing="0">
 			<tr>
 				<th class="text-header"><?php _e("Day", 'woopra') ?></th>
@@ -268,7 +282,9 @@ class WoopraRender extends WoopraAdmin {
 					<td class="text-item"><?php echo $timespentstring; ?></td>
 					<td class="text-item"><?php echo $visitorsstring; ?></td>
 					<td class="text-item"><?php echo number_format($visitors); ?></td>
-					<td class="text-item highlight"><a href="#" onclick="return expandLineChart('<?php echo $this->api_page; ?>', '<?php echo $hashid; ?>', <?php echo $counter; ?>)"><?php echo number_format($pageviews); ?></a></td>
+					<td class="text-item highlight">
+						<a class="woopra-chart-line-a" href="#" onclick="return expandLineChart('<?php echo $counter; ?>');"><?php echo number_format($pageviews); ?></a>
+					</td>
 					<td class="bar"><?php echo $this->woopra_bar($percent); ?></td>
 				</tr>
 				<tr id="woopra-chart-line-tr-<?php echo $hashid; ?>-<?php echo $counter; ?>" style=" height: 120px; display: none;">
