@@ -369,10 +369,10 @@ function expandLineChart(id) {
 	
 	if ( jQuery('#woopra-chart-line-tr-' + hashid + '-' + id).attr('class') == 'loaded' )
 	{
+		// Clear the flash element. So it can be reloaded at a future time.
+		jQuery('#woopra-chart-line-td-' + hashid + '-' + id).html('');
 		// Hide the 'tr'
 		jQuery('#woopra-chart-line-tr-' + hashid + '-' + id).attr("style", "display: none;").removeAttr("class");
-		// Clear the flash element. So it can be reloaded at a future time.
-		jQuery('#woopra-chart-line-td-' + hashid + '-' + id).html();
 		// Return False
 		return false;
 	}
