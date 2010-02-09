@@ -360,8 +360,7 @@ function expandLineChart(id) {
 	var date_format = jQuery('#woopra-chart-data-dateformat').val();
 	var date_from = jQuery('#woopra-chart-data-startday').val();
 	var date_to = jQuery('#woopra-chart-data-endday').val();
-	
-	var type;
+	var type = '';
 	
 	/* Only needed if this is a refer area */
 	if ( apipage == "getReferrers" )
