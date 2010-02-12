@@ -292,6 +292,7 @@ class WoopraRender extends WoopraAdmin {
 				</tr>
 			<?php
 			}
+			unset($this->xml_data);	//	Unset it. No need anymore..
 		?>
 		</table>
 	<?php
