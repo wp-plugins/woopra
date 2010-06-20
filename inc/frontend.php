@@ -11,17 +11,22 @@
 class WoopraFrontend extends Woopra {
 	
 	/**
-	 * Hold the FrontEnd Localized Data String
-	 * @since 1.5.0
-	 * @var array
+	 * What are the current event's going on?
+	 * @since 1.4.3
+	 * @var object
 	 */
-	var $local = array();
+	var $current_event;
+	
+	/**
+	 * Are there events present?
+	 * @var 1.4.3
+	 */
+	var $present_event;
 	
 	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
 	 * @since 1.4.1
 	 * @return none
-	 * @constructor
 	 */
 	function WoopraFrontend () {
 		$this->__construct();
@@ -34,96 +39,107 @@ class WoopraFrontend extends Woopra {
 	 * @constructor
 	 */
 	function __construct() {
+		
+		if (!isset($_SESSION))
+			@session_start();
+		
 		Woopra::__construct();
 		
+		// Load Event Processing
+		$this->event = new WoopraEvents();
+		
 		//	Frontend Actions
-		add_action( 'init',						array(&$this, 'init')							);
-		
-		add_action(	'wp',						array(&$this, 'detect')							);
-		add_action(	'admin_head',				array(&$this, 'detect'),					10	);		
-		
-		add_action( 'wp_footer', 				array(&$this, 'widget'), 					10	);
-		if ($this->get_option('track_admin'))
-			add_action( 'admin_footer',				array(&$this, 'widget'),				10	);
-		
-	}
-	
-	/**
-	 * Initialize Frontend
-	 * @since 1.5.0
-	 * @return none
-	 */
-	function init() {
-		
-		//	Check to see if we should be running
-		if ( !$this->get_status() || $this->get_admin() )
-			return;
-		
-		//	Do not run if we are in admin and we are not going to track the data.
-		if ( is_admin() && !$this->get_option('track_admin') )
-			return;
-		
-		/**
-		 * WordPress Woopra Event Tracking
-		 */
-		if ( $this->get_option('track_events') ) {
-			//	Set jQuery Events Options
-			if ( $this->enabled_event('image') )
-				$this->create_localize( array('trackImage' => 'true', 'trackImageTitle' => __('Image Viewed')),	'woopra-events'	);
-			
-			if ( $this->enabled_event('comments') )
-				$this->create_localize( array('trackComments' => 'true', 'trackCommentsTitle' => __('Comment Posted')),	'woopra-events'	);		
-				
-			if ( is_array($this->local['woopra-events']) )
-				wp_enqueue_script( 'woopra-events',	$this->plugin_url() . '/js/jquery.events.js',		array('jquery', 'woopra-tracking'), '20100201', true );
-			
-			wp_localize_script( 'woopra-events', 'woopraEventsL10n', $this->local['woopra-events'] );
-		}		
-		
-		/**
-		 * Tracking User Information
-		 */
-		wp_enqueue_script( 'woopra-tracking',	$this->plugin_url() . '/js/jquery.tracking.js',		array('jquery'), '20100201', true );
-		//	Set jQuery Tracking Options
-		if ( $this->get_option('use_subdomain') )
-			$this->create_localize(	array('rootDomain'		=>	$this->get_option('root_domain') ),		'woopra-tracking'	);
-		if ( $this->get_option('use_timeout') )
-			$this->create_localize( array('setTimeoutValue'	=>	($this->get_option('timeout')*1000)	),	'woopra-tracking'	);
-		
-		wp_localize_script( 'woopra-tracking', 'woopraFrontL10n', $this->local['woopra-tracking'] );
-		
+		add_action(	'wp',						array(&$this, 'woopra_detect')					);
 
+		add_action(	'admin_head',				array(&$this, 'woopra_detect'),				10	);
+
+		//	Events Actions
+		$this->add_events();
+		if ($this->get_option('process_event'))
+			$this->event->current_event = $_SESSION['woopra']['events'];
+		
+		add_action( 'wp_footer', 				array(&$this, 'woopra_widget'), 			10	);
+		if ($this->get_option('track_admin'))
+			add_action( 'admin_footer',				array(&$this, 'woopra_widget'),			10	);
+		
 	}
-	
+
 	/**
-	 * Create the localized array string.
-	 * @since 1.5.0
-	 * @param $array
-	 * @return none
+	 * Add Actions to Filter List
+	 * @since 1.4.3
+	 * @return true if suscess full.
 	 */
-	function create_localize($array, $script) {
-		$_woopra_localize = $array;
-		if ( is_array($this->local[$script]) )
-			$this->local[$script] = array_merge($_woopra_localize, $this->local[$script] );
-		else
-			$this->local[$script] = $_woopra_localize;
+	function add_events() {
+		
+		$all_events = $this->event->default_events;
+		$event_status = $this->get_option('woopra_event');		
+		
+		foreach ($all_events as $event_name => $data) {
+			$action_name = isset($data['action']) ? $data['action'] : $data['filter'];
+			$is_action = isset($data['action']) ? true : false;
+			
+			if ( ($event_status[$action_name] == 1) && ($is_action) ) {
+				add_action( $action_name, array(&$this, 'process_events') );
+					
+				if ( !has_action( $action_name, array(&$this, 'process_events') ) )
+					$this->fire_error( 'action_could_not_be_added' , array( 'message' => _('This action (<strong>%s</strong>) could not be added to the system. Please disable tracking of this event and report this error.'), 'values' => $action_name, 'debug' => true) );
+
+			} elseif ( ($event_status[$action_name] == 1) && ($is_action == false) ) {
+				add_filter( $action_name, array(&$this, 'process_filter_events') );
+					
+				if ( !has_filter( $action_name, array(&$this, 'process_filter_events') ) )
+					$this->fire_error( 'action_could_not_be_added' , array( 'message' => _('This action (<strong>%s</strong>) could not be added to the system. Please disable tracking of this event and report this error.'), 'values' => $action_name, 'debug' => true) );
+				
+			}
+		}
+		
 	}
-	
+
 	/**
-	 * Get Event Options
-	 * @since 1.5.0
+	 * The handler for processing events.
+	 * @since 1.4.1
+	 * @return boolean
+	 * @param object $args
+	 */
+	function process_events($args) {
+		$current_event = current_filter();
+		
+		if ( !isset($current_event) )
+			$this->fire_error( 'current_filter_no_name' , array( 'message' => _('There is no name with this event.'), 'debug' => true) );
+		$this->check_error( 'current_filter_no_name' );
+		
+		return $this->add_event($current_event, $args);
+	}
+
+	/**
+	 * The handler for processing filter events.
+	 * @since 1.4.1
+	 * @return boolean
+	 * @param object $args
+	 */
+	function process_filter_events($args) {
+		$current_event = current_filter();
+		
+		if ( !isset($current_event) )
+			$this->fire_error( 'current_filter_no_name' , array( 'message' => _('There is no name with this event.'), 'debug' => true) );
+		$this->check_error( 'current_filter_no_name' );
+		
+		$this->add_event($current_event, $args);
+		return $args;
+	}
+
+	/**
+	 * Process Event
+	 * @since 1.4.1
 	 * @return none
 	 * @param object $event
+	 * @param object $args
 	 */
-	function enabled_event($event) {
-		
-		//	Currently enabling all event tracking.
-		return true;
-		
-		if ( !empty($this->options['events'][$event]) )
-			return $this->options['events'][$event];
-		else
-			return false;
+	function add_event($event, $args) {
+		if (!isset($_SESSION))
+			@session_start();
+
+		$_SESSION['woopra']['events'][$event] = $args;
 	}
 	
 	/**
@@ -131,7 +147,7 @@ class WoopraFrontend extends Woopra {
 	 * @since 1.4.1
 	 * @return boolean
 	 */
-	function get_status() {
+	function woopra_status() {
 		if ($this->get_option('run_status') == 'on')
 			return true;
 		else
@@ -143,7 +159,7 @@ class WoopraFrontend extends Woopra {
 	 * @since 1.4.1
 	 * @return boolean
 	 */
-	function get_admin() {
+	function woopra_admin() {
 		if ($this->get_option('ignore_admin'))
 			if ($this->woopra_visitor['admin'])
 				return true;
@@ -152,38 +168,60 @@ class WoopraFrontend extends Woopra {
 		else
 			return false;
 	}
-		
+	
 	/**
 	 * Create the Javascript Code at the Bottom
 	 * @since 1.4.1
 	 * @return none
 	 */
-	function widget() {
+	function woopra_widget() {
 		
-		//	Check to see if we should be running
-		if ( !$this->get_status() || $this->get_admin() )
+		if (!$this->woopra_status())
 			return;
 		
-		//	Do not run if we are in admin and we are not going to track the data.
-		if ( is_admin() && !$this->get_option('track_admin') )
+		if ($this->woopra_admin())
 			return;
+
+		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
+		echo "\r\n<!-- Woopra Analytics Code -->\r\n";
+		echo "<script type=\"text/javascript\" src=\"//static.woopra.com/js/woopra.v2.js\"></script>\r\n";
 		
-		/*** JQUERY CODE -- DO NOT MODFIY ***/
-		echo "\r\n<!-- Woopra Javascript Analytics Code -->\r\n";
+		if ($this->get_option('auto_tagging') && !empty($this->woopra_visitor['name'])) {
+			$woopra_tracker .= "woopraTracker.addVisitorProperty('name','" . js_escape($this->woopra_visitor['name']) . "');\r\n";
+			$woopra_tracker .= "woopraTracker.addVisitorProperty('email','" . js_escape($this->woopra_visitor['email']) . "');\r\n";
+			$woopra_tracker .= "woopraTracker.addVisitorProperty('avatar','". urlencode("http://www.gravatar.com/avatar/" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http://static.woopra.com/images/avatar.png") . "');\r\n";
+		}
+		if ($this->get_option('use_timeout')) {
+			$woopra_tracker .= "woopraTracker.setidletimeout(".($this->get_option('timeout')*1000).");\r\n";
+		}
+		
 		echo "<script type=\"text/javascript\">\r\n";
-		echo "jQuery.trackWoopra({ name : '" . js_escape($this->woopra_visitor['name']) . "', email : '" . js_escape($this->woopra_visitor['email']) . "', avatar : '" . urlencode("http://www.gravatar.com/avatar/" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http://static.woopra.com/images/avatar.png") . "' } );\r\n";
+		echo $woopra_tracker; 
+                echo "woopraTracker.track();\r\n";
 		echo "</script>\r\n";
-		echo "<!-- End of Woopra Javascript Analytics Code -->\r\n\r\n";
-		/*** JQUERY CODE -- DO NOT MODFIY ***/
+		
+		if ( is_array($this->event->current_event) ) {
+			$i=0;
+			echo "<script type=\"text/javascript\">\r\n";
+			foreach ($this->event->current_event as $event_name => $event_value) {
+			echo "var we$i = new WoopraEvent(\"".js_escape($event_name)."\");\r\n";
+			$this->event->print_javascript_events($i);
+			echo "we$i.fire();\r\n";
+			$i++;
+			}
+			echo "</script>\r\n";
+		}
+		echo "<!-- End of Woopra Analytics Code -->\r\n\r\n";
+		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
 		
 	}
-	
+
 	/**
 	 * How Woopra Detects Vistors
 	 * @since 1.4.1
 	 * @return none
 	 */
-	function detect() {
+	function woopra_detect() {
 		$current_user = wp_get_current_user();
 		
 		// Wait? The user is logged in. Get that data instead.
@@ -198,4 +236,3 @@ class WoopraFrontend extends Woopra {
 	}
 	
 }
-?>

@@ -9,6 +9,13 @@
  * @subpackage render
  */
 class WoopraRender extends WoopraAdmin {
+
+	/**
+	 * The Stats Area
+	 * @since 1.4.1
+	 * @var string
+	 */
+	var $key;
 	
 	/**
 	 * Site API Key
@@ -18,13 +25,6 @@ class WoopraRender extends WoopraAdmin {
 	var $api_key;
 	
 	/**
-	 * API Page
-	 * @since 1.5.0
-	 * @var string
-	 */
-	var $api_page;
-	
-	/**
 	 * Are we doing a flash data or reg.?
 	 * @since 1.4.1
 	 * @var string
@@ -32,11 +32,28 @@ class WoopraRender extends WoopraAdmin {
 	var $data_type;
 	
 	/**
+	 * Starting Date
+	 * @since 1.4.1
+	 * @var string
+	 */
+	var $date_from;
+	
+	/**
+	 * Ending Date
+	 * @since 1.4.1
+	 * @var string
+	 */
+	var $date_to;
+	
+	/**
 	 * Number of items
+	 * 
+	 * Note: Soon to be @decrepeted
+	 * 
 	 * @since 1.4.1
 	 * @var int
 	 */
-	var $limit = 50;
+	var $limit = 50;	// hardcoded now...
 	
 	/**
 	 * Current offset for more than one page.
@@ -46,7 +63,7 @@ class WoopraRender extends WoopraAdmin {
 	var $offset = 0;
 	
 	/**
-	 * What is the hostname?
+	 * What is the hostname
 	 * @since 1.4.1
 	 * @var string
 	 */
@@ -65,14 +82,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @var array
 	 */
 	var $countries;
-	
-	/**
-	 * XML Data
-	 * @since 1.5.0
-	 * @var array
-	 */
-	var $xml_data;
-	
+
 	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
 	 * @since 1.4.1
@@ -103,52 +113,36 @@ class WoopraRender extends WoopraAdmin {
 	 * @return 
 	 */
 	function generate_data() {
-		// @todo $_GET == bad. There must be something else.
-		if ( !empty($_GET['apipage']) ) {
-			
-			//	Set Hostname
-			$this->hostname = get_option('siteurl');
-			
-			/**
-			 * Process the $_GET
-			 */
-			
-			//	Regular or Flash - Depending on Data is "Rendered"
+		if (isset($_GET['wkey'])) {
 			$this->data_type = $_GET['datatype'];
-			//	API Query Page File
-			$this->api_page = $_GET['apipage'];
-			//	Website's API Key
 			$this->api_key = $_GET['apikey'];
+			$this->key = str_replace("&amp;", "&", $_GET['wkey']);
+			
+			if ($_GET['type'])
+				$this->key = $this->key . "&type=" . $_GET['type'];
+				
+			if ($_GET['aggregate_by'])
+				$this->key = $this->key . "&aggregate_by=" . $_GET['aggregate_by'];
+			
+			$this->hostname = get_option('siteurl');
 			
 			$date_format = $_GET['date_format'];
 			$start_date = $_GET['from'];
 			$end_date = $_GET['to'];
 			
 			$xml_data = array(
-				'dateFormat'	=>	$date_format,
-				'startDay'		=>	$start_date,
-				'endDay'		=>	$end_date,
+				'key'			=> 	$this->key,
+				'date_format'	=>	$date_format,
+				'start_date'	=>	$start_date,
+				'end_date'		=>	$end_date,
 				'limit'			=>	$this->limit,
-				'offset'		=>	$this->offset,
+				'offset'		=>	$this->offset
 			);
 			
-			//	Append TYPE to the XML Data Array -- Required in this order for the SOAP API Call
-			if ( !empty($_GET['type']) )
-				$xml_data = array_merge( array( 'type' => $_GET['type'] ), $xml_data );
-			
-			/** Process XML Class **/
-			$xml_process = $this->process_xml("render", $xml_data);
-			if ( is_wp_error($xml_process) )
-				wp_die($xml_process->get_error_message());
-			
-			//	Store the XML Data.
-			$this->xml_data = $xml_data;	
-			// Clear up memory!
-			unset($xml_data, $xml_data_append);
-			
-			// Render Results
-			$this->render_results();
-
+			/** LAST LINES **/
+			if ($this->process_xml("render", $xml_data)) {
+				$this->render_results();
+			}
 		}
 		exit;
 	}
@@ -164,50 +158,48 @@ class WoopraRender extends WoopraAdmin {
 	 */
 	function process_xml($area, $xml_data) {
 		
-		if ( empty($area) )
-			return new WP_Error('process-xml',sprintf( __('%s: Sorry. Where are we displaying this data? '), 'WoopraRender::process_xml(193)' ) );
+		$xml = new WoopraXML;
 		
-		//	Set the Woopra XML Object
-		$xml = new WoopraXML();
-		
-		//	Set XML Vars
-		$xml->api_page = $this->api_page;
 		$xml->api_key = $this->api_key;
 		$xml->hostname = $this->woopra_host();
-		
-		//	Clear the Entries
+	
 		$this->entries = null;
-		
-		//	Start the XML Initilization		
-		$xml_init = $xml->init();
-		if ( is_wp_error($xml_init) )
-			return is_wp_error($xml_init);
-		
-		//	Set and Query SOAP connection
-		if ( $xml->set_xml($area, $xml_data) ) {
-			//	Process the SOAP!
-			$xml_process_data = $xml->process_data();
-			if ( is_wp_error($xml_process_data) )
-				return is_wp_error($xml_process_data);
+		if ($xml->init()) {
+			if ($xml->set_xml($area, $xml_data)) {
+				if ($xml->process_data()) {
+					$this->entries = $xml->data;
+				}
+			}
 		}
-		//	 We do not need the index information here!
-		$this->entries = $xml->data['data'];
+		
+		if ($xml->connection_error != null || $xml->error_msg != null || !$xml->init()) {
+			if ($this->data_type != "flash")
+				echo '<div class="error"><p>' . sprintf(__('The Woopra Plugin was not able to request your analytics data from the Woopra Engines. 
+				<br/> Key %s / Error Code: %s
+				<br/> <small><a href="http://www.woopra.com/forums/">Report this error onto the forums!</a><small>
+				<br/>', 'woopra'), $xml_data['key'], $xml->connection_error . $xml->error_msg) . '</small></p></div>';
+			else
+				echo $xml->connection_error . $xml->error_msg;
+			return false;
+		}
+		
+		if (($this->entries == null) || (count($this->entries) == 0)) {
+			echo '<p align="center">' . _('Your query returned 0 results.<br/>Click <a href="#" onclick="refreshCurrent(); return false;">here</a> to retry again!') . '</p>';
+			return;
+		}
 		
 		$xml->clear_data();
 		unset($xml);
 		return true;
 	}
-	
+
 	/**
 	 * Render the Results
 	 * @since 1.4.1
 	 * @return none
 	 */
 	function render_results() {
-		
-		if ( !is_array($this->entries) )
-			return;
-		
+
 		$this->sort_analytics_response();
 		
 		if ($this->data_type != "regular") {
@@ -215,12 +207,20 @@ class WoopraRender extends WoopraAdmin {
 			exit;
 		}
 		
-		switch ($this->api_page) {
-			case 'getGlobals':
+		if ($this->woopra_contains($this->key, 'REFERRERS')) {
+			$this->render_referrers($this->entries, $this->key);
+			exit;
+		}
+		
+		switch ($this->key) {
+			case 'GLOBALS':
 				$this->render_overview($this->entries);
 				break;
+			case 'COUNTRIES':
+				$this->render_default_model($this->entries, 'COUNTRIES');
+				break;
 			default:
-				$this->render_default_model($this->entries, $this->api_page);
+				$this->render_default_model($this->entries, $this->key);
 				break;
 		}
 	}
@@ -234,12 +234,7 @@ class WoopraRender extends WoopraAdmin {
 	function render_overview($entries) {
 		arsort($entries);	// force arsort.
 	?>
-		<input id="woopra-chart-data-apipage" type="hidden" value="<?php echo $this->api_page; ?>" />
-		<input id="woopra-chart-data-hashid" type="hidden" value="<?php echo $this->woopra_friendly_hash($this->api_page); ?>" />
-		<input id="woopra-chart-data-dateformat" type="hidden" value="<?php echo $this->xml_data['dateFormat']; ?>" />
-		<input id="woopra-chart-data-startday" type="hidden" value="<?php echo $this->xml_data['startDay']; ?>" />
-		<input id="woopra-chart-data-endday" type="hidden" value="<?php echo $this->xml_data['endDay']; ?>" />
-		<table class="woopra-table" width="100%" cellpadding="0" cellspacing="0">
+		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
 			<tr>
 				<th class="text-header"><?php _e("Day", 'woopra') ?></th>
 				<th class="text-header"><?php _e("Avg Time Spent", 'woopra') ?></th>
@@ -249,32 +244,29 @@ class WoopraRender extends WoopraAdmin {
 				<th>&nbsp;</th>
 			</tr>
 			<?php
+			
 			$counter = 0;
-			$max = $this->woopra_max($entries, 'totalPageviews');
+			$max = $this->woopra_max($entries, 'pvs');
 			foreach($entries as $entry) {
 				
 				//	Time Code
-				// @todo fix me
-				//$timespentstring = $this->woopra_ms_to_string((int) $entry['totalTimeSpent']);
+				$timespentstring = $this->woopra_ms_to_string((int) $entry['timespent']);
+				//	Vistor Code
+				$newvisitors = (int) $entry['newvtrs'];
+				$visitors = (int) $entry['vts'];
 				
-				//	Visitors Code
-				$newvisitors = (int) $entry['totalNewVisitors'];
-				$visitors = (int) $entry['totalVisitors'];
-				
-				//	Visitors String
 				$visitorsstring = "-";
 				if ($newvisitors <= $visitors && $visitors != 0) {
 					$visitorsstring = (int) ($newvisitors*100/$visitors) . '%';
 				}
 				
 				//	Page Views Code
-				$pageviews = (int) $entry['totalPageviews'];
-				
+				$pageviews = (int) $entry['pvs'];
 				//	Percent Code
 				$percent = round($pageviews*100/$max);
 				
-				//	Hash ID
-				$hashid = $this->woopra_friendly_hash($this->api_page);
+				
+				$hashid = $this->woopra_friendly_hash('GLOBALS');
 				
 				?>
 				<tr<?php echo (($counter++%2==0)?" class=\"even_row\"":""); ?>>
@@ -282,17 +274,14 @@ class WoopraRender extends WoopraAdmin {
 					<td class="text-item"><?php echo $timespentstring; ?></td>
 					<td class="text-item"><?php echo $visitorsstring; ?></td>
 					<td class="text-item"><?php echo number_format($visitors); ?></td>
-					<td class="text-item highlight">
-						<a class="woopra-chart-line-a" href="#" onclick="return expandLineChart('<?php echo $counter; ?>');"><?php echo number_format($pageviews); ?></a>
-					</td>
+					<td class="text-item highlight"><a href="#" onclick="return expandByDay('GLOBALS', '<?php echo $hashid; ?>', <?php echo $counter; ?>, <?php echo $entry['index']; ?>)"><?php echo number_format($pageviews); ?></a></td>
 					<td class="bar"><?php echo $this->woopra_bar($percent); ?></td>
 				</tr>
-				<tr id="woopra-chart-line-tr-<?php echo $hashid; ?>-<?php echo $counter; ?>" style=" height: 120px; display: none;">
-					<td class="woopra-chart-line" id="woopra-chart-line-td-<?php echo $hashid; ?>-<?php echo $counter ?>" colspan="6"></td>
+				<tr id="wlc-<?php echo $hashid; ?>-<?php echo $counter; ?>" style=" height: 120px; display: none;">
+					<td class="wlinechart" id="linecharttd-<?php echo $hashid; ?>-<?php echo $counter ?>" colspan="6"></td>
 				</tr>
 			<?php
 			}
-			unset($this->xml_data);	//	Unset it. No need anymore..
 		?>
 		</table>
 	<?php
@@ -307,11 +296,7 @@ class WoopraRender extends WoopraAdmin {
 	 */
 	function render_default_model($entries, $key) {
 		
-		//	Show data from highest to lowest.
-		$this->sort_analytics_response();
-		
 		?>
-		
 		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
 			<tr>
 				<th>&nbsp;</th>
@@ -322,17 +307,16 @@ class WoopraRender extends WoopraAdmin {
 			<?php
 			
 			$counter = 0;
-			$sum = $this->woopra_sum($entries, 'totalVisits');
+			$sum = $this->woopra_sum($entries, 'vts');
 			
-			foreach ($entries as $entry) {
+			foreach($entries as $index => $entry) {
 				$name = urldecode($entry['name']);
-				$hits = (int) $entry['totalVisits'];
+				$hits = (int) $entry['vts'];
 				$meta = urldecode($entry['meta']);
 				$percent = 0;
 				if ($sum != 0) {
 					$percent = round($hits*100/$sum);
 				}
-			
 				$hashid = $this->woopra_friendly_hash($key);
 				?>
 				<tr<?php echo (($counter++%2==0) ? " class=\"even_row\"" : ""); ?>>
@@ -344,34 +328,87 @@ class WoopraRender extends WoopraAdmin {
 				<tr id="wlc-<?php echo $hashid; ?>-<?php echo $counter; ?>" style=" height: 120px; display: none;">
 					<td class="wlinechart" id="linecharttd-<?php echo $hashid; ?>-<?php echo $counter ?>" colspan="4"></td>
 				</tr>
-			<?php } ?>
+			<?php
+		}
+		?>
 		</table>
 		<?php
 	}
+	
+	/**
+	 * Render Referrers Section
+	 * @return 
+	 * @param object $entries
+	 * @param object $key
+	 */
+	function render_referrers($entries, $key) {
 		
+		?>
+		<table class="woopra_table" width="100%" cellpadding="0" cellspacing="0">
+		<tr>
+			<th>&nbsp;</th>
+			<th class="text-header"><?php _e('Referrer', 'woopra'); ?></th>
+			<th class="text-header" width="100"><?php _e('Hits', 'woopra'); ?></th>
+			<th width="400">&nbsp;</th>
+		</tr>
+		<?php
+		
+		$counter = 0;
+		$sum = $this->woopra_sum($entries, 'vts');
+		
+		foreach($entries as $index => $entry) {
+			$name = urldecode($entry['name']);
+			$hits = (int) $entry['vts'];
+			$meta = urldecode($entry['meta']);
+			
+			$percent = 0;
+			if ($sum != 0)
+				$percent = round($hits*100/$sum);
+			
+			$hashid = $this->woopra_friendly_hash($key);
+			?>
+			<tr<?php echo (($counter++%2==0) ? " class=\"even_row\"" : "" ); ?>>
+				<td class="index"><?php echo $counter; ?></td>
+				<td><span class="ellipsis"><a href="<?php echo $name; ?>" target="_blank"><?php echo $this->woopra_render_name($key, $name, $meta); ?></a></span></td>
+				<td width="100" class="text-item highlight"><a href="#" onclick="return expandByDay('<?php echo $key; ?>', '<?php echo $hashid; ?>', <?php echo $counter; ?>, <?php echo $entry['index']; ?>)"><?php echo $hits; ?></a></td>
+				<td class="bar"><?php echo $this->woopra_bar($percent) ?></td>
+			</tr>
+			<tr id="wlc-<?php echo $hashid; ?>-<?php echo $counter ?>" style=" height: 120px; display: none;"><td class="wlinechart" id="linecharttd-<?php echo $hashid ?>-<?php echo $counter; ?>" colspan="4"></td></tr>
+			<tr id="refexp-<?php echo $hashid; ?>-<?php echo $counter; ?>" style="display: none;"><td colspan="4" style="padding: 0;"><div id="refexptd-<?php echo $hashid; ?>-<?php echo $counter; ?>"></div></td></tr>
+			<?php
+		}
+		?>
+		</table>
+		<?php
+	}
+	
 	/**
 	 * Render the chart data format. Using Open-Flash-2 PHP Librarys
-	 * @since 1.4.3
 	 * @param object $entries
 	 * @return 
 	 */
 	function render_chart_data($entries) {
-		$chart = new WoopraChart();
+	
+		$chart = new WoopraChart;
+
 		if ((!isset($_GET['id'])) || (!is_numeric($_GET['id']))) {
 			unset($chart);
 			exit;
 		}
+		
 		foreach ($entries as $index => $entry) {
 			if ($entry['index'] == $_GET['id'])
 				$chart->data = $entry;
 		}
+		
 		echo $chart->render();
+
 		unset($chart);
 		exit;
 	}
 	
 	/** PRIVATE FUNCTIONS **/
-	
+
 	/**
 	 * Milliseconds to Mintues and Seconds
 	 * @since 1.4.1
@@ -395,43 +432,41 @@ class WoopraRender extends WoopraAdmin {
 	function woopra_render_name($key, $name = null, $meta = null) {
 		if (is_null($name)) {
 			switch ($key) {
-				case 'getCountries':
+				case 'COUNTRIES':
 					return __('Country', 'woopra');
-				case 'getVisitBounces':
+				case 'VISITBOUNCES':
 					return __('Pageviews per Visit', 'woopra');
-				case 'getVisitDurations':
+				case 'VISITDURATIONS':
 					return __('Durations', 'woopra');
-				case 'getBrowsers':
+				case 'BROWSERS':
 					return __('Browser', 'woopra');
-				case 'getPlatforms':
+				case 'PLATFORMS':
 					return __('Platform', 'woopra');
-				case 'getResolutions':
+				case 'RESOLUTIONS':
 					return __('Resolution', 'woopra');
-				case 'getLanguages':
+				case 'LANGUAGES':
 					return __('Language', 'woopra');
-				case 'getPageviews':
+				case 'PAGEVIEWS':
 					return __('Pages', 'woopra');
-				case 'getPageLandings':
+				case 'PAGELANDINGS':
 					return __('Landing Pages', 'woopra');
-				case 'getPageExits':
+				case 'PAGEEXITS':
 					return __('Exit Pages', 'woopra');
-				case 'getOutgoingLinks':
+				case 'OUTGOINGLINKS':
 					return __('Outgoing Links', 'woopra');
-				case 'getDownloads':
+				case 'DOWNLOADS':
 					return __('Downloads', 'woopra');
-				case 'getQueries':
+				case 'QUERIES':
 					return __('Search Queries', 'woopra');
-				case 'getKeywords':
+				case 'KEYWORDS':
 					return __('Keywords', 'woopra');
 				default:
 					return __('Name', 'woopra');
 			}
 		} else {
 			switch ($key) {
-				case 'getCountries':
-					return $this->country_flag($name) . " " . $this->countries[$name];
-					
-				/**  Ummm... do we do this anymore anyway? **/
+				case 'COUNTRIES':
+					return $this->woopra_country_flag($name) . " " . $this->countries[$name];
 				case 'SPECIALVISITORS':
 					$vars = Array();
 					parse_str($meta, $vars);
@@ -445,23 +480,28 @@ class WoopraRender extends WoopraAdmin {
 						$toreturn .= '<br/><small>(<a href="mailto:'.$vars['email'].'">'.$vars['email'].'</a>)</small>';
 					}
 					return $toreturn;
-					
-					
-				case 'getVisitBounces':
-					return sprintf(_n("%s pageview", "%s pageviews", $name), $name);
-				case 'getBrowsers':
-					return $this->browser_icon($name) . "&nbsp;&nbsp;" . $name;
-				case 'getPlatforms':
-					return $this->platform_icon($name) . "&nbsp;&nbsp;" . $name;
-				case 'getPageviews':
+				case 'VISITBOUNCES':
+					$post_text = 'pageviews';
+					if ($name == '1') {
+						$post_text = 'pageview';
+					}
+					return $name . " " . $post_text;
+				case 'VISITDURATIONS':
+					$name = str_replace('-', ' to ', $name);
+					return $name . ' minutes';
+				case 'BROWSERS':
+					return $this->woopra_browser_icon($name) . "&nbsp;&nbsp;" . $name;
+				case 'PLATFORMS':
+					return $this->woopra_platform_icon($name) . "&nbsp;&nbsp;" . $name;
+				case 'PAGEVIEWS':
 					return $meta . "<br/>" . "<small><a href=\"http://".$this->woopra_host()."$name\" target=\"_blank\">$name</a></small>";
-				case 'getPageLandings':
+				case 'PAGELANDINGS':
 					return $meta . "<br/>" . "<small><a href=\"http://".$this->woopra_host()."$name\" target=\"_blank\">$name</a></small>";
-				case 'getPageExits':
+				case 'PAGEEXITS':
 					return $meta . "<br/>" . "<small><a href=\"http://".$this->woopra_host()."$name\" target=\"_blank\">$name</a></small>";
-				case 'getOutgoingLinks':
+				case 'OUTGOINGLINKS':
 					return "<a href=\"$name\" target=\"_blank\">$name</a>";
-				case 'getDownloads':
+				case 'DOWNLOADS':
 					return "<a href=\"$name\" target=\"_blank\">$name</a>";
 				default:
 					return $name;
@@ -514,112 +554,16 @@ class WoopraRender extends WoopraAdmin {
 		return $max;
 	}
 	
-	/** IMAGE FUNCTIONS **/
-	
 	/**
 	 * Create Flag
 	 * @since 1.4.1
 	 * @return 
 	 * @param object $country
 	 */
-	function country_flag($country) {
+	function woopra_country_flag($country) {
 		return "<img src=\"http://static.woopra.com/images/flags/$country.png\" />";
 	}
-	
-	/**
-	 * Get the broswer image.
-	 * @since 1.4.1
-	 * @return string
-	 * @param object $browser
-	 */
-	function browser_icon($browser) {
-		$browser = strtolower($browser);
-		if ( stripos($browser, "firefox") !== false ) {
-			return $this->woopra_image("browsers/firefox");
-		}
-		if ( stripos($browser, "explorer 7") !== false ) {
-			return$this->woopra_image("browsers/ie7");
-		}
-		if ( stripos($browser, "explorer 8") !== false ) {
-			return$this->woopra_image("browsers/ie7");	//	should this me updated?
-		}
-		if ( stripos($browser, "explorer") !== false ) {
-			return$this->woopra_image("browsers/ie");
-		}
-		if ( stripos($browser, "safari") !== false ) {
-			return$this->woopra_image("browsers/safari");
-		}
-		if ( stripos($browser, "chrome") !== false ) {
-			return$this->woopra_image("browsers/chrome");
-		}
-		if ( stripos($browser, "opera") !== false ) {
-			return$this->woopra_image("browsers/opera");
-		}
-		if ( stripos($browser, "mozilla") !== false ) {
-			return$this->woopra_image("browsers/mozilla");
-		}
-		if ( stripos($browser, "netscape") !== false ) {
-			return$this->woopra_image("browsers/netscape");
-		}
-		if ( stripos($browser, "konqueror") !== false ) {
-			return$this->woopra_image("browsers/konqueror");
-		}
-		if ( stripos($browser, "iphone") !== false ) {
-			return $this->woopra_image("os/mac");
-		}
-		if ( stripos($browser, "unknown") !== false || stripos($browser, "other") !== false ) {
-			return$this->woopra_image("browsers/unknown");
-		}
-		return "";
-	}
-	
-	/**
-	 * Platform Icon
-	 * @since 1.4.1
-	 * @return string
-	 * @param object $platform
-	 */
-	function platform_icon($platform) {
-		$platform = strtolower($platform);
-		if ( stripos($platform, "windows") !== false ) {
-			return$this->woopra_image("os/windows");
-		}
-		if ( stripos($platform, "mac") !== false ) {
-			return$this->woopra_image("os/mac");
-		}
-		if ( stripos($platform, "apple") !== false ) {
-			return$this->woopra_image("os/mac");
-		}
-		if ( stripos($platform, "ubuntu") !== false ) {
-			return$this->woopra_image("os/ubuntu");
-		}
-		if ( stripos($platform, "redhat") !== false ) {
-			return$this->woopra_image("os/redhat");
-		}
-		if ( stripos($platform, "suse") !== false ) {
-			return$this->woopra_image("os/suse");
-		}
-		if ( stripos($platform, "fedora") !== false ) {
-			return$this->woopra_image("os/fedora");
-		}
-		if ( stripos($platform, "debian") !== false ) {
-			return$this->woopra_image("os/debian");
-		}
-		if ( stripos($platform, "linux") !== false ) {
-			return$this->woopra_image("os/linux");
-		}
-		if ( stripos($platform, "playstation") !== false ) {
-			return$this->woopra_image("os/playstation");
-		}
-		if ( stripos($platform, "nokia mobile") !== false ) {
-			return$this->woopra_image("browsers/unknown");
-		}
-		if ( stripos($platform, "unknown") !== false || stripos($platform, "other") !== false ) {
-			return$this->woopra_image("browsers/unknown");
-		}
-		return "";
-	}
-	
+
 	/**
 	 * Create Woopra Image
 	 * @since 1.4.1
@@ -645,7 +589,93 @@ class WoopraRender extends WoopraAdmin {
 		return '<img src="'.$barurl.'" width="'.$width.'" height="16" />';
 	}
 	
-	/** INITILIZED FUNCTIONS ONLY!!! **/
+	/**
+	 * Get the broswer image.
+	 * @since 1.4.1
+	 * @return string
+	 * @param object $browser
+	 */
+	function woopra_browser_icon($browser) {
+		$browser = strtolower($browser);
+	    if (stripos($browser, "firefox") !== false) {
+	        return $this->woopra_image("browsers/firefox");
+	    }
+	    if (stripos($browser, "explorer 7") !== false) {
+	        return $this->woopra_image("browsers/ie7");
+	    }
+	    if (stripos($browser, "explorer 8") !== false) {
+	        return $this->woopra_image("browsers/ie7");	//	should this me updated?
+	    }
+	    if (stripos($browser, "explorer") !== false) {
+	        return $this->woopra_image("browsers/ie");
+	    }
+	    if (stripos($browser, "safari") !== false) {
+	        return $this->woopra_image("browsers/safari");
+	    }
+	    if (stripos($browser, "chrome") !== false) {
+	        return $this->woopra_image("browsers/chrome");
+	    }
+	    if (stripos($browser, "opera") !== false) {
+	        return $this->woopra_image("browsers/opera");
+	    }
+	    if (stripos($browser, "mozilla") !== false) {
+	        return $this->woopra_image("browsers/mozilla");
+	    }
+	    if (stripos($browser, "netscape") !== false) {
+	        return $this->woopra_image("browsers/netscape");
+	    }
+	    if (stripos($browser, "konqueror") !== false) {
+	        return $this->woopra_image("browsers/konqueror");
+	    }
+	    if (stripos($browser, "unknown") !== false || stripos($browser, "other") !== false) {
+	        return $this->woopra_image("browsers/unknown");
+	    }
+	    return "";
+	}
+	
+	/**
+	 * Platform Icon
+	 * @since 1.4.1
+	 * @return string
+	 * @param object $platform
+	 */
+	function woopra_platform_icon($platform) {
+		$platform = strtolower($platform);
+	    if (stripos($platform, "windows") !== false) {
+	        return $this->woopra_image("os/windows");
+	    }
+	    if (stripos($platform, "mac") !== false) {
+	        return $this->woopra_image("os/mac");
+	    }
+	    if (stripos($platform, "apple") !== false) {
+	        return $this->woopra_image("os/mac");
+	    }
+	    if (stripos($platform, "ubuntu") !== false) {
+	        return $this->woopra_image("os/ubuntu");
+	    }
+	    if (stripos($platform, "redhat") !== false) {
+	        return $this->woopra_image("os/redhat");
+	    }
+	    if (stripos($platform, "suse") !== false) {
+	        return $this->woopra_image("os/suse");
+	    }
+	    if (stripos($platform, "fedora") !== false) {
+	        return $this->woopra_image("os/fedora");
+	    }
+	    if (stripos($platform, "debian") !== false) {
+	        return $this->woopra_image("os/debian");
+	    }
+	    if (stripos($platform, "linux") !== false) {
+	        return $this->woopra_image("os/linux");
+	    }
+	    if (stripos($platform, "playstation") !== false) {
+	        return $this->woopra_image("os/playstation");
+	    }
+	    if (stripos($platform, "unknown") !== false || stripos($platform, "other") !== false) {
+	        return $this->woopra_image("browsers/unknown");
+	    }
+	    return "";
+	}
 	
 	/**
 	 * Return the country list.
@@ -654,215 +684,215 @@ class WoopraRender extends WoopraAdmin {
 	 */
 	function init_countries() {
 		$this->countries = array(
-			"TJ" => _("Tajikistan"),
-			"TH" => _("Thailand"),
-			"TG" => _("Togo"),
-			"GY" => _("Guyana"),
-			"GW" => _("Guinea-bissau"),
-			"GU" => _("Guam"),
-			"GT" => _("Guatemala"),
-			"GR" => _("Greece"),
-			"GP" => _("Guadeloupe"),
-			"SZ" => _("Swaziland"),
-			"SY" => _("Syria"),
-			"GM" => _("Gambia"),
-			"GL" => _("Greenland"),
-			"SV" => _("El Salvador"),
-			"GI" => _("Gibraltar"),
-			"GH" => _("Ghana"),
-			"SR" => _("Suriname"),
-			"GF" => _("French Guiana"),
-			"GE" => _("Georgia"),
-			"GD" => _("Grenada"),
-			"SN" => _("Senegal"),
-			"GB" => _("United Kingdom"),
-			"SM" => _("San Marino"),
-			"GA" => _("Gabon"),
-			"SL" => _("Sierra Leone"),
-			"SK" => _("Slovakia"),
-			"SI" => _("Slovenia"),
-			"SG" => _("Singapore"),
-			"SE" => _("Sweden"),
-			"SD" => _("Sudan"),
-			"SC" => _("Seychelles"),
-			"SB" => _("Solomon Islands"),
-			"SA" => _("Saudi Arabia"),
-			"FR" => _("France"),
-			"FO" => _("Faroe Islands"),
-			"FM" => _("Micronesia"),
-			"RW" => _("Rwanda"),
-			"FJ" => _("Fiji"),
-			"RU" => _("Russia"),
-			"FI" => _("Finland"),
-			"RS" => _("Serbia"),
-			"RO" => _("Romania"),
-			"EU" => _("European Union"),
-			"ET" => _("Ethiopia"),
-			"ES" => _("Spain"),
-			"ER" => _("Eritrea"),
-			"EG" => _("Egypt"),
-			"EE" => _("Estonia"),
-			"EC" => _("Ecuador"),
-			"DZ" => _("Algeria"),
-			"QA" => _("Qatar"),
-			"DO" => _("Dominican Republic"),
-			"PY" => _("Paraguay"),
-			"PW" => _("Palau"),
-			"DK" => _("Denmark"),
-			"DJ" => _("Djibouti"),
-			"PT" => _("Portugal"),
-			"PS" => _("Palestine"),
-			"PR" => _("Puerto Rico"),
-			"DE" => _("Germany"),
-			"PL" => _("Poland"),
-			"PK" => _("Pakistan"),
-			"PH" => _("Philippines"),
-			"PG" => _("Papua New Guinea"),
-			"CZ" => _("Czech Republic"),
-			"PF" => _("French Polynesia"),
-			"CY" => _("Cyprus"),
-			"PE" => _("Peru"),
-			"CU" => _("Cuba"),
-			"PA" => _("Panama"),
-			"CS" => _("Serbia"),
-			"CR" => _("Costa Rica"),
-			"CO" => _("Colombia"),
-			"CN" => _("China"),
-			"CM" => _("Cameroon"),
-			"CL" => _("Chile"),
-			"CK" => _("Cook Islands"),
-			"CI" => _("Cote D'ivoire"),
-			"CH" => _("Switzerland"),
-			"CF" => _("Central African Republic"),
-			"CD" => _("Congo"),
-			"OM" => _("Oman"),
-			"CA" => _("Canada"),
-			"BZ" => _("Belize"),
-			"BY" => _("Belarus"),
-			"BW" => _("Botswana"),
-			"BT" => _("Bhutan"),
-			"BS" => _("Bahamas"),
-			"BR" => _("Brazil"),
-			"BO" => _("Bolivia"),
-			"NZ" => _("New Zealand"),
-			"BN" => _("Brunei Darussalam"),
-			"BM" => _("Bermuda"),
-			"BJ" => _("Benin"),
-			"NU" => _("Niue"),
-			"BI" => _("Burundi"),
-			"BH" => _("Bahrain"),
-			"BG" => _("Bulgaria"),
-			"NR" => _("Nauru"),
-			"BF" => _("Burkina Faso"),
-			"BE" => _("Belgium"),
-			"NP" => _("Nepal"),
-			"BD" => _("Bangladesh"),
-			"NO" => _("Norway"),
-			"BB" => _("Barbados"),
-			"BA" => _("Bosnia And Herzegowina"),
-			"NL" => _("Netherlands"),
-			"ZW" => _("Zimbabwe"),
-			"NI" => _("Nicaragua"),
-			"NG" => _("Nigeria"),
-			"AZ" => _("Azerbaijan"),
-			"NF" => _("Norfolk Island"),
-			"AX" => _("�land Islands"),
-			"AW" => _("Aruba"),
-			"NC" => _("New Caledonia"),
-			"ZM" => _("Zambia"),
-			"NA" => _("Namibia"),
-			"AU" => _("Australia"),
-			"AT" => _("Austria"),
-			"AS" => _("American Samoa"),
-			"AR" => _("Argentina"),
-			"AP" => _("Non-spec"),
-			"AO" => _("Angola"),
-			"MZ" => _("Mozambique"),
-			"AN" => _("Netherlands"),
-			"MY" => _("Malaysia"),
-			"AM" => _("Armenia"),
-			"MX" => _("Mexico"),
-			"AL" => _("Albania"),
-			"MW" => _("Malawi"),
-			"MV" => _("Maldives"),
-			"MU" => _("Mauritius"),
-			"ZA" => _("South Africa"),
-			"AI" => _("Anguilla"),
-			"MT" => _("Malta"),
-			"AG" => _("Antigua And Barbuda"),
-			"MR" => _("Mauritania"),
-			"AF" => _("Afghanistan"),
-			"AE" => _("United Arab Emirates"),
-			"MP" => _("Northern Mariana Islands"),
-			"AD" => _("Andorra"),
-			"MO" => _("Martinique"),
-			"MN" => _("Mongolia"),
-			"MM" => _("Myanmar"),
-			"ML" => _("Mali"),
-			"MK" => _("Macedonia"),
-			"MG" => _("Madagascar"),
-			"MD" => _("Moldova"),
-			"MC" => _("Monaco"),
-			"MA" => _("Morocco"),
-			"YE" => _("Yemen"),
-			"LY" => _("Libya"),
-			"LV" => _("Latvia"),
-			"LU" => _("Luxembourg"),
-			"LT" => _("Lithuania"),
-			"LS" => _("Lesotho"),
-			"LR" => _("Liberia"),
-			"LK" => _("Sri Lanka"),
-			"LI" => _("Liechtenstein"),
-			"LC" => _("Saint Lucia"),
-			"LB" => _("Lebanon"),
-			"LA" => _("Laos"),
-			"KZ" => _("Kazakhstan"),
-			"KY" => _("Cayman Islands"),
-			"KW" => _("Kuwait"),
-			"KR" => _("Korea"),
-			"KN" => _("Saint Kitts And Nevis"),
-			"KI" => _("Kiribati"),
-			"KH" => _("Cambodia"),
-			"WS" => _("Samoa"),
-			"KG" => _("Kyrgyzstan"),
-			"KE" => _("Kenya"),
-			"JP" => _("Japan"),
-			"JO" => _("Jordan"),
-			"JM" => _("Jamaica"),
-			"VU" => _("Vanuatu"),
-			"VN" => _("Viet Nam"),
-			"VI" => _("U.S. Virgin Islands"),
-			"VG" => _("British Virgin Islands"),
-			"VE" => _("Venezuela"),
-			"VA" => _("Vatican"),
-			"IT" => _("Italy"),
-			"IS" => _("Iceland"),
-			"IR" => _("Iran"),
-			"IQ" => _("Iraq"),
-			"UZ" => _("Uzbekistan"),
-			"IO" => _("British Indian Ocean Territory"),
-			"IN" => _("India"),
-			"UY" => _("Uruguay"),
-			"IL" => _("Israel"),
-			"US" => _("United States"),
-			"IE" => _("Ireland"),
-			"ID" => _("Indonesia"),
-			"UG" => _("Uganda"),
-			"UA" => _("Ukraine"),
-			"HU" => _("Hungary"),
-			"HT" => _("Haiti"),
-			"HR" => _("Croatia"),
-			"TZ" => _("Tanzania"),
-			"HN" => _("Honduras"),
-			"TW" => _("Taiwan"),
-			"HK" => _("Hong Kong"),
-			"TV" => _("Tuvalu"),
-			"TT" => _("Trinidad And Tobago"),
-			"TR" => _("Turkey"),
-			"00" => _("Unknown"),
-			"TO" => _("Tonga"),
-			"TN" => _("Tunisia"),
-			"TM" => _("Turkmenistan")
+			"TJ" => "Tajikistan",
+			"TH" => "Thailand",
+			"TG" => "Togo",
+			"GY" => "Guyana",
+			"GW" => "Guinea-bissau",
+			"GU" => "Guam",
+			"GT" => "Guatemala",
+			"GR" => "Greece",
+			"GP" => "Guadeloupe",
+			"SZ" => "Swaziland",
+			"SY" => "Syria",
+			"GM" => "Gambia",
+			"GL" => "Greenland",
+			"SV" => "El Salvador",
+			"GI" => "Gibraltar",
+			"GH" => "Ghana",
+			"SR" => "Suriname",
+			"GF" => "French Guiana",
+			"GE" => "Georgia",
+			"GD" => "Grenada",
+			"SN" => "Senegal",
+			"GB" => "United Kingdom",
+			"SM" => "San Marino",
+			"GA" => "Gabon",
+			"SL" => "Sierra Leone",
+			"SK" => "Slovakia",
+			"SI" => "Slovenia",
+			"SG" => "Singapore",
+			"SE" => "Sweden",
+			"SD" => "Sudan",
+			"SC" => "Seychelles",
+			"SB" => "Solomon Islands",
+			"SA" => "Saudi Arabia",
+			"FR" => "France",
+			"FO" => "Faroe Islands",
+			"FM" => "Micronesia",
+			"RW" => "Rwanda",
+			"FJ" => "Fiji",
+			"RU" => "Russia",
+			"FI" => "Finland",
+			"RS" => "Serbia",
+			"RO" => "Romania",
+			"EU" => "European Union",
+			"ET" => "Ethiopia",
+			"ES" => "Spain",
+			"ER" => "Eritrea",
+			"EG" => "Egypt",
+			"EE" => "Estonia",
+			"EC" => "Ecuador",
+			"DZ" => "Algeria",
+			"QA" => "Qatar",
+			"DO" => "Dominican Republic",
+			"PY" => "Paraguay",
+			"PW" => "Palau",
+			"DK" => "Denmark",
+			"DJ" => "Djibouti",
+			"PT" => "Portugal",
+			"PS" => "Palestine",
+			"PR" => "Puerto Rico",
+			"DE" => "Germany",
+			"PL" => "Poland",
+			"PK" => "Pakistan",
+			"PH" => "Philippines",
+			"PG" => "Papua New Guinea",
+			"CZ" => "Czech Republic",
+			"PF" => "French Polynesia",
+			"CY" => "Cyprus",
+			"PE" => "Peru",
+			"CU" => "Cuba",
+			"PA" => "Panama",
+			"CS" => "Serbia",
+			"CR" => "Costa Rica",
+			"CO" => "Colombia",
+			"CN" => "China",
+			"CM" => "Cameroon",
+			"CL" => "Chile",
+			"CK" => "Cook Islands",
+			"CI" => "Cote D'ivoire",
+			"CH" => "Switzerland",
+			"CF" => "Central African Republic",
+			"CD" => "Congo",
+			"OM" => "Oman",
+			"CA" => "Canada",
+			"BZ" => "Belize",
+			"BY" => "Belarus",
+			"BW" => "Botswana",
+			"BT" => "Bhutan",
+			"BS" => "Bahamas",
+			"BR" => "Brazil",
+			"BO" => "Bolivia",
+			"NZ" => "New Zealand",
+			"BN" => "Brunei Darussalam",
+			"BM" => "Bermuda",
+			"BJ" => "Benin",
+			"NU" => "Niue",
+			"BI" => "Burundi",
+			"BH" => "Bahrain",
+			"BG" => "Bulgaria",
+			"NR" => "Nauru",
+			"BF" => "Burkina Faso",
+			"BE" => "Belgium",
+			"NP" => "Nepal",
+			"BD" => "Bangladesh",
+			"NO" => "Norway",
+			"BB" => "Barbados",
+			"BA" => "Bosnia And Herzegowina",
+			"NL" => "Netherlands",
+			"ZW" => "Zimbabwe",
+			"NI" => "Nicaragua",
+			"NG" => "Nigeria",
+			"AZ" => "Azerbaijan",
+			"NF" => "Norfolk Island",
+			"AX" => "�land Islands",
+			"AW" => "Aruba",
+			"NC" => "New Caledonia",
+			"ZM" => "Zambia",
+			"NA" => "Namibia",
+			"AU" => "Australia",
+			"AT" => "Austria",
+			"AS" => "American Samoa",
+			"AR" => "Argentina",
+			"AP" => "Non-spec",
+			"AO" => "Angola",
+			"MZ" => "Mozambique",
+			"AN" => "Netherlands",
+			"MY" => "Malaysia",
+			"AM" => "Armenia",
+			"MX" => "Mexico",
+			"AL" => "Albania",
+			"MW" => "Malawi",
+			"MV" => "Maldives",
+			"MU" => "Mauritius",
+			"ZA" => "South Africa",
+			"AI" => "Anguilla",
+			"MT" => "Malta",
+			"AG" => "Antigua And Barbuda",
+			"MR" => "Mauritania",
+			"AF" => "Afghanistan",
+			"AE" => "United Arab Emirates",
+			"MP" => "Northern Mariana Islands",
+			"AD" => "Andorra",
+			"MO" => "Martinique",
+			"MN" => "Mongolia",
+			"MM" => "Myanmar",
+			"ML" => "Mali",
+			"MK" => "Macedonia",
+			"MG" => "Madagascar",
+			"MD" => "Moldova",
+			"MC" => "Monaco",
+			"MA" => "Morocco",
+			"YE" => "Yemen",
+			"LY" => "Libya",
+			"LV" => "Latvia",
+			"LU" => "Luxembourg",
+			"LT" => "Lithuania",
+			"LS" => "Lesotho",
+			"LR" => "Liberia",
+			"LK" => "Sri Lanka",
+			"LI" => "Liechtenstein",
+			"LC" => "Saint Lucia",
+			"LB" => "Lebanon",
+			"LA" => "Laos",
+			"KZ" => "Kazakhstan",
+			"KY" => "Cayman Islands",
+			"KW" => "Kuwait",
+			"KR" => "Korea",
+			"KN" => "Saint Kitts And Nevis",
+			"KI" => "Kiribati",
+			"KH" => "Cambodia",
+			"WS" => "Samoa",
+			"KG" => "Kyrgyzstan",
+			"KE" => "Kenya",
+			"JP" => "Japan",
+			"JO" => "Jordan",
+			"JM" => "Jamaica",
+			"VU" => "Vanuatu",
+			"VN" => "Viet Nam",
+			"VI" => "U.S. Virgin Islands",
+			"VG" => "British Virgin Islands",
+			"VE" => "Venezuela",
+			"VA" => "Vatican",
+			"IT" => "Italy",
+			"IS" => "Iceland",
+			"IR" => "Iran",
+			"IQ" => "Iraq",
+			"UZ" => "Uzbekistan",
+			"IO" => "British Indian Ocean Territory",
+			"IN" => "India",
+			"UY" => "Uruguay",
+			"IL" => "Israel",
+			"US" => "United States",
+			"IE" => "Ireland",
+			"ID" => "Indonesia",
+			"UG" => "Uganda",
+			"UA" => "Ukraine",
+			"HU" => "Hungary",
+			"HT" => "Haiti",
+			"HR" => "Croatia",
+			"TZ" => "Tanzania",
+			"HN" => "Honduras",
+			"TW" => "Taiwan",
+			"HK" => "Hong Kong",
+			"TV" => "Tuvalu",
+			"TT" => "Trinidad And Tobago",
+			"TR" => "Turkey",
+			"00" => "Unknown",
+			"TO" => "Tonga",
+			"TN" => "Tunisia",
+			"TM" => "Turkmenistan"
 		);
 	}
 	
@@ -902,7 +932,7 @@ class WoopraRender extends WoopraAdmin {
 	function woopra_friendly_hash($value) {
 		return substr(md5($value),0,4);
 	}
-	
+
 	/**
 	 * Sort Analytics
 	 * @since 1.4.1
@@ -920,7 +950,7 @@ class WoopraRender extends WoopraAdmin {
 	 * @users sort_analytics_response
 	 */
 	function compare_analytics_entries($entry1, $entry2) {
-		$sort_by = (isset($entry1['day'])?'day':'totalVisits');
+		$sort_by = (isset($entry1['day'])?'day':'vts');
 		
 		$v1 = (int)$entry1[$sort_by];
 		$v2 = (int)$entry2[$sort_by];

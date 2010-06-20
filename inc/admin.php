@@ -10,7 +10,21 @@
  * @subpackage admin
  */
 class WoopraAdmin extends Woopra {
-		
+
+	/**
+	 * Current Event
+	 * @since 1.4.1
+	 * @var array
+	 */
+	var $event;
+	
+	/**
+	 * All the events.
+	 * @since 1.4.1
+	 * @var array
+	 */
+	var $_events;
+
 	/**
 	 * The plugin file.
 	 * @since 1.4.1
@@ -24,7 +38,8 @@ class WoopraAdmin extends Woopra {
 	 * @var string
 	 */
 	var $plugin_basename;
-	
+
+
 	/**
 	 * PHP 4 Style constructor which calls the below PHP5 Style Constructor
 	 * @since 1.4.1
@@ -53,7 +68,7 @@ class WoopraAdmin extends Woopra {
 		
 		//	Load Transations File
 		load_plugin_textdomain( 'woopra', false, '/woopra/locale' );
-		
+
 		//	Run this when installed or upgraded.
 		register_activation_hook( $this->plugin_file,	array(&$this, 'init') 				);
 		register_deactivation_hook( $this->plugin_file, array(&$this, 'init_deactivate')	);
@@ -67,9 +82,13 @@ class WoopraAdmin extends Woopra {
 			//	AJAX Render
 			add_action(	'wp_ajax_woopra',				array(&$this, 'render_page' ) 						);
 		}
-		
+
 		add_action( 'admin_menu',					array(&$this, 'register_settings_page') 			);
-		add_action( 'admin_init',					array(&$this, 'admin_init' ) 						);		
+		add_action( 'admin_init',					array(&$this, 'admin_init' ) 						);
+		
+		//	Process Events
+		$this->event = new WoopraEvents();
+				
 	}
 	
 	/*** MAIN FUNCTIONS ***/
@@ -79,7 +98,7 @@ class WoopraAdmin extends Woopra {
 	 * @since 1.4.1
 	 * @return none
 	 */
-	function init($data) {
+	function init() {
 		if (!get_option('woopra')) {
 			add_option('woopra', $this->defaults());
 		} else if (!$this->get_option('activated')) {
@@ -90,18 +109,6 @@ class WoopraAdmin extends Woopra {
 	}
 	
 	/**
-	 * Test to see if we can even initilize
-	 * @since 1.5.0
-	 * @return object
-	 */
-	function init_test() {
-		/** Soap Test **/
-		if ( !class_exists("SoapClient") )
-			return new WP_Error('soap-needed', _('Woopra Usage Requirement: SOAP needs to be enabled with your PHP installation. Consult <a href="http://www.php.net">www.php.net</a> for more information and contact your host if you have any trouble.') );
-			
-	}
-	
-	/**
 	 * Mark that we are activated!
 	 * @since 1.4.1
 	 * @return none
@@ -109,7 +116,7 @@ class WoopraAdmin extends Woopra {
 	function init_activate() {
 		$woopra = get_option('woopra');
 		$newopts = array (
-			'activated'		=>	1,
+				'activated'		=>	1,
 		);
 		update_option( 'woopra', array_merge($woopra, $newopts) );
 	}
@@ -122,7 +129,7 @@ class WoopraAdmin extends Woopra {
 	function init_deactivate() {
 		$woopra = get_option('woopra');
 		$newopts = array (
-			'activated'		=>	0,
+				'activated'		=>	0,
 		);
 		update_option( 'woopra', array_merge($woopra, $newopts) );
 	}
@@ -163,7 +170,7 @@ class WoopraAdmin extends Woopra {
 			}
 		}
 	}
-	
+
 	/**
 	 * Whitelist the 'woopra' options
 	 * @since 1.4.1
@@ -182,67 +189,24 @@ class WoopraAdmin extends Woopra {
 	function enqueue($hook_action) {
 		$plugin_url = $this->plugin_url();
 		if (('dashboard_page_woopra-analytics' == $hook_action) || ('toplevel_page_woopra' == $hook_action)) {
-			
-			/** jQuery Scripts */
-			wp_enqueue_script( 'woopra-analytics',	$plugin_url. '/js/jquery.analytics.js',		array('jquery'), '20100208'	);
-			wp_localize_script( 'woopra-analytics', 
-				'woopraL10n', 
-					array(
-						//	Text Strings
-						'error'			=>	__('An jQuery error has happened. Please try again later.', 'woopra'),
-						'loading'		=>	__('Loading...'),
-						'from'			=> 	__('From'),
-						'to'			=> 	__('To'),
-						//	Tabs Strings
-						'visitors'		=>	__('Visitors'),
-						'systems'		=>	__('Systems'),
-						'pages'			=>	__('Pages'),
-						'referrers'		=>	__('Referrers'),
-						'searches'		=>	__('Searches'),
-						//'tagvisitors'	=>	__('Tagged Vistors'),
-						'overview'		=>	__('Overview'),
-						'countries'		=>	__('Countries'),
-						'bouncerate'	=>	__('Bounce Rate'),
-						'visitdura'		=>	__('Visit Durations'),
-						'browsers'		=>	__('Browsers'),
-						'platforms'		=>	__('Platforms'),
-						'screenres'		=>	__('Screen Resolutions'),
-						'languages'		=>	__('Languages'),
-						'pageview'		=>	__('Page Views'),
-						'landingpage'	=>	__('Landing Pages'),
-						'exitpage'		=>	__('Exit Pages'),
-						'outgoinglink'	=>	__('Outgoing Links'),
-						'downloads'		=>	__('Downloads'),
-						'referrer_ty'	=>	__('Referrer Types'),
-						'referrer_se'	=>	__('Search Engines'),
-						'referrer_fr'	=>	__('Feed Readers'),
-						'referrer_em'	=>	__('Emails'),
-						'referrer_sb'	=>	__('Social Bookmarks'),
-						'referrer_sn'	=>	__('Social Networks'),
-						'referrer_me'	=>	__('Media'),
-						'referrer_ne'	=>	__('News'),
-						'referrer_co'	=>	__('Community'),
-						'referrer_al'	=>	__('All Links'),
-						'search_quer'	=>	__('Search Queries'),
-						'keywords'		=>	__('Keywords'),
-						//	Data Settings
-						'apikey'		=>	$this->get_option('api_key'),
-						'dateformat'	=>	$this->get_option('date_format'),
-						//	WordPress Needed Things
-						'siteurl'		=>	get_option('siteurl'),
-						'baseurl'		=>	$plugin_url,
-					)
+			wp_enqueue_script( 'woopra-analytics',	$plugin_url. '/js/analytics.js'	);
+			wp_localize_script( 'woopra-analytics', 'woopradefaultL10n', array(
+									'apikey'		=>	$this->get_option('api_key'),
+									'siteurl'		=>	get_option('siteurl'),
+									'baseurl'		=>	$plugin_url,
+									'dateformat'	=>	$this->get_option('date_format'),
+									'error'			=>	__('An javascript error has happened. Please try again later.', 'woopra'),
+				)
 			);
-			// ** jQuery Plugins Needed **/
-			wp_enqueue_script( 'woopra-md5',		$plugin_url . '/js/jquery.md5.js',			array('jquery', 'woopra-analytics')	);
-			wp_enqueue_script( 'woopra-flash',		$plugin_url . '/js/jquery.flash.js',		array('jquery', 'woopra-analytics')	);
-			wp_enqueue_script( 'woopra-datepicker',	$plugin_url . '/js/ui.datepicker.js',		array('jquery', 'woopra-analytics')	);
+			wp_enqueue_script( 'woopra-swfobject',	$plugin_url . '/js/swfobject.js'							);
+			// ** jQuery Datepicker **/
+			wp_enqueue_script( 'woopra-datepicker',	$plugin_url . '/js/ui.datepicker.js',		array('jquery')	);
 			
-			//	*** SYTLE SHEETS ***/
 			wp_enqueue_style( 'woopra-analytics',	$plugin_url . '/css/analytics.css'							);
 			wp_enqueue_style( 'woopra-datepicker',	$plugin_url . '/css/ui.datepicker.css'						);
 		}
 	}
+	
 	
 	/*** OTHER FUNCTIONS ***/
 	
@@ -260,8 +224,8 @@ class WoopraAdmin extends Woopra {
 			$this->upgrade('1.4.2');
 		else if ($this->version_compare(array( '1.4.2' => '>' , '1.4.3' => '<' )))
 			$this->upgrade('1.4.3');
-		else if ($this->version_compare(array( '1.4.3' => '>' , '1.5.0' => '<' )))
-			$this->upgrade('1.5.0');
+		else if ($this->version_compare(array( '1.4.3.2' => '<' )))
+			$this->upgrade('1.4.3.2');
 	}
 
 	/**
@@ -278,7 +242,7 @@ class WoopraAdmin extends Woopra {
 		}
 		return $response;
 	}
-	
+
 	/**
 	 * Upgrade options
 	 * @return none
@@ -297,21 +261,25 @@ class WoopraAdmin extends Woopra {
 			
 			$api_key = get_option('woopra_api_key');
 			$tab = get_option('woopra_analytics_tab');
-			
+	
 			$api_key = (!empty($api_key)) ? $api_key : '';
 			$tab = (!empty($tab)) ? $tab : 'dashboard';
-			
+
 			$newopts = array (
-				'version'		=>	'1.4.1',
-				'activated'		=>	1,
-				'api_key'		=>	$api_key,
-				'analytics_tab'	=>	$tab,
-				'run_status'	=>	'on',
-				'ignore_admin'	=>	$tagging,
-				'ignore_admin'	=>	$ignoreadmin,
-				'track_admin'	=>	$trackadmin,
+					'version'		=>	'1.4.1',
+					'activated'		=>	1,
+					'api_key'		=>	$api_key,
+					'analytics_tab'	=>	$tab,
+					'run_status'	=>	'on',
+					'ignore_admin'	=>	$tagging,
+					'ignore_admin'	=>	$ignoreadmin,
+					'track_admin'	=>	$trackadmin,
+					'woopra_events'	=>	array(
+						'comment_post'		=>	$comment_event,
+						'the_search_query'	=>	$search_event,
+					),
 			);
-			
+
 			/* Delete old options */
 			delete_option('woopra_api_key');
 			delete_option('woopra_analytics_tab');
@@ -325,9 +293,9 @@ class WoopraAdmin extends Woopra {
 		} else if ( $ver == '1.4.1.1' ) {
 			
 			$woopra = get_option('woopra');
-			
+
 			$newopts = array (
-				'version'	=>	'1.4.1.1'
+					'version'		=>	'1.4.1.1'
 			);
 			
 			unset($woopra['version']);
@@ -335,11 +303,11 @@ class WoopraAdmin extends Woopra {
 		} else if ( $ver == '1.4.2' ) {
 			
 			$woopra = get_option('woopra');
-			
+
 			$newopts = array (
-				'version'		=>	'1.4.2',
-				'use_timeout'	=>	0,
-				'timeout'		=>	600,
+					'version'		=>	'1.4.2',
+					'use_timeout'	=>	0,
+					'timeout'		=>	600,
 			);
 			
 			unset($woopra['version']);
@@ -347,40 +315,27 @@ class WoopraAdmin extends Woopra {
 		} else if ( $ver == '1.4.3' ) {
 			
 			$woopra = get_option('woopra');
-			
+
 			$newopts = array (
-				'version'			=>	'1.4.3',
-				'process_events'	=>	1,
+					'version'			=>	'1.4.3',
+					'process_events'	=>	1,
 			);
 			
 			unset($woopra['version']);
 			update_option( 'woopra', array_merge($woopra, $newopts) );
-		} else if ( $ver == '1.4.3.1' ) {
+		} else if (( $ver == '1.4.3.1' ) || ( $ver == '1.4.3.2' )) {
 			
 			$woopra = get_option('woopra');
-			
+
 			$newopts = array (
-				'version'	=>	'1.4.3.1',
+					'version'			=>	$ver,
 			);
 			
 			unset($woopra['version']);
 			update_option( 'woopra', array_merge($woopra, $newopts) );
-		} else if ( $ver == '1.5.0' ) {
-			
-			$woopra = get_option('woopra');
-			
-			$newopts = array (
-				'use_subdomain'	=>	0,
-				'track_evemts'	=>	1,
-				'root_domain'	=>	$this->woopra_host(),
-			);
-			
-			unset($woopra['version']);
-			update_option( 'woopra', array_merge($woopra, $newopts) );
-		
 		}
 	}
-	
+
 	/**
 	 * Return the default options
 	 * @since 1.4.1
@@ -388,28 +343,23 @@ class WoopraAdmin extends Woopra {
 	 */
 	function defaults() {
 		$defaults = array(
-			/** DO NOT MODIFY THIS AT ALL! I MEAN IT! **/
-			'version'			=> WOOPRA_VERSION,
+			'version'			=> '',
 			'activated'			=> 1,
-			/** INFORMATION NEEDED TO RUN BACKEND PART OF WOOPRA **/
 			'api_key'			=> '',
 			'analytics_tab'		=> 'dashboard',
 			'run_status'		=> 'on',
-			'date_format'		=> 'yyyy-MM-dd',	// This still has to be hard-coded.
+			'date_format'		=> 'yyyy-MM-dd',	// hardcoded for now
 			'limit'				=> 50,
-			/** SETTING DEFAULTS **/
 			'auto_tagging'		=> 1,
 			'ignore_admin'		=> 0,
 			'track_admin'		=> 0,
-			'track_events'		=> 1,
 			'use_timeout'		=> 0,
-			'use_subdomain'		=> 0,
-			'root_domain'		=> $this->woopra_host(),
+			'process_events'	=> 1,
 			'timeout'			=> 600,
 		);
 		return $defaults;
 	}
-	
+
 	/**
 	 * Update/validate the options in the options table from the POST
 	 * @since 1.4.1
@@ -424,14 +374,13 @@ class WoopraAdmin extends Woopra {
 			unset($options['delete'], $options['default']);
 			
 			if ( !is_numeric( $options['timeout'] ) )
-				$woopra_error = new WP_Error( 'timeout_not_numeric' , sprintf( __('You entred (<strong>%s</strong>) as a timeout value. This is not a vaild entry. Please enter whole numbers only!') , $options['timeout']) );
+				$this->fire_error( 'timeout_not_numeric' , array('message' => 'You entred (<strong>%s</strong>) as a timeout value. This is not a vaild entry. Please enter whole numbers only!', 'values' => $options['timeout']) );
 			
-			if ( is_wp_error($woopra_error) )
-				wp_die($woopra_error);
-				
-			if ( $options['timeout'] <= 0 )
+			$this->check_error( 'timeout_not_numeric' );
+			
+			if ($options['timeout'] <= 0)
 				$options['use_timeout'] = false;
-				
+
 			return $options;
 		}
 	}
@@ -443,6 +392,9 @@ class WoopraAdmin extends Woopra {
 	 */
 	function settings_page() {
 	
+	$this->_events = $this->event->default_events;
+	$event_status = $this->get_option('woopra_event');
+
 	?>
 	
 <div class="wrap">
@@ -455,9 +407,8 @@ class WoopraAdmin extends Woopra {
 	
 	<input type="hidden" name="woopra[version]" value="<?php echo $this->version; ?>" />
 	<input type="hidden" name="woopra[activated]" value="<?php echo $this->get_option('activated'); ?>" />
-	<input type="hidden" name="woopra[root_domain]" value="<?php echo $this->woopra_host(); ?>" />
 	<input type="hidden" name="woopra[date_format]" value="yyyy-MM-dd" />
-	
+		
 	<h3><? _e('Main Settings', 'woopra'); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
@@ -480,7 +431,6 @@ class WoopraAdmin extends Woopra {
 			</td>
 		</tr>
 	</table>
-	
 	<br/>
 	<h3><? _e('Tracking Settings', 'woopra'); ?></h3>
 	<table class="form-table">
@@ -497,9 +447,10 @@ class WoopraAdmin extends Woopra {
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><?php _e('Admin Area', 'woopra') ?></th>
+			<th scope="row"><?php _e('Auto Timeout', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_admin')); ?> id="track_admin" name="woopra[track_admin]"/> <label for="track_admin"><?php _e("Track Admin Pages", 'woopra'); ?></label><br /><?php printf(__("Admin pages are all pages under %s", 'woopra'), $this->get_option('siteurl')."/wp-admin/" ); ?>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('use_timeout')); ?> id="use_timeout" name="woopra[use_timeout]"/> <label for="use_timeout"><?php _e("Override Woopra Default 'Auto Time Out'"); ?></label><br /><small><?php _e("Turn this 'on' if you want to override Woopra Default Timeout Settings (600 seconds). Setting this to low might cause incorrect statistics. Once a user is considered 'timed out' they will be considered gone. If they revisit they will be considered a 'new visit' and might mess up your statistics. This must be a whole number. (e.g. 34, 23) System will automaticly turn off if the number is less than or equal to 'zero'.", 'woopra'); ?></small>
+				<br/> <label for="timeout"><?php _e('Seconds before Timeout:') ?> </label> <input type="text" value="<?php echo $this->get_option('timeout'); ?>" <?php checked( '1', $this->get_option('use_timeout') ) ?> id="timeout" name="woopra[timeout]" />
 			</td>
 		</tr>
 		<tr valign="top">
@@ -511,40 +462,70 @@ class WoopraAdmin extends Woopra {
 		<tr valign="top">
 			<th scope="row"><?php _e('Ignore Administrator', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('ignore_admin')); ?> id="ignore_admin" name="woopra[ignore_admin]"/> <label for="ignore_admin"><?php _e("Ignore Administrator Visits", 'woopra'); ?></label><br /><?php _e("Enable this check box if you want Woopra to ignore <strong>your visits</strong> or any other administrator visits.", 'woopra'); ?>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('ignore_admin')); ?> id="ignore_admin" name="woopra[ignore_admin]"/> <label for="ignore_admin"><?php _e("Ignore Administrator Visits", 'woopra'); ?></label><br /><?php _e("Enable this check box if you want Woopra to ignore your or any other administrator visits.", 'woopra'); ?>
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><?php _e('Sub Domains', 'woopra') ?></th>
+			<th scope="row"><?php _e('Admin Area', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('use_subdomain')); ?> id="use_subdomain" name="woopra[use_subdomain]"/> <label for="use_subdomain"><?php _e("Track Sub Domains"); ?></label><br /><small><?php printf( __('Enabled this if you want to track subdomains. Note: You must have an account that allows subdomain tracking. Please refer to the <a href="%s">account information</a> page for more information.', 'woopra'), 'https://www.woopra.com/members/'); ?></small>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_admin')); ?> id="track_admin" name="woopra[track_admin]"/> <label for="track_admin"><?php _e("Track Admin Pages", 'woopra'); ?></label><br /><?php printf(__("Admin pages are all pages under %s", 'woopra'), $this->get_option('siteurl')."/wp-admin/" ); ?>
 			</td>
 		</tr>
 	</table>
 	<br/>
-	
-	<h3><? _e('Event Tracking', 'woopra'); ?></h3>
+	<h3><? _e('Event Settings', 'woopra'); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
-			<th scope="row"><?php _e('Enable', 'woopra') ?></th>
+			<th scope="row"><?php _e('Global Event Tracking', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_events')); ?> id="track_events" name="woopra[track_events]"/> <label for="track_events"><?php _e("Enable WordPress Event Tracking.", 'woopra'); ?></label><br /><?php _e("More options are below to enable/disable certain events from being tracked for both the frontend and the admin area. This only controls Woopra Built-In WordPress Event Tracking.", 'woopra'); ?>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('process_event')); ?> id="process_event" name="woopra[process_event]"/> <label for="process_event"><?php _e("Turn on Event Tracking System", 'woopra'); ?></label><br /><?php printf(__("If this is turned on, all events that are selected below will be tracked and reported back to the Woopra system.", 'woopra')); ?>
 			</td>
 		</tr>
-	</table>
-	<br/>
-	
-	<h3><? _e('Miscellaneous Settings', 'woopra'); ?></h3>
-	<table class="form-table">
 		<tr valign="top">
-			<th scope="row"><?php _e('Auto Timeout', 'woopra') ?></th>
+			<th scope="row"><?php _e('Main Area Events', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('use_timeout')); ?> id="use_timeout" name="woopra[use_timeout]"/> <label for="use_timeout"><?php _e("Override Woopra Default 'Auto Time Out'"); ?></label><br /><small><?php _e("Turn this 'on' if you want to override Woopra Default Timeout Settings (600 seconds). Setting this to low might cause incorrect statistics. Once a user is considered 'timed out' they will be considered gone. If they revisit they will be considered a 'new visit' and might mess up your statistics. This must be a whole number. (e.g. 34, 23) System will automaticly turn off if the number is less than or equal to 'zero'.", 'woopra'); ?></small>
-				<br/> <label for="timeout"><?php _e('Seconds before Timeout:') ?> </label> <input type="text" value="<?php echo $this->get_option('timeout'); ?>" <?php checked( '1', $this->get_option('use_timeout') ) ?> id="timeout" name="woopra[timeout]" />
+			<?php
+				foreach ( $this->_events as $event => $data) {
+					if (!$data['adminonly']) {
+						$event_reg++;
+						echo "\n\t<input type=\"checkbox\" value=\"1\"" . checked( '1', $event_status[(isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter']))], false ) . " id=\"" . ((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter']))) . "\" name=\"woopra[woopra_event][".((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter'])))."]\"/> <label for=\"woopra[woopra_event][".((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter'])))."]\">".$data['name']."</label> - ".$data['label']."<br/>";
+					}
+				}
+				if ($event_reg < 1)
+					echo "<strong>" . __('No Main Events Registered.', 'woopra') . "</strong>";
+			?>				
+			</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><?php _e('Admin Area Events', 'woopra') ?></th>
+			<td>
+			<?php
+				foreach ( $this->_events as $event => $data) {
+					if ($data['adminonly']) {
+						$event_admin++;
+						echo "\n\t<input type=\"checkbox\" value=\"1\"" . checked( '1', $event_status[(isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter']))], false ) . " id=\"" . ((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter']))) . "\" name=\"woopra[woopra_event][".((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter'])))."]\"/> <label for=\"woopra[woopra_event][".((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter'])))."]\">".$data['name']."</label> - ".$data['label']."<br/>";
+					}
+				}
+				if ($event_admin < 1)
+					echo "<strong>" . __('No Admin Events Registered.', 'woopra') . "</strong>";
+			?>
+			</td>
+		</tr>
+		<tr valign="top">
+			<th scope="row"><?php _e('Third Party Events', 'woopra') ?></th>
+			<td>
+			<?php
+				/*
+				foreach ( $this->custom_events as $event => $data) {
+					echo "\n\t<input type=\"checkbox\" value=\"1\"" . checked( '1', $custom_event_status[$data['action']], false ) . " id=\"" . $data['action'] . "\" name=\"woopra[woopra_event][".$data['action']."]\"/> <label for=\"woopra[woopra_event][".$data['action']."]\">".$data['name']."</label><br />".$data['label'];
+				}
+				*/
+				if (!count($this->custom_events))
+					echo "<strong>" . __('No Custom Events Registered.', 'woopra') . "</strong>";
+			?>
 			</td>
 		</tr>
 	</table>
-	<br/>
 	
 	<p class="submit">
 		<input type="submit" name="woopra-submit" class="button-primary" value="<?php _e('Save Changes', 'woopra') ?>" />
@@ -554,27 +535,15 @@ class WoopraAdmin extends Woopra {
 	</div>
 	
 	<?php }
-	
-	/**
-	 * Return a pretty version of the hostname.
-	 * @since 1.5.0
-	 * @return string
-	 */
-	function woopra_host() {
-		$site = get_option('siteurl');
-		preg_match('@^(?:http://)?([^/]+)@i', $site, $matches);
-		$host = $matches[1];
-		return preg_replace('!^www\.!i', '', $host);
-	}
-	
+
 	/**
 	 * The content page.
 	 * @since 1.4.1
 	 * @return none
 	 */
 	function content_page() {
-		$_woopra_tests = $this->init_test();		
-		$WoopraAnalytics = new WoopraAnalytics($_woopra_tests);
+		$WoopraAnalytics = new WoopraAnalytics();
+		$WoopraAnalytics->main();
 		unset($WoopraAnalytics);
 	}
 	
@@ -586,8 +555,6 @@ class WoopraAdmin extends Woopra {
 	function render_page() {
 		$WoopraRender = new WoopraRender();
 		unset($WoopraRender);
-	}
-
+	}	
+	
 }
-
-?>
