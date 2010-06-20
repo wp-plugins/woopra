@@ -14,5 +14,4 @@ if( ! defined ( 'ABSPATH' ) && ! defined ( 'WP_UNINSTALL_PLUGIN' ) )
 
 // Delete shadowbox option from options table
 delete_option ( 'woopra' );
-
 ?>
