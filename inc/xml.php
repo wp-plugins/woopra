@@ -74,6 +74,13 @@ class WoopraXML {
 	var $byday_found = false;
 	
 	/**
+	*Curl Check var
+	*@since 1.4.3.2
+	*@var boolean
+	*/
+	var $curlok = true;
+	
+	/**
 	 * Hours Found
 	 * @since 1.4.1
 	 * @var boolean
@@ -139,9 +146,34 @@ class WoopraXML {
 	}
 	
 	/**
+	curl extension functions
+	chech if installed
+	get content of a file using curl
+	added by mario
+	*/
+	function iscurlinstalled() {
+		return function_exists('curl_init');
+	}
+	function get_content($url)
+	{
+    $ch = curl_init();
+
+    curl_setopt ($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+	
+    $datas = curl_exec ($ch);
+	
+	if(curl_errno($ch)) $datas = false;
+
+    curl_close ($ch);
+
+    return $datas; 
+	}
+	/**
 	 * Set the XML File Location
 	 * 
 	 * @since 1.4.2
+	 * Modified by mario on 1.4.3.3
 	 * 
 	 * @param object $area
 	 * @param object $xml_data
@@ -181,9 +213,10 @@ class WoopraXML {
 	/**
 	 * Process the XML File
 	 * @since 1.4.1
+	 *Modified by Mario on 1.4.3.3
 	 * @return boolean
 	 */
-    function process_data() {
+    function process_data() { 	
         $this->parser = xml_parser_create("UTF-8");
         xml_set_object($this->parser, $this);
         xml_set_element_handler($this->parser, 'start_xml', 'end_xml');
@@ -191,17 +224,37 @@ class WoopraXML {
         xml_parser_set_option($this->parser, XML_OPTION_CASE_FOLDING, false);
 				
         if (!($fp = @fopen($this->url, 'rb'))) {
-            $this->connection_error = sprintf(__("%s: Cannot open URL. @fopen failed or URL failed.", 'woopra'), 'WoopraXML::parse(172)');
+		//fopen failed, try curl
+			if (!$this->iscurlinstalled()) {
+				//curl not installed go to error
+				$this->connection_error = sprintf(__("%s: Cannot open URL. @fopen failed or URL failed.", 'woopra'), 'WoopraXML::parse(224)');
             return $this->error();
-        }
-
-        while (($data = fread($fp, 8192))) {
-            if (!xml_parse($this->parser, $data, feof($fp))) {
-                $this->error_msg = sprintf(__('%s: XML error at line %d column %d', 'woopra'), 'WoopraXML::parse(178)', xml_get_current_line_number($this->parser), xml_get_current_column_number($this->parser));
-                return $this->error();
-            }
-        }
-		
+			} else {
+				$data = $this->get_content($this->url);
+				if ($data == "") {
+					$this->curlok = false;
+					return;
+				}
+				if ($data === false) {
+					//curl failed go to error
+					$this->connection_error = sprintf(__("%s: Cannot open URL. Curl failed", 'woopra'), 'WoopraXML::parse(230)');
+					return $this->error();
+				} else {
+					//attempt parse
+					if (!xml_parse($this->parser, $data, true)) {
+						$this->error_msg = sprintf(__('%s: XML error at line %d column %d', 'woopra'), 'WoopraXML::parse(235)', xml_get_current_line_number($this->parser), xml_get_current_column_number($this->parser));
+						return $this->error();
+					}
+				}
+			}
+        } else {
+			while (($data = fread($fp, 8192))) {
+				if (!xml_parse($this->parser, $data, feof($fp))) {
+					$this->error_msg = sprintf(__('%s: XML error at line %d column %d', 'woopra'), 'WoopraXML::parse(178)', xml_get_current_line_number($this->parser), xml_get_current_column_number($this->parser));
+					return $this->error();
+				}
+			}
+		}
         if ($this->founddata) {
         	return true;
         } else {

@@ -184,7 +184,7 @@ class WoopraFrontend extends Woopra {
 
 		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
 		echo "\r\n<!-- Woopra Analytics Code -->\r\n";
-		echo "<script type=\"text/javascript\" src=\"//static.woopra.com/js/woopra.v2.js\"></script>\r\n";
+		echo "<script type=\"text/javascript\" src=\"http://static.woopra.com/js/woopra.v2.js\"></script>\r\n";
 		
 		if ($this->get_option('auto_tagging') && !empty($this->woopra_visitor['name'])) {
 			$woopra_tracker .= "woopraTracker.addVisitorProperty('name','" . js_escape($this->woopra_visitor['name']) . "');\r\n";

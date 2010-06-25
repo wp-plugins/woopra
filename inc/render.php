@@ -171,7 +171,10 @@ class WoopraRender extends WoopraAdmin {
 				}
 			}
 		}
-		
+		if ($xml->curlok == false) {
+			echo '<p align="center">' . _('An error occured while retrieving the page.<br/>Click <a href="#" onclick="refreshCurrent(); return false;">here</a> to retry again!') . '</p>';
+			return;
+		}
 		if ($xml->connection_error != null || $xml->error_msg != null || !$xml->init()) {
 			if ($this->data_type != "flash")
 				echo '<div class="error"><p>' . sprintf(__('The Woopra Plugin was not able to request your analytics data from the Woopra Engines. 
@@ -321,7 +324,7 @@ class WoopraRender extends WoopraAdmin {
 				?>
 				<tr<?php echo (($counter++%2==0) ? " class=\"even_row\"" : ""); ?>>
 					<td class="index"><?php echo $counter; ?></td>
-					<td><span class="ellipsis"><?php echo $this->woopra_render_name($key, $name, $meta); ?></span></td>
+					<td><span class="ellipsis" style="margin-left: 5px"><?php echo $this->woopra_render_name($key, $name, $meta); ?></span></td>
 					<td width="100" class="text-item highlight"><a href="#" onclick="return expandByDay('<?php echo $key; ?>', '<?php echo $hashid; ?>', <?php echo $counter; ?>, <?php echo $entry['index']; ?>)"><?php echo $hits; ?></a></td>
 					<td class="bar"><?php echo $this->woopra_bar($percent); ?></td>
 				</tr>
@@ -488,7 +491,7 @@ class WoopraRender extends WoopraAdmin {
 					return $name . " " . $post_text;
 				case 'VISITDURATIONS':
 					$name = str_replace('-', ' to ', $name);
-					return $name . ' minutes';
+					return $name; //. ' minutes';
 				case 'BROWSERS':
 					return $this->woopra_browser_icon($name) . "&nbsp;&nbsp;" . $name;
 				case 'PLATFORMS':
