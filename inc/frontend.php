@@ -192,7 +192,7 @@ class WoopraFrontend extends Woopra {
 			$woopra_tracker .= "woopraTracker.addVisitorProperty('avatar','". urlencode("http://www.gravatar.com/avatar/" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http://static.woopra.com/images/avatar.png") . "');\r\n";
 		}
 		if ($this->get_option('use_timeout')) {
-			$woopra_tracker .= "woopraTracker.setidletimeout(".($this->get_option('timeout')*1000).");\r\n";
+			$woopra_tracker .= "woopraTracker.setIdleTimeout(".($this->get_option('timeout')*1000).");\r\n";
 		}
 		
 		echo "<script type=\"text/javascript\">\r\n";
