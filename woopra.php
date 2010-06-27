@@ -21,7 +21,7 @@
  * itself here: http://teethgrinder.co.uk/open-flash-chart-2/
  * * Open Flash Charts 2 is copyrighted and created by John Glazebrook <http://teethgrinder.co.uk>
  * @author Elie El Khoury <elie@woopra.com>, Shane Froebel <shane@woopra.com> and Mario Achkar <mario.achkar@gmail.com>
- * @version 1.4.5
+ * @version 1.4.6
  * @copyright 2007-2010
  * @package woopra
  */
@@ -31,7 +31,7 @@
  * @since 1.4.1
  * @return none
  */
-DEFINE ('WOOPRA_VERSION', '1.4.5');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
+DEFINE ('WOOPRA_VERSION', '1.4.6');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
 
 /*
 
@@ -39,7 +39,7 @@ DEFINE ('WOOPRA_VERSION', '1.4.5');		// MAKE SURE THIS MATCHES THE VERSION ABOVE
 
 Plugin Name:  Woopra
 Plugin URI:   http://wordpress.org/extend/plugins/woopra/
-Version:      1.4.5
+Version:      1.4.6
 Description:  This plugin adds Woopra's real-time analytics to any WordPress installation.  Simply sign up at Woopra.com, then activate the plugin!
 Author:       <a href="http://www.ekhoury.com">Elie El Khoury</a>, <a href="http://bugssite.org">Shane Froebel</a>, <a href="http://machkar.info">Mario Achkar</a>
 Author URI:   http://www.woopra.com/

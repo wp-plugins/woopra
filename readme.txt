@@ -4,7 +4,7 @@ Web site: http://www.woopra.com
 Tags: statistics, analytics, stats, real-time
 Requires at least: 2.7.0
 Tested up to: 3.0
-Stable tag: 1.4.5
+Stable tag: 1.4.6
 
 This plugin adds Woopra's real-time analytics to any WordPress installation.
 
@@ -69,6 +69,11 @@ Q. I can not see anything under 'Woopra Analytics' even though I have an API Key
 A. Make sure your site is registered exactly like it should be in the Woopra Members area that matches your WordPress SiteUrl. (A fix will be along shortly.)
 
 == Changelog ==
+
+= 1.4.6 (06-27-10) =
+* [BUG] Fixed another issue with setIdleTimeout
+* [BUG] Fixed a division by 0 issue
+* [NEW] Added a few comments on some errors and how to resolve them
 
 = 1.4.5 (06-25-10) =
 * [NEW] Added support for Curl in case fopen is disabled on server.
