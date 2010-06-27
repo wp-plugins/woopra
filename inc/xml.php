@@ -75,7 +75,7 @@ class WoopraXML {
 	
 	/**
 	*Curl Check var
-	*@since 1.4.3.2
+	*@since 1.4.5
 	*@var boolean
 	*/
 	var $curlok = true;
@@ -173,7 +173,7 @@ class WoopraXML {
 	 * Set the XML File Location
 	 * 
 	 * @since 1.4.2
-	 * Modified by mario on 1.4.3.3
+	 * Modified by mario on 1.4.5
 	 * 
 	 * @param object $area
 	 * @param object $xml_data
@@ -213,7 +213,7 @@ class WoopraXML {
 	/**
 	 * Process the XML File
 	 * @since 1.4.1
-	 *Modified by Mario on 1.4.3.3
+	 *Modified by Mario on 1.4.5
 	 * @return boolean
 	 */
     function process_data() { 	
@@ -227,7 +227,7 @@ class WoopraXML {
 		//fopen failed, try curl
 			if (!$this->iscurlinstalled()) {
 				//curl not installed go to error
-				$this->connection_error = sprintf(__("%s: Cannot open URL. @fopen failed or URL failed.", 'woopra'), 'WoopraXML::parse(224)');
+				$this->connection_error = sprintf(__("%s: Cannot open URL. @fopen failed or URL failed.", 'woopra'), 'WoopraXML::parse(230)');
             return $this->error();
 			} else {
 				$data = $this->get_content($this->url);
@@ -237,12 +237,12 @@ class WoopraXML {
 				}
 				if ($data === false) {
 					//curl failed go to error
-					$this->connection_error = sprintf(__("%s: Cannot open URL. Curl failed", 'woopra'), 'WoopraXML::parse(230)');
+					$this->connection_error = sprintf(__("%s: Cannot open URL. Curl failed", 'woopra'), 'WoopraXML::parse(240)');
 					return $this->error();
 				} else {
 					//attempt parse
 					if (!xml_parse($this->parser, $data, true)) {
-						$this->error_msg = sprintf(__('%s: XML error at line %d column %d', 'woopra'), 'WoopraXML::parse(235)', xml_get_current_line_number($this->parser), xml_get_current_column_number($this->parser));
+						$this->error_msg = sprintf(__('%s: XML error at line %d column %d', 'woopra'), 'WoopraXML::parse(245)', xml_get_current_line_number($this->parser), xml_get_current_column_number($this->parser));
 						return $this->error();
 					}
 				}
@@ -250,7 +250,7 @@ class WoopraXML {
         } else {
 			while (($data = fread($fp, 8192))) {
 				if (!xml_parse($this->parser, $data, feof($fp))) {
-					$this->error_msg = sprintf(__('%s: XML error at line %d column %d', 'woopra'), 'WoopraXML::parse(178)', xml_get_current_line_number($this->parser), xml_get_current_column_number($this->parser));
+					$this->error_msg = sprintf(__('%s: XML error at line %d column %d', 'woopra'), 'WoopraXML::parse(253)', xml_get_current_line_number($this->parser), xml_get_current_column_number($this->parser));
 					return $this->error();
 				}
 			}
@@ -258,7 +258,7 @@ class WoopraXML {
         if ($this->founddata) {
         	return true;
         } else {
-        	$this->error_msg = sprintf(__("%s: No data entries.", 'woopra'), 'WoopraXML::parse(186)');
+        	$this->error_msg = sprintf(__("%s: No data entries found. Please check your API Key for mistakes", 'woopra'), 'WoopraXML::parse(261)');
         	return $this->error();
         }     
     }

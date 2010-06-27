@@ -266,6 +266,7 @@ class WoopraRender extends WoopraAdmin {
 				//	Page Views Code
 				$pageviews = (int) $entry['pvs'];
 				//	Percent Code
+				if ($max == 0) $percent = 0; else
 				$percent = round($pageviews*100/$max);
 				
 				
