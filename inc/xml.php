@@ -75,7 +75,7 @@ class WoopraXML {
 	
 	/**
 	*Curl Check var
-	*@since 1.4.3.2
+	*@since 1.4.5
 	*@var boolean
 	*/
 	var $curlok = true;
