@@ -471,6 +471,12 @@ class WoopraAdmin extends Woopra {
 				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_admin')); ?> id="track_admin" name="woopra[track_admin]"/> <label for="track_admin"><?php _e("Track Admin Pages", 'woopra'); ?></label><br /><?php printf(__("Admin pages are all pages under %s", 'woopra'), $this->get_option('siteurl')."/wp-admin/" ); ?>
 			</td>
 		</tr>
+		<tr align="top">
+			<th scope="row"><?php _e('Authors and Categories','woopra') ?></th>
+			<td>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_author')); ?> id="track_author" name="woopra[track_author]"/> <label for="track_author"><?php _e("Track Authors and Categories"); ?> </label><br /><?php _e("Enable this check box if you want Woopra to track the author and the category of a visited blog post. <a href=\"http://www.woopra.com/docs/jsdocs/#custom_page_options\" target=\"_blank\">More about Custom Page Options</a>.",'woopra'); ?>
+			</td>
+		</tr>
 	</table>
 	<br/>
 	<h3><? _e('Event Settings', 'woopra'); ?></h3>
