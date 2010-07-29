@@ -194,10 +194,18 @@ class WoopraFrontend extends Woopra {
 		if ($this->get_option('use_timeout')) {
 			$woopra_tracker .= "woopraTracker.setIdleTimeout(".($this->get_option('timeout')*1000).");\r\n";
 		}
-		
+		$taset = false;
+		if ($this->get_option('track_author')) {
+			if (is_single()) {
+				global $post;
+				$myvar = get_the_category($post->ID);
+				$myvar = $myvar[0]->cat_name;
+				$woopra_tracker .="woopraTracker.track(window.location.pathname, document.title, {author: '".js_escape(get_the_author_meta("display_name",$post->post_author))."', category: '".js_escape($myvar)."'});\r\n"; $taset = true;
+			}
+		}
 		echo "<script type=\"text/javascript\">\r\n";
 		echo $woopra_tracker; 
-                echo "woopraTracker.track();\r\n";
+                if (!$taset) echo "woopraTracker.track();\r\n";
 		echo "</script>\r\n";
 		
 		if ( is_array($this->event->current_event) ) {
