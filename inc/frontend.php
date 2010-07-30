@@ -196,6 +196,7 @@ class WoopraFrontend extends Woopra {
 		}
 		$taset = false;
 		if ($this->get_option('track_author')) {
+			wp_reset_query();
 			if (is_single()) {
 				global $post;
 				$myvar = get_the_category($post->ID);
