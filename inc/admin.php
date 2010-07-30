@@ -474,7 +474,7 @@ class WoopraAdmin extends Woopra {
 		<tr align="top">
 			<th scope="row"><?php _e('Authors and Categories','woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_author')); ?> id="track_author" name="woopra[track_author]"/> <label for="track_author"><?php _e("Track Authors and Categories"); ?> </label><br /><?php _e("Enable this check box if you want Woopra to track the author and the category of a visited blog post. <a href=\"http://www.woopra.com/docs/jsdocs/#custom_page_options\" target=\"_blank\">More about Custom Page Options</a>.",'woopra'); ?>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_author')); ?> id="track_author" name="woopra[track_author]"/> <label for="track_author"><?php _e("Track Authors and Categories"); ?> </label><br /><?php _e("Enable this check box if you want Woopra to track the author and the category of a visited blog post. <a href=\"http://www.woopra.com/docs/jsguide/#custom_page_options\" target=\"_blank\">More about Custom Page Options</a>.",'woopra'); ?>
 			</td>
 		</tr>
 	</table>
