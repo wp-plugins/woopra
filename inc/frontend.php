@@ -239,7 +239,7 @@ class WoopraFrontend extends Woopra {
 			$this->woopra_visitor['email'] = $current_user->user_email;
 		}
 		
-		if ($current_user->user_level == 10)
+		if (current_user_can('manage_options'))
 			$this->woopra_visitor['admin'] = true;
 		
 	}
