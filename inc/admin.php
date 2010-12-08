@@ -564,3 +564,4 @@ class WoopraAdmin extends Woopra {
 	}	
 	
 }
+?>
