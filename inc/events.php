@@ -87,7 +87,7 @@ class WoopraEvents extends WoopraFrontend {
 		 */
 		$default_events = array(
 			array(
-				'name'		=>	__('Comments', 'woopra'),
+				'name'		=>	__('comments', 'woopra'),
 				'label'		=>	__('Show comments as they are posted.', 'woopra'),
 				'function'	=>	'get_comment',
 				'object'	=>	'comment_content',
@@ -95,7 +95,7 @@ class WoopraEvents extends WoopraFrontend {
 				'action'	=>	'comment_post',
 			),
 			array(
-				'name'		=>	__('Search', 'woopra'),
+				'name'		=>	__('search', 'woopra'),
 				'label'		=>	__('Show users search queries.', 'woopra'),
 				'function'	=>	'get_search_query',
 				'object'	=>	null,
@@ -113,14 +113,27 @@ class WoopraEvents extends WoopraFrontend {
 	 * @return none
 	 * @param object $event
 	 */
-	function print_javascript_events($i) {	
+	function print_javascript_events($i) {
+		$toret = array();
 		if (is_array($this->current_event)) {
 			foreach ($this->current_event as $event_name => $event_value) {
 				if (!is_null($event_value) || is_object($event_value) || !empty($event_value))
-					echo "we$i.addProperty(\"" . js_escape($this->event_display($event_name)) . "\",\"" . js_escape($this->event_value($event_name, $event_value)) . "\");\r\n";
+					//$toret[0] = js_escape($this->event_display($event_name));
+					if ($event_name == "comment_post") {
+					$toret[0] = "content";
+					$toret[1] = js_escape(substr($this->event_value($event_name, $event_value),0,50));
+					}
+					else {
+					//exit($event_name);
+					$toret[0] = "query";
+					$toret[1] = js_escape(substr($this->event_value($event_name, $event_value),0,50));
+					}
+					 //js_escape($this->event_value($event_name, $event_value));
+					//echo "we$i.addProperty(\"" . js_escape($this->event_display($event_name)) . "\",\"" . js_escape($this->event_value($event_name, $event_value)) . "\");\r\n";
 			}
 			unset($_SESSION['woopra']['events'], $this->current_event);
 		}
+		return $toret;
 	}
 	
 	/**
@@ -131,7 +144,8 @@ class WoopraEvents extends WoopraFrontend {
 	 */
 	function event_display($event_name) {
 		foreach ($this->default_events as $_event_name => $event_datablock) {
-			if ((isset($event_datablock['action']) ? $event_datablock['action'] : $event_datablock['filter']) == $event_name) {
+$myvar = (isset($event_datablock['action']) ? $event_datablock['action'] : $event_datablock['filter']);
+			if ($myvar == $event_name || ($event_name == "get_search_query" && $myvar == "the_search_query")) {
 				return $event_datablock['name'];
 			}
 		}
@@ -144,11 +158,12 @@ class WoopraEvents extends WoopraFrontend {
 	 * @param object $event_name
 	 * @param object $event_value
 	 */
-	function event_value($event_name, $event_value) {
+	function event_value($event_name,& $event_value) {
 		foreach ($this->default_events as $_event_name => $event_datablock) {
 			
 			$_type = (isset($event_datablock['action']) ? $event_datablock['action'] : $event_datablock['filter']);
-			
+			if ($_type == "the_search_query") $_type = "get_search_query";
+
 			if ($_type == $event_name) {
 				
 				if ( isset($event_datablock['function']) == true )
@@ -181,7 +196,7 @@ class WoopraEvents extends WoopraFrontend {
 	 */
 	function event_function($func, $args) {
 		if (function_exists($func['function'])) {
-			$func_args = array(); 
+			$func_args = array();
 			if (!is_array($args)) {
 				$args_array = preg_split("%,%", $args); 
 				foreach ($args_array as $arg_array) 
@@ -189,7 +204,12 @@ class WoopraEvents extends WoopraFrontend {
 			} else {
 				$func_args = $args;
 			}
+			if ($func['function'] != "get_comment")
 			$value = call_user_func_array($func['function'], $func_args);
+			else {
+			$myid = $func_args[0];
+			$value = get_comment($myid);
+			}
 			if (is_object($value))
 				return $value->{$func['object']};
 			else
