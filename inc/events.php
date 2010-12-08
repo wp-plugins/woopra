@@ -204,8 +204,10 @@ $myvar = (isset($event_datablock['action']) ? $event_datablock['action'] : $even
 			} else {
 				$func_args = $args;
 			}
-			if ($func['function'] != "get_comment")
+			if ($func['function'] != "get_comment") {
 			$value = call_user_func_array($func['function'], $func_args);
+			if ($value == "") $value = $func_args[0];
+			}
 			else {
 			$myid = $func_args[0];
 			$value = get_comment($myid);
