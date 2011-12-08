@@ -1,10 +1,10 @@
 === Woopra Analytics Plugin ===
-Contributors: eliekhoury, markjaquith, ShaneF, marioac
+Contributors: eliekhoury, markjaquith, ShaneF
 Web site: http://www.woopra.com
 Tags: statistics, analytics, stats, real-time
 Requires at least: 2.7.0
-Tested up to: 3.0.2
-Stable tag: 1.5.0.1
+Tested up to: 3.2.1
+Stable tag: 1.6
 
 This plugin adds Woopra's real-time analytics to any WordPress installation.
 
@@ -40,35 +40,37 @@ Using the automatic method:
 
 After step 2 (of either method):
 
-3. Activate the plugin through the 'Plugins' menu in WordPress
-4. Configure your API key and event settings in the Woopra Settings menu
-(Your API key can be found in the Members area on Woopra.com)
+3. Activate the plugin through the 'Plugins' menu in WordPress.
+4. Make sure the status is On in the Woopra settings page.
 
-IMPORTANT NOTE: In order for the WordPress Plugin to work, your WordPress theme must have the following code immediately before the </BODY> element in the footer.php file:
+IMPORTANT NOTE: In order for the WordPress Plugin to work, your WordPress theme must have the following code immediately before the </HEAD> element in the header.php file:
 
-    `<?php wp_footer(); ?>`
+    `<?php wp_head(); ?>`
 
 Without this function, the Woopra application will fail to track users who visit your site.
 
-For more detailed installation instructions refer to: http://www.woopra.com/installation-guide/
+For more detailed installation instructions refer to: http://www.woopra.com/docs/tracking/
 
-For more support refer to: http://www.woopra.com/forums/
+For more support refer to: http://support.woopra.com/
 
 == Frequently Asked Questions == 
 
-Q. I do not see 'Woopra Analytics' link.
-A. Make sure the plugin is active.
+Q. What is Woopra?
+A. Woopra is Web Analytics company. Learn more about Woopra at http://www.woopra.com
 
-Q. I can not see any of the flash charts.
-A. Make sure you have flash installed and be sure you are not stopping or blocking flash from loading.
+Q. How to setup Woopra for WordPress?
+A. Simply install the Woopra plugin and activate it. You'll start watching visitors instantly.
 
-Q. How do I get an API Key?
-A. You must be invited (for free account) or sign up for a paid account to use Woopra.
-
-Q. I can not see anything under 'Woopra Analytics' even though I have an API Key.
-A. Make sure your site is registered exactly like it should be in the Woopra Members area that matches your WordPress SiteUrl. (A fix will be along shortly.)
+Q. My Woopra plugin is not working.
+A. Make sure that the plugin is active. If it's active and the code is not showing up on your pages (between <head> and </head>), make sure your theme supports/contains the `<?php wp_head(); ?>` hook.
 
 == Changelog ==
+
+= 1.6 (12-08-11) =
+* [CHANGE] Removed the old Analytics which is no longer compatible with the new API
+* [CHANGE] Updated the Woopra Javascript Code
+* [CHANGE] Move the Woopra code from the footer to the header for better tracking results
+* [NEW] Added a link to the Woopra Live App on the Woopra settings page
 
 = 1.5.0.1 (12-08-10) =
 * [BUG] Fixed a problem with search values getting returned by reference (affects search query events)
