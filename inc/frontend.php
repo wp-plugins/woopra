@@ -58,7 +58,7 @@ class WoopraFrontend extends Woopra {
 		if ($this->get_option('process_event'))
 			$this->event->current_event = $_SESSION['woopra']['events'];
 		
-		add_action( 'wp_footer', 				array(&$this, 'woopra_widget'), 			10	);
+		add_action( 'wp_head', 					array(&$this, 'woopra_widget'), 			10	);
 		if ($this->get_option('track_admin'))
 			add_action( 'admin_footer',				array(&$this, 'woopra_widget'),			10	);
 		
@@ -185,7 +185,7 @@ if ($action_name == "the_search_query") $action_name = "get_search_query";
 			return;
 
 		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
-		echo "\r\n<!-- Woopra Analytics Code -->\r\n";
+		echo "\r\n<!-- Start of Woopra Code -->\r\n";
 	
 		//Check options and set booleans (much cleaner)
 		
@@ -198,7 +198,7 @@ if ($action_name == "the_search_query") $action_name = "get_search_query";
 			$auto_tagging = true;	
 			$escaped_name = js_escape($this->woopra_visitor['name']);
 			$escaped_email = js_escape($this->woopra_visitor['email']);
-		        $escaped_avatar = urlencode("http://www.gravatar.com/avatar/" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http://static.woopra.com/images/avatar.png"); 		
+		    $escaped_avatar = js_escape("http://www.gravatar.com/avatar/" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http://static.woopra.com/images/avatar.png"); 		
 		}
 
 		if ($this->get_option('use_timeout')) {
@@ -239,71 +239,39 @@ if ($action_name == "the_search_query") $action_name = "get_search_query";
 		}
 
 		echo "<script type=\"text/javascript\">\r\n";
-		$build_actions = "var woo_actions = [";
-		$builded = false;
-		if ($event_array) {
-			foreach($my_event as $event_name => $event_value) {
-			$build_actions .= "{type:'event',name:'".$event_value['name']."',".$event_value['other'][0].":'".$event_value['other'][1]."'},";
-			}
-			$builded = true;
-		}
-		if ($taset)
-		{
-		$build_actions .= "{type:'pageview',title:document.title,url:window.location.pathname,author:'$the_author',category:'$the_category'}";
-		$builded = true;		
-		}
-		if (substr($build_actions,-1) == ",") $build_actions = substr($build_actions,0,-1)."];\r\n"; else $build_actions.="];\r\n";
-		
-		$build_visitor = "";
-	 	if ($auto_tagging) {
-		$build_visitor = "var woo_visitor={name:'$escaped_name',email:'$escaped_email',avatar:'$escaped_avatar'};\r\n";	
-		}
+		echo "function woopraReady(tracker) {\r\n";
 		
 		$custom_settings = "";
 		if ($use_timeout) {
-		$custom_settings = "var woo_settings={idle_timeout:'$set_timeout'};\r\n";
+			$custom_settings = "    tracker.setIdleTimeout($set_timeout);\r\n";
+			echo $custom_settings;
 		}
-	
-		if ($builded) echo $build_actions;
-		echo $build_visitor.$custom_settings;	
-	
-		$toout = "(function(){\r\nvar wsc=document.createElement('script');\r\nwsc.type='text/javascript';\r\nwsc.src=document.location.protocol+'//static.woopra.com/js/woopra.js';";
-		$toout.="\r\nwsc.async=true;\r\nvar ssc = document.getElementsByTagName('script')[0];\r\nssc.parentNode.insertBefore(wsc, ssc);})();\r\n</script>\r\n";
-		echo $toout;
-		 /* else {
-		echo "<script type=\"text/javascript\" src=\"http://static.woopra.com/js/woopra.v2.js\"></script>\r\n";
 		
-		if ($auto_tagging) {
-			$woopra_tracker .= "woopraTracker.addVisitorProperty('name','$escaped_name');\r\n";
-			$woopra_tracker .= "woopraTracker.addVisitorProperty('email','$escaped_email');\r\n";
-			$woopra_tracker .= "woopraTracker.addVisitorProperty('avatar','$escaped_avatar');\r\n";
+	 	if ($auto_tagging) {
+			$build_visitor = "";
+			$build_visitor = "    tracker.addVisitorProperty('name', '$escaped_name');\r\n";
+			$build_visitor .= "    tracker.addVisitorProperty('email', '$escaped_email');\r\n";
+			$build_visitor .= "    tracker.addVisitorProperty('avatar', '$escaped_avatar'};\r\n";	
+			echo $build_visitor;
 		}
-
-		if ($use_timeout) {
-			$woopra_tracker .= "woopraTracker.setIdleTimeout($set_timeout);\r\n";
-		}
-
-		if ($taset)
-			$woopra_tracker .="woopraTracker.track(window.location.pathname, document.title, {author: '$the_author', category: '$the_category'});\r\n";		
-		echo "<script type=\"text/javascript\">\r\n";
-		echo $woopra_tracker; 
-                if (!$taset) echo "woopraTracker.track();\r\n";
-		echo "</script>\r\n";
 		
 		if ($event_array) {
-			$i=0;
-			echo "<script type=\"text/javascript\">\r\n";
-			foreach ($my_event as $event_name => $event_value) {
-			echo "var we$i = new WoopraEvent(\"".$event_value['name']."\");\r\n";
-			//$this->event->print_javascript_events($i);
-			echo "we$i.addProperty(\"" . $event_value['other'][0] . "\",\"" . $event_value['other'][1]  . "\");\r\n";
-			echo "we$i.fire();\r\n";
-			$i++;
+			foreach($my_event as $event_name => $event_value) {
+				$js_action = "    tracker.track({name:'".js_escape($event_value['name'])."',".js_escape($event_value['other'][0]).":'".js_escape($event_value['other'][1])."'});\r\n";
+				echo $js_action;
 			}
-			echo "</script>\r\n";
 		}
-	}*/
-		echo "<!-- End of Woopra Analytics Code -->\r\n\r\n";
+		if ($taset) {
+			$js_action = "    tracker.trackPageview({title:document.title,url:window.location.pathname,author:'".js_escape($the_author)."',category:'".js_escape($the_category)."'});\r\n";
+			$js_action .= "    return false;\r\n";
+			echo $js_action;
+		}
+		echo "}\r\n</script>\r\n";
+		
+		$toout .= "<script type=\"text/javascript\">\r\n(function(){\r\nvar wsc=document.createElement('script');\r\nwsc.type='text/javascript';\r\nwsc.src=document.location.protocol+'//static.woopra.com/js/woopra.js';";
+		$toout .= "\r\nwsc.async=true;\r\nvar ssc = document.getElementsByTagName('script')[0];\r\nssc.parentNode.insertBefore(wsc, ssc);})();\r\n</script>\r\n";
+		echo $toout;
+		echo "<!-- End of Woopra Code -->\r\n\r\n";
 		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
 		
 	}

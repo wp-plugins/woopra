@@ -162,7 +162,8 @@ class WoopraAdmin extends Woopra {
 	 * @return none
 	 */
 	function woopra_add_menu() {
-		if (function_exists('add_menu_page')) {
+		
+		if (false && function_exists('add_menu_page')) {
 			if ($this->get_option('analytics_tab') && $this->get_option('analytics_tab') ==	'toplevel') {
 				add_menu_page(__("Woopra Analytics", 'woopra'), __("Woopra Analytics", 'woopra'), "manage_options", "woopra.php", array(&$this, 'content_page') ); 
 			} else {
@@ -402,6 +403,10 @@ class WoopraAdmin extends Woopra {
 	<h2><?php _e( 'Woopra Settings', 'woopra' ); ?></h2>
 	<p><?php _e('For more info about installation and customization, please visit <a href="http://www.woopra.com/installation-guide">the installation page in your member&#8217;s area</a>', 'woopra') ?></p>
 	
+	<p>
+	<input type="button" style="font-size: 16px;" onclick="window.open('http://www.woopra.com/live/')" class="button-primary" value="<?php _e('Launch Woopra', 'woopra') ?>" />
+	</p>
+	
 	<form method="post" action="options.php">
 	<?php settings_fields('woopra'); ?>
 	
@@ -409,29 +414,6 @@ class WoopraAdmin extends Woopra {
 	<input type="hidden" name="woopra[activated]" value="<?php echo $this->get_option('activated'); ?>" />
 	<input type="hidden" name="woopra[date_format]" value="yyyy-MM-dd" />
 		
-	<h3><? _e('Main Settings', 'woopra'); ?></h3>
-	<table class="form-table">
-		<tr valign="top">
-			<th scope="row"><?php _e('API Key', 'woopra') ?><small><?php _e('(Optional)', 'woopra') ?></small></th>
-				<td>
-					<input type="text" value="<?php echo attribute_escape( $this->get_option('api_key') ); ?>" id="api_key" name="woopra[api_key]"/><br/>
-					<?php _e("You can find the Website's API Key in <a href='http://www.woopra.com/members/'>your member&#8217;s area", 'woopra') ?></a>
-				</td>
-		</tr>
-		<tr valign="top">
-			<th scope="row"><?php _e('Analytics Link Location', 'woopra') ?></th>
-			<td>
-			<?php
-				$woopra_tab_options = array('dashboard' => __("At the dashboard menu", 'woopra'), 'toplevel' => __('At the top level menu', 'woopra'));
-				foreach ( $woopra_tab_options as $key => $value) {
-					$selected = ($this->get_option('analytics_tab') == $key) ? 'checked="checked"' : '';
-					echo "\n\t<label><input id='$key' type='radio' name='woopra[analytics_tab]' value='$key' $selected/> $value</label><br />";
-				}
-			?>
-			</td>
-		</tr>
-	</table>
-	<br/>
 	<h3><? _e('Tracking Settings', 'woopra'); ?></h3>
 	<table class="form-table">
 		<tr valign="top">
