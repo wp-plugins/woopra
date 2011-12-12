@@ -4,7 +4,7 @@ Web site: http://www.woopra.com
 Tags: statistics, analytics, stats, real-time
 Requires at least: 2.7.0
 Tested up to: 3.2.1
-Stable tag: 1.6
+Stable tag: 1.6.1
 
 This plugin adds Woopra's real-time analytics to any WordPress installation.
 
@@ -65,6 +65,9 @@ Q. My Woopra plugin is not working.
 A. Make sure that the plugin is active. If it's active and the code is not showing up on your pages (between <head> and </head>), make sure your theme supports/contains the `<?php wp_head(); ?>` hook.
 
 == Changelog ==
+
+= 1.6.1 (12-12-11) =
+* [FIXED] Fixed the addVisitorProperty when adding an avatar property.
 
 = 1.6 (12-08-11) =
 * [CHANGE] Removed the old Analytics which is no longer compatible with the new API

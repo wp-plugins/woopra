@@ -251,7 +251,7 @@ if ($action_name == "the_search_query") $action_name = "get_search_query";
 			$build_visitor = "";
 			$build_visitor = "    tracker.addVisitorProperty('name', '$escaped_name');\r\n";
 			$build_visitor .= "    tracker.addVisitorProperty('email', '$escaped_email');\r\n";
-			$build_visitor .= "    tracker.addVisitorProperty('avatar', '$escaped_avatar'};\r\n";	
+			$build_visitor .= "    tracker.addVisitorProperty('avatar', '$escaped_avatar');\r\n";	
 			echo $build_visitor;
 		}
 		
