@@ -120,13 +120,13 @@ class WoopraEvents extends WoopraFrontend {
 				if (!is_null($event_value) || is_object($event_value) || !empty($event_value))
 					//$toret[0] = js_escape($this->event_display($event_name));
 					if ($event_name == "comment_post") {
-					$toret[0] = "content";
-					$toret[1] = js_escape(substr($this->event_value($event_name, $event_value),0,50));
+                        $toret[0] = "comment_id";
+                        $toret[1] =  $event_value;
 					}
 					else {
 					//exit($event_name);
-					$toret[0] = "query";
-					$toret[1] = js_escape(substr($this->event_value($event_name, $event_value),0,50));
+                        $toret[0] = "query";
+                        $toret[1] = js_escape(substr($this->event_value($event_name, $event_value),0,50));
 					}
 					 //js_escape($this->event_value($event_name, $event_value));
 					//echo "we$i.addProperty(\"" . js_escape($this->event_display($event_name)) . "\",\"" . js_escape($this->event_value($event_name, $event_value)) . "\");\r\n";
@@ -144,7 +144,7 @@ class WoopraEvents extends WoopraFrontend {
 	 */
 	function event_display($event_name) {
 		foreach ($this->default_events as $_event_name => $event_datablock) {
-$myvar = (isset($event_datablock['action']) ? $event_datablock['action'] : $event_datablock['filter']);
+            $myvar = (isset($event_datablock['action']) ? $event_datablock['action'] : $event_datablock['filter']);
 			if ($myvar == $event_name || ($event_name == "get_search_query" && $myvar == "the_search_query")) {
 				return $event_datablock['name'];
 			}
@@ -170,7 +170,7 @@ $myvar = (isset($event_datablock['action']) ? $event_datablock['action'] : $even
 					$_return = $this->event_function($event_datablock, $event_value);
 				
 				if ( isset($_return) == true )
-					return $_return;			
+					return $_return;
 				
 				if ( isset($event_datablock['value']) == true )
 					$_return = $event_datablock['value'];
@@ -218,6 +218,18 @@ $myvar = (isset($event_datablock['action']) ? $event_datablock['action'] : $even
 				return $value;
 		}
 	}
+    
+    /**
+     *fetches the comment details based on the comment id passed
+     *
+     *@param integer comment_id
+     *@return array
+     *
+     */
+    function get_comment_details($commentID){
+        $commentDetails = & get_comment( $commentID );
+        return $commentDetails;
+    }
 
 }
 

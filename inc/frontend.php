@@ -85,8 +85,8 @@ class WoopraFrontend extends Woopra {
 					$this->fire_error( 'action_could_not_be_added' , array( 'message' => _('This action (<strong>%s</strong>) could not be added to the system. Please disable tracking of this event and report this error.'), 'values' => $action_name, 'debug' => true) );
 
 			} elseif ( ($event_status[$action_name] == 1) && ($is_action == false) ) {
-if ($action_name == "the_search_query") $action_name = "get_search_query";
-				add_filter( $action_name, array(&$this, 'process_filter_events') );
+                if ($action_name == "the_search_query") $action_name = "get_search_query";
+                    add_filter( $action_name, array(&$this, 'process_filter_events') );
 					
 				if ( !has_filter( $action_name, array(&$this, 'process_filter_events') ) )
 					$this->fire_error( 'action_could_not_be_added' , array( 'message' => _('This action (<strong>%s</strong>) could not be added to the system. Please disable tracking of this event and report this error.'), 'values' => $action_name, 'debug' => true) );
@@ -192,13 +192,19 @@ if ($action_name == "the_search_query") $action_name = "get_search_query";
 		$auto_tagging = false;
 		$use_timeout = false;
 		$event_array = false;
+        $use_trackas = false;
 		//$author_category = false;
-
+        
 		if ($this->get_option('auto_tagging') && !empty($this->woopra_visitor['name'])) {
-			$auto_tagging = true;	
+			$auto_tagging = true;
 			$escaped_name = js_escape($this->woopra_visitor['name']);
 			$escaped_email = js_escape($this->woopra_visitor['email']);
 		    $escaped_avatar = js_escape("http://www.gravatar.com/avatar/" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http://static.woopra.com/images/avatar.png"); 		
+		}
+        
+        if ($this->get_option('use_trackas') && $this->get_option('trackas')) {
+			$use_trackas = true;
+			$trackas = $this->get_option('trackas');
 		}
 
 		if ($this->get_option('use_timeout')) {
@@ -206,32 +212,32 @@ if ($action_name == "the_search_query") $action_name = "get_search_query";
 			$set_timeout = $this->get_option('timeout')*1000;
 		}
 		if ( is_array($this->event->current_event) ) {
-                        $event_array = true;
+            $event_array = true;
 			$i=0;
-			foreach ($this->event->current_event as $event_name => $event_value) {	
+			foreach ($this->event->current_event as $event_name => $event_value) {
 				$mydef = "";			
-			switch($event_name) {
-				case "get_search_query":
-					$mydef = "search";
-				break;
-				case "comment_post":
-					$mydef = "comment";				
-				break;
-				default:
-					$mydef = $event_name;
-			}
-                        $my_event[$i]['name'] = js_escape($mydef);
-			$my_event[$i]['other'] = $this->event->print_javascript_events($i);
-                        $i++;
-                        }
+                switch($event_name) {
+                    case "get_search_query":
+                        $mydef = "search";
+                    break;
+                    case "comment_post":
+                        $mydef = "comment";
+                    break;
+                    default:
+                        $mydef = $event_name;
                 }
+                $my_event[$i]['name'] = js_escape($mydef);
+                $my_event[$i]['other'] = $this->event->print_javascript_events($i);
+                $i++;
+            }
+        }
 		$taset = false;	
 		if ($this->get_option('track_author')) {
-                      	wp_reset_query();
-                        if (is_single()) {
-			        global $post;
-                                $myvar = get_the_category($post->ID);
-                                $myvar = $myvar[0]->cat_name;
+            wp_reset_query();
+            if (is_single()) {
+                global $post;
+                $myvar = get_the_category($post->ID);
+                $myvar = $myvar[0]->cat_name;
 				$the_author = js_escape(get_the_author_meta("display_name",$post->post_author));
 				$the_category = js_escape($myvar);
 				$taset = true;
@@ -240,7 +246,13 @@ if ($action_name == "the_search_query") $action_name = "get_search_query";
 
 		echo "<script type=\"text/javascript\">\r\n";
 		echo "function woopraReady(tracker) {\r\n";
-		
+        
+        $trackas_settings = "";
+        if ($use_trackas) {
+			$trackas_settings = "    tracker.setDomain('" . $trackas . "');\r\n";
+			echo $trackas_settings;
+		}
+        
 		$custom_settings = "";
 		if ($use_timeout) {
 			$custom_settings = "    tracker.setIdleTimeout($set_timeout);\r\n";
@@ -257,7 +269,13 @@ if ($action_name == "the_search_query") $action_name = "get_search_query";
 		
 		if ($event_array) {
 			foreach($my_event as $event_name => $event_value) {
-				$js_action = "    tracker.track({name:'".js_escape($event_value['name'])."',".js_escape($event_value['other'][0]).":'".js_escape($event_value['other'][1])."'});\r\n";
+                if($event_name == 'comment' && $event_value['other'][0] == 'comment_id'){
+                    $commentDetails = $this->event->get_comment_details($event_value['other'][1]);
+                    $js_action = "    tracker.pushEvent({name:'".js_escape($event_value['name'])."',content:'".js_escape($commentDetails->comment_content)."',commentauthor:'".js_escape($commentDetails->comment_author)."'});\r\n";
+                }
+                else{
+                    $js_action = "    tracker.pushEvent({name:'".js_escape($event_value['name'])."',".js_escape($event_value['other'][0]).":'".js_escape($event_value['other'][1])."'});\r\n";   
+                }
 				echo $js_action;
 			}
 		}
@@ -268,7 +286,7 @@ if ($action_name == "the_search_query") $action_name = "get_search_query";
 		}
 		echo "}\r\n</script>\r\n";
 		
-		$toout .= "<script type=\"text/javascript\">\r\n(function(){\r\nvar wsc=document.createElement('script');\r\nwsc.type='text/javascript';\r\nwsc.src=document.location.protocol+'//static.woopra.com/js/woopra.js';";
+		$toout = "<script type=\"text/javascript\">\r\n(function(){\r\nvar wsc=document.createElement('script');\r\nwsc.type='text/javascript';\r\nwsc.src=document.location.protocol+'//static.woopra.com/js/woopra.js';";
 		$toout .= "\r\nwsc.async=true;\r\nvar ssc = document.getElementsByTagName('script')[0];\r\nssc.parentNode.insertBefore(wsc, ssc);})();\r\n</script>\r\n";
 		echo $toout;
 		echo "<!-- End of Woopra Code -->\r\n\r\n";
