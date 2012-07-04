@@ -343,6 +343,7 @@ class WoopraAdmin extends Woopra {
 	 * @return array
 	 */
 	function defaults() {
+        $domainName = $this->getDomainName();
 		$defaults = array(
 			'version'			=> '',
 			'activated'			=> 1,
@@ -352,6 +353,8 @@ class WoopraAdmin extends Woopra {
 			'date_format'		=> 'yyyy-MM-dd',	// hardcoded for now
 			'limit'				=> 50,
 			'auto_tagging'		=> 1,
+            'use_trackas'       => 0,
+            'trackas'           => $domainName,
 			'ignore_admin'		=> 0,
 			'track_admin'		=> 0,
 			'use_timeout'		=> 0,
@@ -435,6 +438,14 @@ class WoopraAdmin extends Woopra {
 				<br/> <label for="timeout"><?php _e('Seconds before Timeout:') ?> </label> <input type="text" value="<?php echo $this->get_option('timeout'); ?>" <?php checked( '1', $this->get_option('use_timeout') ) ?> id="timeout" name="woopra[timeout]" />
 			</td>
 		</tr>
+        <tr valign="top">
+			<th scope="row"><?php _e('Track As', 'woopra') ?></th>
+			<td>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('use_trackas')); ?> id="use_trackas" name="woopra[use_trackas]"/> <label for="use_trackas"><?php _e("Use this feature if you want to track your subdomain under your main domain"); ?></label><br>
+                <input type="text" value="<?php echo $this->get_option('trackas'); ?>" id="trackas" name="woopra[trackas]" />
+				<br/> <label for="trackas"><?php _e("Enter the your domain name here (i.e. domain.com) - don't need the www.") ?> </label>
+			</td>
+		</tr>
 		<tr valign="top">
 			<th scope="row"><?php _e('Auto Tagging', 'woopra') ?></th>
 			<td>
@@ -485,7 +496,7 @@ class WoopraAdmin extends Woopra {
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><?php _e('Admin Area Events', 'woopra') ?></th>
+			<th scope="row"><?php _e('Admin Area Events', 'woopra'); ?></th>
 			<td>
 			<?php
 				foreach ( $this->_events as $event => $data) {
@@ -543,7 +554,27 @@ class WoopraAdmin extends Woopra {
 	function render_page() {
 		$WoopraRender = new WoopraRender();
 		unset($WoopraRender);
-	}	
+    }
 	
+    /**
+	 * fetches the domain name.
+	 * @return domain name
+	 */
+    function getDomainName() {
+        $url = $_SERVER['SERVER_NAME'];
+        if ((substr_count($url, 'http://www.')) > 0) {
+            $url = str_replace('http://www.', '', $url);
+        } elseif ((substr_count($url, 'http://')) > 0) {
+            $url = str_replace('http://', '', $url);
+        } elseif ((substr_count($url, 'www.')) > 0) {
+            $url = str_replace('www.', '', $url);
+        }
+        if ((substr_count($url, '/')) > 0) {
+            $url = substr($url, 0, strrpos($url, '/'));
+        }
+        $url = preg_replace("/\/.*$/is" , "" ,$url);
+        return $url;
+    }
+    
 }
 ?>
