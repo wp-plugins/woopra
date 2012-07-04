@@ -1,10 +1,10 @@
 === Woopra Analytics Plugin ===
 Contributors: eliekhoury, markjaquith, ShaneF
 Web site: http://www.woopra.com
-Tags: statistics, analytics, stats, real-time
+Tags: statistics, analytics, stats, real-time, chat
 Requires at least: 2.7.0
-Tested up to: 3.2.1
-Stable tag: 1.6.1
+Tested up to: 3.4.1
+Stable tag: 1.7
 
 This plugin adds Woopra's real-time analytics to any WordPress installation.
 
@@ -19,7 +19,7 @@ Features include:
 *   Real-time Analytics
 *   Manage Multiple Blogs and Websites
 *   Deep analytic and search capabilities
-*   Click-to-chat
+*   Pro-active and Re-active Chat with visitors
 *   Visitor and member tagging
 *   Real-time notifications
 *   Easy Installation and Update Notification
@@ -65,6 +65,11 @@ Q. My Woopra plugin is not working.
 A. Make sure that the plugin is active. If it's active and the code is not showing up on your pages (between <head> and </head>), make sure your theme supports/contains the `<?php wp_head(); ?>` hook.
 
 == Changelog ==
+
+= 1.7 (07-04-12) =
+* [NEW] Added a new property to allow you to track subdomains as main domains.
+* [BUG] Fixed comments tracking
+* [BUG] Fixed internal search tracking
 
 = 1.6.1 (12-12-11) =
 * [FIXED] Fixed the addVisitorProperty when adding an avatar property.
