@@ -3,10 +3,10 @@ Contributors: eliekhoury, markjaquith, ShaneF
 Web site: http://www.woopra.com
 Tags: statistics, analytics, stats, real-time, chat
 Requires at least: 2.7.0
-Tested up to: 3.4.1
-Stable tag: 1.7
+Tested up to: 3.6
+Stable tag: 2.0
 
-This plugin adds Woopra's real-time analytics to any WordPress installation.
+This plugin adds Woopra's real-time customer analytics to any WordPress installation.
 
 == Description ==
 
@@ -14,12 +14,12 @@ Woopra is the world's most comprehensive, information rich, easy to use, real-ti
 
 Features include:
 
-*   Live Tracking and Web Statistics
+*   Know who's on your website in real-time
+*   Build a behavioral profile for every visitor and member
 *   A rich user interface and client monitoring application
 *   Real-time Analytics
-*   Manage Multiple Blogs and Websites
-*   Deep analytic and search capabilities
-*   Pro-active and Re-active Chat with visitors
+*   Funnel Analytics
+*   Retention Analytics
 *   Visitor and member tagging
 *   Real-time notifications
 *   Easy Installation and Update Notification
@@ -56,7 +56,7 @@ For more support refer to: http://support.woopra.com/
 == Frequently Asked Questions == 
 
 Q. What is Woopra?
-A. Woopra is Web Analytics company. Learn more about Woopra at http://www.woopra.com
+A. Woopra is Customer Analytics company. Learn more about Woopra at http://www.woopra.com
 
 Q. How to setup Woopra for WordPress?
 A. Simply install the Woopra plugin and activate it. You'll start watching visitors instantly.
@@ -65,6 +65,9 @@ Q. My Woopra plugin is not working.
 A. Make sure that the plugin is active. If it's active and the code is not showing up on your pages (between <head> and </head>), make sure your theme supports/contains the `<?php wp_head(); ?>` hook.
 
 == Changelog ==
+
+= 2.0 (08-23-13) =
+* [CHANGE] Update tracking code to version 4 
 
 = 1.7 (07-04-12) =
 * [NEW] Added a new property to allow you to track subdomains as main domains.
