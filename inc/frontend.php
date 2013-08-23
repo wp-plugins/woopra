@@ -185,7 +185,6 @@ class WoopraFrontend extends Woopra {
 			return;
 
 		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
-		echo "\r\n<!-- Start of Woopra Code -->\r\n";
 	
 		//Check options and set booleans (much cleaner)
 		
@@ -197,9 +196,9 @@ class WoopraFrontend extends Woopra {
         
 		if ($this->get_option('auto_tagging') && !empty($this->woopra_visitor['name'])) {
 			$auto_tagging = true;
-			$escaped_name = js_escape($this->woopra_visitor['name']);
-			$escaped_email = js_escape($this->woopra_visitor['email']);
-		    $escaped_avatar = js_escape("http://www.gravatar.com/avatar/" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http://static.woopra.com/images/avatar.png"); 		
+			$visitor_name = $this->woopra_visitor['name'];
+			$visitor_email = $this->woopra_visitor['email'];
+		    $visitor_avatar = "http://www.gravatar.com/avatar/" . md5(strtolower($this->woopra_visitor['email'])) . "&amp;size=60&amp;default=http://static.woopra.com/images/avatar.png"; 		
 		}
         
         if ($this->get_option('use_trackas') && $this->get_option('trackas')) {
@@ -211,6 +210,7 @@ class WoopraFrontend extends Woopra {
 			$use_timeout = true;
 			$set_timeout = $this->get_option('timeout')*1000;
 		}
+		
 		if ( is_array($this->event->current_event) ) {
             $event_array = true;
 			$i=0;
@@ -243,53 +243,96 @@ class WoopraFrontend extends Woopra {
 				$taset = true;
 			}
 		}
+		
 
-		echo "<script type=\"text/javascript\">\r\n";
-		echo "function woopraReady(tracker) {\r\n";
+
+		// Setup tracker config
+		$woopra_config = array();
         
         $trackas_settings = "";
         if ($use_trackas) {
-			$trackas_settings = "    tracker.setDomain('" . $trackas . "');\r\n";
-			echo $trackas_settings;
+			$woopra_config['domain'] = $trackas;
 		}
         
 		$custom_settings = "";
 		if ($use_timeout) {
-			$custom_settings = "    tracker.setIdleTimeout($set_timeout);\r\n";
-			echo $custom_settings;
+			$woopra_config['idle_timeout'] = $set_timeout;
 		}
 		
+		$woopra_js_config = "woopra.config(".json_encode($woopra_config).");";
+		
+		// Setup visitor data
+		$woopra_js_identify = '';
 	 	if ($auto_tagging) {
-			$build_visitor = "";
-			$build_visitor = "    tracker.addVisitorProperty('name', '$escaped_name');\r\n";
-			$build_visitor .= "    tracker.addVisitorProperty('email', '$escaped_email');\r\n";
-			$build_visitor .= "    tracker.addVisitorProperty('avatar', '$escaped_avatar');\r\n";	
-			echo $build_visitor;
+			$woopra_identity = array();
+			$woopra_identity['name'] = $visitor_name;
+			$woopra_identity['email'] = $visitor_email;
+			$woopra_identity['avatar'] = $visitor_avatar;
+			$woopra_js_identify = "woopra.identify(".json_encode($woopra_identity).");";
 		}
+		
+		// Setup events data
+		
+		$woopra_js_pv = '';
+		if ($taset) {
+			$woopra_js_pv .= "woopra.track('pv', {";
+			$woopra_js_pv .= "title: document.title, url: window.location.pathname, author: ".json_encode($the_author).", category: ".json_encode($the_category);
+			$woopra_js_pv .= "})";
+		} else {
+			$woopra_js_pv .= "woopra.track();";
+		}
+		
+		$woopra_events = array();
 		
 		if ($event_array) {
 			foreach($my_event as $event_name => $event_value) {
-                if($event_name == 'comment' && $event_value['other'][0] == 'comment_id'){
+			
+				$woopra_event_name = '';
+				$woopra_event = array();
+			
+                if($event_name == 'comment' && $event_value['other'][0] == 'comment_id') {
+                	$woopra_event_name = $event_value['name'];
                     $commentDetails = $this->event->get_comment_details($event_value['other'][1]);
-                    $js_action = "    tracker.pushEvent({name:'".js_escape($event_value['name'])."',content:'".js_escape($commentDetails->comment_content)."',commentauthor:'".js_escape($commentDetails->comment_author)."'});\r\n";
+                    $woopra_event['content'] = $commentDetails->comment_content;
+                    $woopra_event['commentauthor'] = $commentDetails->comment_author;
                 }
-                else{
-                    $js_action = "    tracker.pushEvent({name:'".js_escape($event_value['name'])."',".js_escape($event_value['other'][0]).":'".js_escape($event_value['other'][1])."'});\r\n";   
+                else {
+                	
+	                $woopra_event_name = $event_value['name'];
+	                $woopra_event[$event_value['other'][0]] = $event_value['other'][1]; 
                 }
-				echo $js_action;
+				
+				$woopra_events[$woopra_event_name] = $woopra_event;
 			}
 		}
-		if ($taset) {
-			$js_action = "    tracker.trackPageview({title:document.title,url:window.location.pathname,author:'".js_escape($the_author)."',category:'".js_escape($the_category)."'});\r\n";
-			$js_action .= "    return false;\r\n";
-			echo $js_action;
-		}
-		echo "}\r\n</script>\r\n";
 		
-		$toout = "<script type=\"text/javascript\">\r\n(function(){\r\nvar wsc=document.createElement('script');\r\nwsc.type='text/javascript';\r\nwsc.src=document.location.protocol+'//static.woopra.com/js/woopra.js';";
-		$toout .= "\r\nwsc.async=true;\r\nvar ssc = document.getElementsByTagName('script')[0];\r\nssc.parentNode.insertBefore(wsc, ssc);})();\r\n</script>\r\n";
-		echo $toout;
-		echo "<!-- End of Woopra Code -->\r\n\r\n";
+		$woopra_js_events = '';
+		foreach ($woopra_events as $woopra_event_name => &$woopra_event_data) {
+			$woopra_js_events .= "woopra.track(".json_encode($woopra_event_name).", ".json_encode($woopra_event_data).");\r\n	";
+		}
+		
+		
+		?>
+		
+		<!-- Woopra code starts here -->
+		<script>
+		(function(){
+		var t,i,e,n=window,o=document,a=arguments,s="script",r=["config","track","identify","visit","push","call"],c=function(){var t,i=this;for(i._e=[],t=0;r.length>t;t++)(function(t){i[t]=function(){return i._e.push([t].concat(Array.prototype.slice.call(arguments,0))),i}})(r[t])};for(n._w=n._w||{},t=0;a.length>t;t++)n._w[a[t]]=n[a[t]]=n[a[t]]||new c;i=o.createElement(s),i.async=1,i.src="//static.woopra.com/js/w.js",e=o.getElementsByTagName(s)[0],e.parentNode.insertBefore(i,e)
+		})("woopra");
+		
+		<?php echo $woopra_js_config; ?>
+		
+		<?php echo $woopra_js_identify; ?>
+		
+		<?php echo $woopra_js_pv; ?>
+		
+		<?php echo $woopra_js_events; ?>
+		
+		</script>
+		<!-- Woopra code ends here -->
+		
+		<?php
+		
 		/*** JAVASCRIPT CODE -- DO NOT MODFIY ***/
 		
 	}
