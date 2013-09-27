@@ -100,136 +100,13 @@ class WoopraEvents extends WoopraFrontend {
 				'function'	=>	'get_search_query',
 				'object'	=>	null,
 				'value'		=>	__('Executed Search', 'woopra'),
-				'filter'	=>	'the_search_query',
+				'action'	=>	'the_search_query',
 			)
 		);
 		
 		$this->default_events = $default_events;
 	}
 	
-	/**
-	 * What is the javascript we needed to generate?
-	 * @since 1.4.1
-	 * @return none
-	 * @param object $event
-	 */
-	function print_javascript_events($i) {
-		$toret = array();
-		if (is_array($this->current_event)) {
-			foreach ($this->current_event as $event_name => $event_value) {
-				if (!is_null($event_value) || is_object($event_value) || !empty($event_value))
-					//$toret[0] = js_escape($this->event_display($event_name));
-					if ($event_name == "comment_post") {
-                        $toret[0] = "comment_id";
-                        $toret[1] =  $event_value;
-					}
-					else {
-					//exit($event_name);
-                        $toret[0] = "query";
-                        $toret[1] = js_escape(substr($this->event_value($event_name, $event_value),0,50));
-					}
-					 //js_escape($this->event_value($event_name, $event_value));
-					//echo "we$i.addProperty(\"" . js_escape($this->event_display($event_name)) . "\",\"" . js_escape($this->event_value($event_name, $event_value)) . "\");\r\n";
-			}
-			unset($_SESSION['woopra']['events'], $this->current_event);
-		}
-		return $toret;
-	}
-	
-	/**
-	 * Return the event name for the Woopra App.
-	 * @since 1.4.1
-	 * @return none
-	 * @param object $event_name
-	 */
-	function event_display($event_name) {
-		foreach ($this->default_events as $_event_name => $event_datablock) {
-            $myvar = (isset($event_datablock['action']) ? $event_datablock['action'] : $event_datablock['filter']);
-			if ($myvar == $event_name || ($event_name == "get_search_query" && $myvar == "the_search_query")) {
-				return $event_datablock['name'];
-			}
-		}
-	}
-	
-	/**
-	 * Return the event value to show in the even name.
-	 * @since 1.4.1
-	 * @return mixed
-	 * @param object $event_name
-	 * @param object $event_value
-	 */
-	function event_value($event_name,& $event_value) {
-		foreach ($this->default_events as $_event_name => $event_datablock) {
-			
-			$_type = (isset($event_datablock['action']) ? $event_datablock['action'] : $event_datablock['filter']);
-			if ($_type == "the_search_query") $_type = "get_search_query";
-
-			if ($_type == $event_name) {
-				
-				if ( isset($event_datablock['function']) == true )
-					$_return = $this->event_function($event_datablock, $event_value);
-				
-				if ( isset($_return) == true )
-					return $_return;
-				
-				if ( isset($event_datablock['value']) == true )
-					$_return = $event_datablock['value'];
-				
-				if ( isset($_return) == true )
-					return $_return;
-				
-				return $event_value;
-			}
-			
-		}
-	}
-	
-	/**
-	 * If the event requires a function, process it. 
-	 * 
-	 * Note: If the function returns an object, the $func['object'] var is used.
-	 * 
-	 * @since 1.4.1
-	 * @return mixed
-	 * @param object $func
-	 * @param object $args
-	 */
-	function event_function($func, $args) {
-		if (function_exists($func['function'])) {
-			$func_args = array();
-			if (!is_array($args)) {
-				$args_array = preg_split("%,%", $args); 
-				foreach ($args_array as $arg_array) 
-					array_push($func_args, $arg_array);
-			} else {
-				$func_args = $args;
-			}
-			if ($func['function'] != "get_comment") {
-			$value = call_user_func_array($func['function'], $func_args);
-			if ($value == "") $value = $func_args[0];
-			}
-			else {
-			$myid = $func_args[0];
-			$value = get_comment($myid);
-			}
-			if (is_object($value))
-				return $value->{$func['object']};
-			else
-				return $value;
-		}
-	}
-    
-    /**
-     *fetches the comment details based on the comment id passed
-     *
-     *@param integer comment_id
-     *@return array
-     *
-     */
-    function get_comment_details($commentID){
-        $commentDetails = & get_comment( $commentID );
-        return $commentDetails;
-    }
 
 }
 

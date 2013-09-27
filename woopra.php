@@ -20,7 +20,7 @@
  * itself here: http://teethgrinder.co.uk/open-flash-chart-2/
  * * Open Flash Charts 2 is copyrighted and created by John Glazebrook <http://teethgrinder.co.uk>
  * @author Elie El Khoury <elie@woopra.com>
- * @version 2.0
+ * @version 2.1
  * @copyright 2013
  * @package woopra
  */
@@ -30,7 +30,7 @@
  * @since 1.4.1
  * @return none
  */
-DEFINE ('WOOPRA_VERSION', '2.0');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
+DEFINE ('WOOPRA_VERSION', '2.1');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
 
 /*
 
@@ -177,12 +177,9 @@ class Woopra {
  */
 require_once( dirname(__FILE__) . '/inc/frontend.php' 		);
 require_once( dirname(__FILE__) . '/inc/events.php' 		);
+require_once( dirname(__FILE__) . '/woopra-php-sdk/woopra_tracker.php' 		);
 if (is_admin()) {
 	require_once( dirname(__FILE__) . '/inc/admin.php' 		);
-	require_once( dirname(__FILE__) . '/inc/xml.php' 		);
-	require_once( dirname(__FILE__) . '/inc/analytics.php' 	);
-	require_once( dirname(__FILE__) . '/inc/chart.php' 		);
-	require_once( dirname(__FILE__) . '/inc/render.php' 	);
 	$WoopraAdmin = new WoopraAdmin();
 }
 //	Always Run the Front End Code
