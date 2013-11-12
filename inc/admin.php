@@ -353,7 +353,6 @@ class WoopraAdmin extends Woopra {
 			'date_format'		=> 'yyyy-MM-dd',	// hardcoded for now
 			'limit'				=> 50,
 			'auto_tagging'		=> 1,
-            'use_trackas'       => 0,
             'trackas'           => $domainName,
 			'ignore_admin'		=> 0,
 			'track_admin'		=> 0,
@@ -443,8 +442,7 @@ class WoopraAdmin extends Woopra {
         <tr valign="top">
 			<th scope="row"><?php _e('Track As', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('use_trackas')); ?> id="use_trackas" name="woopra[use_trackas]"/> <label for="use_trackas"><?php _e("Use this feature if you want to track your subdomain under your main domain"); ?></label><br>
-                <input type="text" value="<?php echo $this->get_option('trackas'); ?>" id="trackas" name="woopra[trackas]" />
+                <input type="text" value="<?php echo $this->get_option('trackas') != "" ? $this->get_option('trackas') : $this->getDomainName() ; ?>" id="trackas" name="woopra[trackas]" />
 				<br/> <label for="trackas"><?php _e("Enter the your domain name here (i.e. domain.com) - don't need the www.") ?> </label>
 			</td>
 		</tr>

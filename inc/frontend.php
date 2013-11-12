@@ -111,9 +111,9 @@ class WoopraFrontend extends Woopra {
 	        $myvar = $myvar[0]->cat_name;
 			$page_data["author"] = js_escape(get_the_author_meta("display_name",$post->post_author));
 			$page_data["category"] = isset($myvar) ? js_escape($myvar) : "Uncategorized";
-			$this->woopra->track("pv", $page_data)->woopra_code();
+			$this->woopra->track("pv", $page_data)->js_code();
 		} else {
-			$this->woopra->track()->woopra_code();
+			$this->woopra->track()->js_code();
 		}
 	}
 	
@@ -142,13 +142,14 @@ class WoopraFrontend extends Woopra {
 	*/
 	function woopra_config() {
 		
-		if ($this->get_option('use_trackas') && $this->get_option('trackas')) {
+		if ($this->get_option('trackas')) {
 			$this->config["domain"] = $this->get_option('trackas');
 		}
 		if ($this->get_option('use_timeout')) {
 			$this->config["idle_timeout"] = $this->get_option('timeout')*1000;
 		}
 		$this->config["hide_campaign"] = $this->get_option('hide_campaign') == 1 ? true : false;
+		$this->config["app"] = "wordpress";
 	}
 	
 }
