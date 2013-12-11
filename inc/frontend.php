@@ -3,7 +3,6 @@
  * WoopraFrontend Class for Woopra
  * This class contains all functions and actions required for Woopra to track Wordpress events and outputs the frontend code.
  */
-
 class WoopraFrontend extends Woopra {
 
 	var $user;
@@ -25,7 +24,6 @@ class WoopraFrontend extends Woopra {
 		// Load Event Processing
 		$this->events = new WoopraEvents();
 		
-		
 		// If there is no cookie, set one before the headers are sent
 		add_action('init', array(&$this->woopra, 'set_woopra_cookie'));
 		
@@ -35,7 +33,7 @@ class WoopraFrontend extends Woopra {
 		
 		//If event tracking is turned on, process events
 		if ($this->get_option('process_event')) {
-			add_action('init', array(&$this, 'register_events'));
+			$this->register_events();
 		}
 		
 		if ($this->get_option('other_events')) {
@@ -57,26 +55,48 @@ class WoopraFrontend extends Woopra {
 	 	foreach ($all_events as $event_name => $data) {
 	 		if (($event_status[$data['action']] == 1)) {
 		 		switch($data['action']) {
-		 			case "the_search_query":
+		 			case "search_query":
 		 				if (isset($_GET["s"])) {
 							$this->woopra->track("search", array("User searched" => $_GET["s"]), true);
 						}
 		 			break;
 		 			case "comment_post":
-		 				add_action('comment_post', array(&$this, 'track_comment'));
+		 				add_action('comment_post', array(&$this, 'track_comment'), 10, 1);
+		 			break;
+		 			case "signup":
+		 				add_action('user_register', array(&$this, 'track_signup'), 10, 1);
 		 			break;
 		 		}
 	 		}
 		}
 	 }
+
+	 /**
+	 * Tracks a signup
+	 * @return none
+	 */
+	 function track_signup($user_id) {
+	 	$user = get_user_by('id', $user_id);
+	 	if ( !($user instanceof WP_User) ) {
+			return;
+		}
+		$user_details = array(
+			"first_name" => $user->user_firstname,
+			"last_name" => $user->user_lastname,
+			"full name" => $user->user_firstname . ' ' . $user->user_lastname,
+			"email" => $user->user_email,
+			"username" => $user->user_login
+		);
+		$this->woopra->track('signup', $user_details, true);
+	}
 	 
 	 /**
 	 * Tracks a comment
 	 * @return none
 	 */
-	 function track_comment($args) {
+	 function track_comment($comment_id) {
 	 	$comment_details = array();
-	 	$comment = get_comment($args);
+	 	$comment = get_comment($comment_id);
 	 	$comment_details["author"] = $comment->comment_author;
 	 	$comment_details["content"] = $comment->comment_content;
 	 	$this->woopra->track("comment", $comment_details, true);
