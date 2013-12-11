@@ -89,18 +89,17 @@ class WoopraEvents extends WoopraFrontend {
 			array(
 				'name'		=>	__('comments', 'woopra'),
 				'label'		=>	__('Show comments as they are posted.', 'woopra'),
-				'function'	=>	'get_comment',
-				'object'	=>	'comment_content',
-				'value'		=>	__('User posted comment.', 'woopra'),
 				'action'	=>	'comment_post',
 			),
 			array(
 				'name'		=>	__('search', 'woopra'),
 				'label'		=>	__('Show users search queries.', 'woopra'),
-				'function'	=>	'get_search_query',
-				'object'	=>	null,
-				'value'		=>	__('Executed Search', 'woopra'),
-				'action'	=>	'the_search_query',
+				'action'	=>	'search_query',
+			),
+			array(
+				'name'		=>	__('signup', 'woopra'),
+				'label'		=>	__('Show users sign up.', 'woopra'),
+				'action'	=>	'signup',
 			)
 		);
 		
