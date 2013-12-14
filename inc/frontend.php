@@ -57,7 +57,7 @@ class WoopraFrontend extends Woopra {
 		 		switch($data['action']) {
 		 			case "search_query":
 		 				if (isset($_GET["s"])) {
-							$this->woopra->track("search", array("User searched" => $_GET["s"]), true);
+							$this->woopra->track("search", array("query" => $_GET["s"]), true);
 						}
 		 			break;
 		 			case "comment_post":
@@ -80,13 +80,22 @@ class WoopraFrontend extends Woopra {
 	 	if ( !($user instanceof WP_User) ) {
 			return;
 		}
-		$user_details = array(
-			"first_name" => $user->user_firstname,
-			"last_name" => $user->user_lastname,
-			"full name" => $user->user_firstname . ' ' . $user->user_lastname,
-			"email" => $user->user_email,
-			"username" => $user->user_login
-		);
+		$user_details = array();
+		if ($user->has_prop("user_firstname")) {
+			$user_details["first_name"] = $user->user_firstname;
+		}
+		if ($user->has_prop("user_lastname")) {
+			$user_details["last_name"] = $user->user_lastname;
+		}
+		if ($user->has_prop("user_firstname") && $user->has_prop("user_lastname")) {
+			$user_details["full_name"] = $user->user_firstname . ' ' . $user->user_lastname;
+		}
+		if ($user->has_prop("user_email")) {
+			$user_details["email"] = $user->user_email;
+		}
+		if ($user->has_prop("user_login")) {
+			$user_details["username"] = $user->user_login;
+		}
 		$this->woopra->track('signup', $user_details, true);
 	}
 	 
@@ -98,7 +107,17 @@ class WoopraFrontend extends Woopra {
 	 	$comment_details = array();
 	 	$comment = get_comment($comment_id);
 	 	$comment_details["author"] = $comment->comment_author;
+	 	$comment_details["author_email"] = $comment->comment_author_email;
+	 	if ($comment->comment_author_url) {
+	 		$comment_details["author_website"] = $comment->comment_author_url;
+	 	}
 	 	$comment_details["content"] = $comment->comment_content;
+	 	if (!is_user_logged_in() && $this->get_option('auto_tagging')) {
+	 		$user_details = array();
+	 		$user_details["name"] = $comment->comment_author;
+	 		$user_details["email"] = $comment->comment_author_email;
+			$this->woopra->identify($user_details);
+		}
 	 	$this->woopra->track("comment", $comment_details, true);
 	 }
 	
@@ -115,10 +134,10 @@ class WoopraFrontend extends Woopra {
 			if (current_user_can('manage_options')) {
 				$this->user['admin'] = true;
 			}
-		}
-		//	Identify with woopra
-		if ($this->get_option('auto_tagging')) {
-			$this->woopra->identify($this->user);
+			//	Identify with woopra
+			if ($this->get_option('auto_tagging')) {
+				$this->woopra->identify($this->user);
+			}
 		}
 	}
 	

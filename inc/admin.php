@@ -403,13 +403,13 @@ class WoopraAdmin extends Woopra {
 	?>
 	
 <div class="wrap">
+	
+	<input type="button" style="font-size: 16px;width: 300px;height: 42px;float: right;margin-top: 20px;margin-right: 10px;" onclick="window.open('http://www.woopra.com/live/')" class="button-primary" value="<?php _e('Launch Woopra', 'woopra') ?>" />
+	
 <?php screen_icon(); ?>
 	<h2><?php _e( 'Woopra Settings', 'woopra' ); ?></h2>
 	<p><?php _e('For more info about installation and customization, please visit <a href="http://www.woopra.com/installation-guide">the installation page in your member&#8217;s area</a>', 'woopra') ?></p>
 	
-	<p>
-	<input type="button" style="font-size: 16px;" onclick="window.open('http://www.woopra.com/live/')" class="button-primary" value="<?php _e('Launch Woopra', 'woopra') ?>" />
-	</p>
 	
 	<form method="post" action="options.php">
 	<?php settings_fields('woopra'); ?>
@@ -504,7 +504,7 @@ class WoopraAdmin extends Woopra {
 		<tr valign="top">
 			<th scope="row"><?php _e('Other Events Tracking', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('other_events')); ?> id="other_events" name="woopra[other_events]"/> <label for="other_events"><?php _e("Custom Event Tracking", 'woopra'); ?></label><br /><?php printf(__("Turn this feature on to allow other developers to track events with Woopra. Developers can refer to the example below.<br><pre style='color:#000000;background:#ffffff;'><html><body style='color:#000000; background:#ffffff; '><pre>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('other_events')); ?> id="other_events" name="woopra[other_events]"/> <label for="other_events"><?php _e("Custom Event Tracking", 'woopra'); ?></label><br /><?php printf(__("Turn this feature on to allow other developers to track events with Woopra. Developers can refer to the example below.<br><pre style='color:#000000;'><pre>
 <span style='color:#5f5035; background:#ffffe8; '>&lt;?php</span><span style='color:#000000; background:#ffffe8; '></span>
 <span style='color:#000000; background:#ffffe8; '>do_action</span><span style='color:#808030; background:#ffffe8; '>(</span><span style='color:#0000e6; background:#ffffe8; '>\"woopra_track\"</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>[</span><span style='color:#808030; background:#ffffe8; '>,</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#797997; background:#ffffe8; '>$event_name</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>=</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#0000e6; background:#ffffe8; '>\"pv\"</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>[</span><span style='color:#808030; background:#ffffe8; '>,</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#797997; background:#ffffe8; '>$event_properties</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>=</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#800000; background:#ffffe8; font-weight:bold; '>array</span><span style='color:#808030; background:#ffffe8; '>(</span><span style='color:#808030; background:#ffffe8; '>)</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>[</span><span style='color:#808030; background:#ffffe8; '>,</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#797997; background:#ffffe8; '>$back_end_processing</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>=</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#800000; background:#ffffe8; font-weight:bold; '>false</span><span style='color:#808030; background:#ffffe8; '>]</span><span style='color:#808030; background:#ffffe8; '>]</span><span style='color:#808030; background:#ffffe8; '>]</span><span style='color:#808030; background:#ffffe8; '>)</span><span style='color:#800080; background:#ffffe8; '>;</span><span style='color:#000000; background:#ffffe8; '></span>
 <span style='color:#5f5035; background:#ffffe8; '>?></span>
