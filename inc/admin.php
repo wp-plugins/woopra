@@ -435,45 +435,51 @@ class WoopraAdmin extends Woopra {
 		<tr valign="top">
 			<th scope="row"><?php _e('Auto Timeout', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('use_timeout')); ?> id="use_timeout" name="woopra[use_timeout]"/> <label for="use_timeout"><?php _e("Override Woopra Default 'Auto Time Out'"); ?></label><br /><small><?php _e("Turn this 'on' if you want to override Woopra Default Timeout Settings (600 seconds). Setting this to low might cause incorrect statistics. Once a user is considered 'timed out' they will be considered gone. If they revisit they will be considered a 'new visit' and might mess up your statistics. This must be a whole number. (e.g. 34, 23) System will automaticly turn off if the number is less than or equal to 'zero'.", 'woopra'); ?></small>
-				<br/> <label for="timeout"><?php _e('Seconds before Timeout:') ?> </label> <input type="text" value="<?php echo $this->get_option('timeout'); ?>" <?php checked( '1', $this->get_option('use_timeout') ) ?> id="timeout" name="woopra[timeout]" />
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('use_timeout')); ?> id="use_timeout" name="woopra[use_timeout]"/> <label for="use_timeout"><?php _e("Override Woopra Default 'Auto Time Out'"); ?></label>
+				<p class="description"><?php _e("Turn this 'on' if you want to override Woopra Default Timeout Settings (600 seconds). Setting this to low might cause incorrect statistics. Once a user is considered 'timed out' they will be considered gone. If they revisit they will be considered a 'new visit' and might mess up your statistics. This must be a whole number. (e.g. 34, 23) System will automaticly turn off if the number is less than or equal to 'zero'.", 'woopra'); ?></p>
+				<label for="timeout"><?php _e('Seconds before Timeout:') ?> </label> <input type="text" value="<?php echo $this->get_option('timeout'); ?>" <?php checked( '1', $this->get_option('use_timeout') ) ?> id="timeout" name="woopra[timeout]" />
 			</td>
 		</tr>
         <tr valign="top">
 			<th scope="row"><?php _e('Track As', 'woopra') ?></th>
 			<td>
                 <input type="text" value="<?php echo $this->get_option('trackas') != "" ? $this->get_option('trackas') : $this->getDomainName() ; ?>" id="trackas" name="woopra[trackas]" />
-				<br/> <label for="trackas"><?php _e("Enter the your domain name here (i.e. domain.com) - don't need the www.") ?> </label>
+				<p class="description"><?php _e("Enter the your domain name here (i.e. domain.com) - don't need the www.") ?> </label>
 			</td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><?php _e('Auto Tagging', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('auto_tagging')); ?> id="auto_tagging" name="woopra[auto_tagging]"/> <label for="auto_tagging"><?php _e("Automatically Tag Members &amp; Commentators", 'woopra'); ?></label><br /><?php _e("Enable this check box if you want Woopra to auto-tag visitors.", 'woopra'); ?>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('auto_tagging')); ?> id="auto_tagging" name="woopra[auto_tagging]"/> <label for="auto_tagging"><?php _e("Automatically Tag Members &amp; Commentators", 'woopra'); ?></label>
+				<p class="description"><?php _e("Enable this check box if you want Woopra to auto-tag visitors.", 'woopra'); ?></p>
 			</td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><?php _e('Ignore Administrator', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('ignore_admin')); ?> id="ignore_admin" name="woopra[ignore_admin]"/> <label for="ignore_admin"><?php _e("Ignore Administrator Visits", 'woopra'); ?></label><br /><?php _e("Enable this check box if you want Woopra to ignore your or any other administrator visits.", 'woopra'); ?>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('ignore_admin')); ?> id="ignore_admin" name="woopra[ignore_admin]"/> <label for="ignore_admin"><?php _e("Ignore Administrator Visits", 'woopra'); ?></label>
+				<p class="description"><?php _e("Enable this check box if you want Woopra to ignore your or any other administrator visits.", 'woopra'); ?></p>
 			</td>
 		</tr>
 		<tr valign="top">
 			<th scope="row"><?php _e('Admin Area', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_admin')); ?> id="track_admin" name="woopra[track_admin]"/> <label for="track_admin"><?php _e("Track Admin Pages", 'woopra'); ?></label><br /><?php printf(__("Admin pages are all pages under %s", 'woopra'), $this->get_option('siteurl')."/wp-admin/" ); ?>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_admin')); ?> id="track_admin" name="woopra[track_admin]"/> <label for="track_admin"><?php _e("Track Admin Pages", 'woopra'); ?></label>
+				<p class="description"><?php printf(__("Admin pages are all pages under %s", 'woopra'), $this->get_option('siteurl')."/wp-admin/" ); ?></p>
 			</td>
 		</tr>
 		<tr align="top">
 			<th scope="row"><?php _e('Authors and Categories','woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_author')); ?> id="track_author" name="woopra[track_author]"/> <label for="track_author"><?php _e("Track Authors and Categories"); ?> </label><br /><?php _e("Enable this check box if you want Woopra to track the author and the category of a visited blog post. <a href=\"http://www.woopra.com/docs/jsguide/#custom_page_options\" target=\"_blank\">More about Custom Page Options</a>.",'woopra'); ?>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_author')); ?> id="track_author" name="woopra[track_author]"/> <label for="track_author"><?php _e("Track Authors and Categories"); ?> </label>
+				<p class="description"><?php _e("Enable this check box if you want Woopra to track the author and the category of a visited blog post. <a href=\"http://www.woopra.com/docs/jsguide/#custom_page_options\" target=\"_blank\">More about Custom Page Options</a>.",'woopra'); ?></p>
 			</td>
 		</tr>
 		<tr align="top">
 			<th scope="row"><?php _e('Campaign Tracking','woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('hide_campaign')); ?> id="hide_campaign" name="woopra[hide_campaign]"/> <label for="hide_campaign"><?php _e("Hide Campaign Properties"); ?> </label><br /><?php _e("Hide campaign properties from url (e.g. utm_campaign). <a href=\"https://www.woopra.com/blog/2013/09/10/announcing-enhanced-campaign-tracking/\" target=\"_blank\">More about Campaign Tracking</a>.",'woopra'); ?>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('hide_campaign')); ?> id="hide_campaign" name="woopra[hide_campaign]"/> <label for="hide_campaign"><?php _e("Hide Campaign Properties"); ?> </label>
+				<p class="description"><?php _e("Hide campaign properties from url (e.g. utm_campaign). <a href=\"https://www.woopra.com/blog/2013/09/10/announcing-enhanced-campaign-tracking/\" target=\"_blank\">More about Campaign Tracking</a>.",'woopra'); ?></p>
 			</td>
 		</tr>
 	</table>
@@ -483,7 +489,8 @@ class WoopraAdmin extends Woopra {
 		<tr valign="top">
 			<th scope="row"><?php _e('Global Event Tracking', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('process_event')); ?> id="process_event" name="woopra[process_event]"/> <label for="process_event"><?php _e("Turn on Event Tracking System", 'woopra'); ?></label><br /><?php printf(__("If this is turned on, all events that are selected below will be tracked and reported back to the Woopra system.", 'woopra')); ?>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('process_event')); ?> id="process_event" name="woopra[process_event]"/> <label for="process_event"><?php _e("Turn on Event Tracking System", 'woopra'); ?></label>
+				<p class="description"><?php printf(__("If this is turned on, all events that are selected below will be tracked and reported back to the Woopra system.", 'woopra')); ?></p>
 			</td>
 		</tr>
 		<tr valign="top">
