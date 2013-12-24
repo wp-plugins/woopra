@@ -162,12 +162,11 @@ class WoopraFrontend extends Woopra {
 	 */
 	function set_tracker() {
 		global $post;
-		if (current_user_can('manage_options') && ! $this->get_option('ignore_admin')) {
-			if($this->get_option('track_admin')) {
-				add_action('admin_footer', array(&$this, 'track'), 10);
-			} else {
-				add_action('wp_head', array(&$this, 'track'), 10);
+		if (current_user_can('manage_options') && $this->get_option('ignore_admin') == 0) {
+			if($this->get_option('track_admin') == 1) {
+				add_action('admin_head', array(&$this, 'track'), 10);
 			}
+			add_action('wp_head', array(&$this, 'track'), 10);
 		} elseif(!current_user_can('manage_options')) {
 			add_action('wp_head', array(&$this, 'track'), 10);
 		}
