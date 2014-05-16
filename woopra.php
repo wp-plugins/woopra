@@ -16,11 +16,8 @@
  * ViperBond007, DD32, and sivel are to credit by helping this plugin envole into a very
  * pretty PHP class format. 
  * 
- * It is licenced as LGPL. You can view the terms of the object helper files and the flash file
- * itself here: http://teethgrinder.co.uk/open-flash-chart-2/
- * * Open Flash Charts 2 is copyrighted and created by John Glazebrook <http://teethgrinder.co.uk>
  * @author Elie El Khoury <elie@woopra.com>
- * @version 2.5.1
+ * @version 2.5.3
  * @copyright 2013
  * @package woopra
  */
@@ -30,7 +27,7 @@
  * @since 1.4.1
  * @return none
  */
-DEFINE ('WOOPRA_VERSION', '2.5.1');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
+DEFINE ('WOOPRA_VERSION', '2.5.3');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
 
 /*
 
@@ -38,7 +35,7 @@ DEFINE ('WOOPRA_VERSION', '2.5.1');		// MAKE SURE THIS MATCHES THE VERSION ABOVE
 
 Plugin Name:  Woopra
 Plugin URI:   http://wordpress.org/extend/plugins/woopra/
-Version:      2.5.1
+Version:      2.5.3
 Description:  This plugin adds Woopra's real-time analytics to any WordPress installation.  Simply sign up at Woopra.com, then activate the plugin!
 Author:       <a href="https://www.woopra.com">Elie El Khoury</a>
 Author URI:   https://www.woopra.com/

@@ -319,7 +319,7 @@ class WoopraAdmin extends Woopra {
 
 			$newopts = array (
 					'version'			=>	'1.4.3',
-					'process_events'	=>	1,
+					'process_event'	=>	1,
 			);
 			
 			unset($woopra['version']);
@@ -350,17 +350,25 @@ class WoopraAdmin extends Woopra {
 			'api_key'			=> '',
 			'analytics_tab'		=> 'dashboard',
 			'run_status'		=> 'on',
-			'date_format'		=> 'yyyy-MM-dd',	// hardcoded for now
+			'date_format'		=> 'yyyy-MM-dd',
 			'limit'				=> 50,
-			'auto_tagging'		=> 1,
             'trackas'           => $domainName,
 			'ignore_admin'		=> 0,
 			'track_admin'		=> 0,
 			'use_timeout'		=> 0,
-			'process_events'	=> 1,
+			'process_event'		=> 1,
 			'timeout'			=> 600,
-			'track_author'		=> 0,
-			'hide_campaign'	=> 0
+			'track_author'		=> 1,
+			'hide_campaign'		=> 0,
+			'woopra_event'		=> array(
+				'search_query' => 1,
+				'signup' => 1,
+				'comment_post' => 1
+			), 'woopra_woocommerce_event'	=> array(
+				'cart' => 1,
+				'checkout' => 1,
+				'coupon' => 1
+			)
 		);
 		return $defaults;
 	}
@@ -399,6 +407,11 @@ class WoopraAdmin extends Woopra {
 	
 	$this->_events = $this->event->default_events;
 	$event_status = $this->get_option('woopra_event');
+
+	$this->_woocommerce_events = $this->event->default_woocommerce_events;
+	$woocommerce_event_status = $this->get_option('woopra_woocommerce_event');
+
+	$process_event = $this->get_option('process_event') != false ? $this->get_option('process_event') : '0';
 
 	?>
 	
@@ -448,13 +461,6 @@ class WoopraAdmin extends Woopra {
 			</td>
 		</tr>
 		<tr valign="top">
-			<th scope="row"><?php _e('Auto Tagging', 'woopra') ?></th>
-			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('auto_tagging')); ?> id="auto_tagging" name="woopra[auto_tagging]"/> <label for="auto_tagging"><?php _e("Automatically Tag Members &amp; Commentators", 'woopra'); ?></label>
-				<p class="description"><?php _e("Enable this check box if you want Woopra to auto-tag visitors.", 'woopra'); ?></p>
-			</td>
-		</tr>
-		<tr valign="top">
 			<th scope="row"><?php _e('Ignore Administrator', 'woopra') ?></th>
 			<td>
 				<input type="checkbox" value="1"<?php checked('1', $this->get_option('ignore_admin')); ?> id="ignore_admin" name="woopra[ignore_admin]"/> <label for="ignore_admin"><?php _e("Ignore Administrator Visits", 'woopra'); ?></label>
@@ -472,14 +478,14 @@ class WoopraAdmin extends Woopra {
 			<th scope="row"><?php _e('Authors and Categories','woopra') ?></th>
 			<td>
 				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_author')); ?> id="track_author" name="woopra[track_author]"/> <label for="track_author"><?php _e("Track Authors and Categories"); ?> </label>
-				<p class="description"><?php _e("Enable this check box if you want Woopra to track the author and the category of a visited blog post. <a href=\"http://www.woopra.com/docs/jsguide/#custom_page_options\" target=\"_blank\">More about Custom Page Options</a>.",'woopra'); ?></p>
+				<p class="description"><?php _e("Enable this check box if you want Woopra to track the author and the category of a visited blog post as custom event properties. <a href=\"https://www.woopra.com/docs/getting-started/custom-data/\" target=\"_blank\">More about custom data</a>.",'woopra'); ?></p>
 			</td>
 		</tr>
 		<tr align="top">
 			<th scope="row"><?php _e('Campaign Tracking','woopra') ?></th>
 			<td>
 				<input type="checkbox" value="1"<?php checked('1', $this->get_option('hide_campaign')); ?> id="hide_campaign" name="woopra[hide_campaign]"/> <label for="hide_campaign"><?php _e("Hide Campaign Properties"); ?> </label>
-				<p class="description"><?php _e("Hide campaign properties from url (e.g. utm_campaign). <a href=\"https://www.woopra.com/blog/2013/09/10/announcing-enhanced-campaign-tracking/\" target=\"_blank\">More about Campaign Tracking</a>.",'woopra'); ?></p>
+				<p class="description"><?php _e("Hide campaign properties from url (e.g. woo_campaign). <a href=\"https://www.woopra.com/docs/manual/campaign-tracking/\" target=\"_blank\">More about Campaign Tracking</a>.",'woopra'); ?></p>
 			</td>
 		</tr>
 	</table>
@@ -489,7 +495,7 @@ class WoopraAdmin extends Woopra {
 		<tr valign="top">
 			<th scope="row"><?php _e('Global Event Tracking', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('process_event')); ?> id="process_event" name="woopra[process_event]"/> <label for="process_event"><?php _e("Turn on Event Tracking System", 'woopra'); ?></label>
+				<input type="checkbox" value="1" <?php checked('1', $process_event);?>id="process_event" name="woopra[process_event]"/> <label for="process_event"><?php _e("Turn on Event Tracking System", 'woopra'); ?></label>
 				<p class="description"><?php printf(__("If this is turned on, all events that are selected below will be tracked and reported back to the Woopra system.", 'woopra')); ?></p>
 			</td>
 		</tr>
@@ -497,10 +503,12 @@ class WoopraAdmin extends Woopra {
 			<th scope="row"><?php _e('Main Area Events', 'woopra') ?></th>
 			<td>
 			<?php
+				$event_reg = 0;
 				foreach ( $this->_events as $event => $data) {
 					if (!$data['adminonly']) {
 						$event_reg++;
-						echo "\n\t<input type=\"checkbox\" value=\"1\"" . checked( '1', $event_status[(isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter']))], false ) . " id=\"" . ((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter']))) . "\" name=\"woopra[woopra_event][".((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter'])))."]\"/> <label for=\"woopra[woopra_event][".((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter'])))."]\">".$data['name']."</label> - ".$data['label']."<br/>";
+						$checked = $process_event && $event_status[(isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter']))];
+						echo "\n\t<input type=\"checkbox\" value=\"1\" class=\"custom-events\"" . checked( '1', $checked, false ) . disabled('0', $process_event, false) . " id=\"" . ((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter']))) . "\" name=\"woopra[woopra_event][".((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter'])))."]\"/> <label for=\"woopra[woopra_event][".((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter'])))."]\">".$data['name']."</label> - ".$data['label']."<br/>";
 					}
 				}
 				if ($event_reg < 1)
@@ -508,10 +516,30 @@ class WoopraAdmin extends Woopra {
 			?>				
 			</td>
 		</tr>
+		<?php if(is_plugin_active( 'woocommerce/woocommerce.php' )) { ?>
+		<tr valign="top">
+			<th scope="row"><?php _e('WooCommerce Events', 'woopra') ?></th>
+			<td>
+			<?php
+				$event_reg = 0;
+				foreach ( $this->_woocommerce_events as $event => $data) {
+					if (!$data['adminonly']) {
+						$event_reg++;
+						$checked = $process_event && $woocommerce_event_status[(isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter']))];
+						echo "\n\t<input type=\"checkbox\" value=\"1\" class=\"custom-events\"" . checked( '1', $checked, false ) . disabled('0', $process_event, false) . " id=\"" . ((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter']))) . "\" name=\"woopra[woopra_woocommerce_event][".((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter'])))."]\"/> <label for=\"woopra[woopra_woocommerce_event][".((isset($data['setting']) ? $data['setting'] : (isset($data['action']) ? $data['action'] : $data['filter'])))."]\">".$data['name']."</label> - ".$data['label']."<br/>";
+					}
+				}
+				if ($event_reg < 1)
+					echo "<strong>" . __('No WooCommerce Events Registered.', 'woopra') . "</strong>";
+			?>				
+			</td>
+		</tr>
+
+		<?php } ?>
 		<tr valign="top">
 			<th scope="row"><?php _e('Other Events Tracking', 'woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('other_events')); ?> id="other_events" name="woopra[other_events]"/> <label for="other_events"><?php _e("Custom Event Tracking", 'woopra'); ?></label><br /><?php printf(__("Turn this feature on to allow other developers to track events with Woopra. Developers can refer to the example below.<br><pre style='color:#000000;'><pre>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('other_events')); disabled('0', $process_event); ?> class="custom-events" id="other_events" name="woopra[other_events]"/> <label for="other_events"><?php _e("Custom Event Tracking", 'woopra'); ?></label><br /><?php printf(__("Turn this feature on to allow other developers to track events with Woopra. Developers can refer to the example below.<br><pre style='color:#000000;'><pre>
 <span style='color:#5f5035; background:#ffffe8; '>&lt;?php</span><span style='color:#000000; background:#ffffe8; '></span>
 <span style='color:#000000; background:#ffffe8; '>do_action</span><span style='color:#808030; background:#ffffe8; '>(</span><span style='color:#0000e6; background:#ffffe8; '>\"woopra_track\"</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>[</span><span style='color:#808030; background:#ffffe8; '>,</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#797997; background:#ffffe8; '>$event_name</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>=</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#0000e6; background:#ffffe8; '>\"pv\"</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>[</span><span style='color:#808030; background:#ffffe8; '>,</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#797997; background:#ffffe8; '>$event_properties</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>=</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#800000; background:#ffffe8; font-weight:bold; '>array</span><span style='color:#808030; background:#ffffe8; '>(</span><span style='color:#808030; background:#ffffe8; '>)</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>[</span><span style='color:#808030; background:#ffffe8; '>,</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#797997; background:#ffffe8; '>$back_end_processing</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>=</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#800000; background:#ffffe8; font-weight:bold; '>false</span><span style='color:#808030; background:#ffffe8; '>]</span><span style='color:#808030; background:#ffffe8; '>]</span><span style='color:#808030; background:#ffffe8; '>]</span><span style='color:#808030; background:#ffffe8; '>)</span><span style='color:#800080; background:#ffffe8; '>;</span><span style='color:#000000; background:#ffffe8; '></span>
 <span style='color:#5f5035; background:#ffffe8; '>?></span>
@@ -526,6 +554,23 @@ class WoopraAdmin extends Woopra {
 	
 	</form>
 	</div>
+	<script>
+		document.getElementById('process_event').addEventListener('click',
+    		function(){
+    			custom_events = document.getElementsByClassName('custom-events');
+    			for (i in custom_events) {
+    				var event = custom_events[i];
+    				if (this.checked) {
+						event.disabled = null;
+					    event.checked = "cheked";
+					} else {
+						event.checked = null;
+					    event.disabled = "disabled";
+					}
+    			}
+    		}
+    	);
+	</script>
 	
 	<?php }
 
