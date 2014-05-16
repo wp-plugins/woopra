@@ -1,7 +1,12 @@
 Track customers directly in PHP using Woopra's PHP SDK
 
-The SDK can be used both for front-end and back-end tracking. In either cases, you should setup the tracker SDK first. To do so, configure the tracker instance as follows (replace mybusiness.com with your website as registered on Woopra):
+The purpose of this SDK is to allow our customers who have servers running PHP to track their users by writing only PHP code. Tracking directly in PHP will allow you to decide whether you want to track your users:
+- through the front-end: after configuring the tracker, identifying the user, and tracking page views and events in PHP, the SDK will generate the corresponding JavaScript code, and you will be able to print that code in your pages' headers.
+- through the back-end: after configuring the tracker & identifying the user, add the optional parameter TRUE to the methods <code>track</code> or <code>push</code>, and the PHP tracker will handle sending the data to Woopra by making HTTP Requests. By doing that, the client is never involved in the tracking process.
+
+The first step is to setup the tracker SDK. To do so, import the woopra_tracker.php file then configure the tracker instance as follows (replace mybusiness.com with your website as registered on Woopra):
 ``` php
+require_once('woopra_tracker.php');
 $woopra = new WoopraTracker(array("domain" => "mybusiness.com"));
 ```
 You can update your idle timeout (default: 30 seconds) by updating the timeout property in your WoopraTracker instance (NB: this could also have been done in the step above, by adding all the properties you wish to configure to the array):
@@ -20,11 +25,11 @@ $woopra->identify(array(
    "company" => "User Business"
 ));
 ```
-If you wish to track page views, first call track(), and finally calling woopra_code() in your page header will insert the woopra javascript tracker:
+If you wish to track page views, first call track(), and finally calling js_code() in your page header will insert the woopra javascript tracker:
 ``` php
 <head>
    ...
-   <?php $woopra->track()->woopra_code(); ?>
+   <?php $woopra->track()->js_code(); ?>
 </head>
 
 ```
@@ -35,7 +40,7 @@ You can always track events through front-end later in the page. With all the pr
       ...
       <?php
          $woopra = new WoopraTracker($config);
-         $woopra->identify($user)->track()->woopra_code();
+         $woopra->identify($user)->track()->js_code();
       ?>
    </head>
    <body>
@@ -65,8 +70,4 @@ $woopra->identify($user)->push(TRUE);
 If you're only going to be tracking through the back-end, set the cookie (before the headers are sent):
 ``` php
 $woopra->set_woopra_cookie();
-```
-and to make sure you're sending you're user's IP, set it manually doing (if none if specified, the value of $_SERVER['REMOTE_ADDR'] will be used):
-``` php
-$woopra->config(array("ip_address" => 74.125.224.72));
 ```

@@ -104,6 +104,26 @@ class WoopraEvents extends WoopraFrontend {
 		);
 		
 		$this->default_events = $default_events;
+
+		$default_woocommerce_events = array(
+			array(
+				'name'		=>	__('cart update', 'woopra'),
+				'label'		=>	__('Show cart updates.', 'woopra'),
+				'action'	=>	'cart',
+			),
+			array(
+				'name'		=>	__('checkout', 'woopra'),
+				'label'		=>	__('Show users checkouts.', 'woopra'),
+				'action'	=>	'checkout',
+			),
+			array(
+				'name'		=>	__('coupon', 'woopra'),
+				'label'		=>	__('Track coupons applied.', 'woopra'),
+				'action'	=>	'coupon',
+			)
+		);
+
+		$this->default_woocommerce_events = $default_woocommerce_events;
 	}
 	
 
