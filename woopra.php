@@ -17,7 +17,7 @@
  * pretty PHP class format. 
  * 
  * @author Elie Khoury <elie@woopra.com>
- * @version 2.6
+ * @version 2.6.1
  * @copyright 2014
  * @package woopra
  */
@@ -27,7 +27,7 @@
  * @since 1.4.1
  * @return none
  */
-DEFINE ('WOOPRA_VERSION', '2.6');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
+DEFINE ('WOOPRA_VERSION', '2.6.1');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
 
 /*
 
@@ -35,9 +35,9 @@ DEFINE ('WOOPRA_VERSION', '2.6');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!
 
 Plugin Name:  Woopra
 Plugin URI:   http://wordpress.org/extend/plugins/woopra/
-Version:      2.5.3
+Version:      2.6.1
 Description:  This plugin adds Woopra's real-time analytics to any WordPress installation.  Simply sign up at Woopra.com, then activate the plugin!
-Author:       <a href="https://www.woopra.com">Elie El Khoury</a>
+Author:       <a href="https://www.woopra.com">Elie Khoury</a>
 Author URI:   https://www.woopra.com/
 
 **************************************************************************/

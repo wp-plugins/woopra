@@ -56,7 +56,7 @@ class WoopraFrontend extends Woopra {
 		 		switch($data['action']) {
 		 			case "search_query":
 		 				if (isset($_GET["s"])) {
-							$this->woopra->track("search", array("query" => $_GET["s"]), true);
+							$this->woopra->track("wc search", array("query" => $_GET["s"]), true);
 						}
 		 			break;
 		 			case "comment_post":
@@ -132,6 +132,10 @@ class WoopraFrontend extends Woopra {
 	 function track_comment($comment_id) {
 	 	$comment_details = array();
 	 	$comment = get_comment($comment_id);
+	 	$post_info = get_post($comment->comment_post_ID);
+	 	$comment_details["id"] = $comment->comment_ID;
+	 	$comment_details["post title"] = $post_info->post_title;
+	 	$comment_details["post permalink"] = get_permalink($post_info->ID);
 	 	$comment_details["author name"] = $comment->comment_author;
 	 	$comment_details["author email"] = $comment->comment_author_email;
 	 	if ($comment->comment_author_url) {
