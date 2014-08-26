@@ -4,7 +4,7 @@ Web site: http://www.woopra.com
 Tags: statistics, analytics, stats, real-time, chat
 Requires at least: 2.7.0
 Tested up to: 3.9.2
-Stable tag: 2.6.1
+Stable tag: 2.6.2
 
 This plugin adds Woopra's real-time customer analytics to any WordPress installation.
 
@@ -68,7 +68,10 @@ A. Make sure that the plugin is active. If it's active and the code is not showi
 
 == Changelog ==
 
-= 2.6 (08-26-14) =
+= 2.6.2 (08-26-14) =
+* [FIX] Fix search event name (wp search)
+
+= 2.6.1 (08-26-14) =
 * [UPDATE] Add more comment properties
 
 = 2.6 (08-25-14) =

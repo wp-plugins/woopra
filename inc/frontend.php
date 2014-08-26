@@ -56,7 +56,7 @@ class WoopraFrontend extends Woopra {
 		 		switch($data['action']) {
 		 			case "search_query":
 		 				if (isset($_GET["s"])) {
-							$this->woopra->track("wc search", array("query" => $_GET["s"]), true);
+							$this->woopra->track("wp search", array("query" => $_GET["s"]), true);
 						}
 		 			break;
 		 			case "comment_post":
