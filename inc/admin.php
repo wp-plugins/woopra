@@ -5,7 +5,7 @@
  * This class contains all functions and actions required
  * for Woopra to work on the backend of WordPress.
  *
- * @since 1.4.1
+ * @since 2.6
  * @package woopra
  * @subpackage admin
  */
@@ -353,18 +353,18 @@ class WoopraAdmin extends Woopra {
 			'date_format'		=> 'yyyy-MM-dd',
 			'limit'				=> 50,
             'trackas'           => $domainName,
+            'track_article'		=> 1,
 			'ignore_admin'		=> 0,
 			'track_admin'		=> 0,
 			'use_timeout'		=> 0,
 			'process_event'		=> 1,
 			'timeout'			=> 600,
-			'track_author'		=> 1,
 			'hide_campaign'		=> 0,
 			'woopra_event'		=> array(
 				'search_query' => 1,
 				'signup' => 1,
 				'comment_post' => 1
-			), 'woopra_woocommerce_event'	=> array(
+			),  'woopra_woocommerce_event'	=> array(
 				'cart' => 1,
 				'checkout' => 1,
 				'coupon' => 1
@@ -475,10 +475,10 @@ class WoopraAdmin extends Woopra {
 			</td>
 		</tr>
 		<tr align="top">
-			<th scope="row"><?php _e('Authors and Categories','woopra') ?></th>
+			<th scope="row"><?php _e('Track Articles','woopra') ?></th>
 			<td>
-				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_author')); ?> id="track_author" name="woopra[track_author]"/> <label for="track_author"><?php _e("Track Authors and Categories"); ?> </label>
-				<p class="description"><?php _e("Enable this check box if you want Woopra to track the author and the category of a visited blog post as custom event properties. <a href=\"https://www.woopra.com/docs/getting-started/custom-data/\" target=\"_blank\">More about custom data</a>.",'woopra'); ?></p>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_article')); ?> id="track_article" name="woopra[track_article]"/> <label for="track_article"><?php _e("Track \"Article View\" action instead of \"Pageview\" for articles. (Recommended)"); ?> </label>
+				<p class="description"><?php _e("Enable this check box if you want Woopra to track your blog posts as a custom event (author and category properties are included)",'woopra'); ?></p>
 			</td>
 		</tr>
 		<tr align="top">
@@ -541,7 +541,7 @@ class WoopraAdmin extends Woopra {
 			<td>
 				<input type="checkbox" value="1"<?php checked('1', $this->get_option('other_events')); disabled('0', $process_event); ?> class="custom-events" id="other_events" name="woopra[other_events]"/> <label for="other_events"><?php _e("Custom Event Tracking", 'woopra'); ?></label><br /><?php printf(__("Turn this feature on to allow other developers to track events with Woopra. Developers can refer to the example below.<br><pre style='color:#000000;'><pre>
 <span style='color:#5f5035; background:#ffffe8; '>&lt;?php</span><span style='color:#000000; background:#ffffe8; '></span>
-<span style='color:#000000; background:#ffffe8; '>do_action</span><span style='color:#808030; background:#ffffe8; '>(</span><span style='color:#0000e6; background:#ffffe8; '>\"woopra_track\"</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>[</span><span style='color:#808030; background:#ffffe8; '>,</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#797997; background:#ffffe8; '>$event_name</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>=</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#0000e6; background:#ffffe8; '>\"pv\"</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>[</span><span style='color:#808030; background:#ffffe8; '>,</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#797997; background:#ffffe8; '>$event_properties</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>=</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#800000; background:#ffffe8; font-weight:bold; '>array</span><span style='color:#808030; background:#ffffe8; '>(</span><span style='color:#808030; background:#ffffe8; '>)</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>[</span><span style='color:#808030; background:#ffffe8; '>,</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#797997; background:#ffffe8; '>$back_end_processing</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>=</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#800000; background:#ffffe8; font-weight:bold; '>false</span><span style='color:#808030; background:#ffffe8; '>]</span><span style='color:#808030; background:#ffffe8; '>]</span><span style='color:#808030; background:#ffffe8; '>]</span><span style='color:#808030; background:#ffffe8; '>)</span><span style='color:#800080; background:#ffffe8; '>;</span><span style='color:#000000; background:#ffffe8; '></span>
+<span style='color:#000000; background:#ffffe8; '>do_action</span><span style='color:#808030; background:#ffffe8; '>(</span><span style='color:#0000e6; background:#ffffe8; '>\"woopra_track\"</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>[</span><span style='color:#808030; background:#ffffe8; '>,</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#797997; background:#ffffe8; '>$event_name</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>=</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#0000e6; background:#ffffe8; '>\"banner click\"</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>[</span><span style='color:#808030; background:#ffffe8; '>,</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#797997; background:#ffffe8; '>$event_properties</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>=</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#800000; background:#ffffe8; font-weight:bold; '>array</span><span style='color:#808030; background:#ffffe8; '>(</span><span style='color:#808030; background:#ffffe8; '>)</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>[</span><span style='color:#808030; background:#ffffe8; '>,</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#797997; background:#ffffe8; '>$back_end_processing</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#808030; background:#ffffe8; '>=</span><span style='color:#000000; background:#ffffe8; '> </span><span style='color:#800000; background:#ffffe8; font-weight:bold; '>false</span><span style='color:#808030; background:#ffffe8; '>]</span><span style='color:#808030; background:#ffffe8; '>]</span><span style='color:#808030; background:#ffffe8; '>]</span><span style='color:#808030; background:#ffffe8; '>)</span><span style='color:#800080; background:#ffffe8; '>;</span><span style='color:#000000; background:#ffffe8; '></span>
 <span style='color:#5f5035; background:#ffffe8; '>?></span>
 </pre>", 'woopra')); ?>
 			</td>

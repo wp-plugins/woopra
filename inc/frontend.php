@@ -108,13 +108,13 @@ class WoopraFrontend extends Woopra {
 		}
 		$user_details = array();
 		if ($user->has_prop("user_firstname")) {
-			$user_details["first_name"] = $user->user_firstname;
+			$user_details["first name"] = $user->user_firstname;
 		}
 		if ($user->has_prop("user_lastname")) {
-			$user_details["last_name"] = $user->user_lastname;
+			$user_details["last name"] = $user->user_lastname;
 		}
 		if ($user->has_prop("user_firstname") && $user->has_prop("user_lastname")) {
-			$user_details["full_name"] = $user->user_firstname . ' ' . $user->user_lastname;
+			$user_details["full name"] = $user->user_firstname . ' ' . $user->user_lastname;
 		}
 		if ($user->has_prop("user_email")) {
 			$user_details["email"] = $user->user_email;
@@ -122,7 +122,7 @@ class WoopraFrontend extends Woopra {
 		if ($user->has_prop("user_login")) {
 			$user_details["username"] = $user->user_login;
 		}
-		$this->woopra->track('signup', $user_details, true);
+		$this->woopra->track('wp signup', $user_details, true);
 	}
 	 
 	 /**
@@ -132,19 +132,19 @@ class WoopraFrontend extends Woopra {
 	 function track_comment($comment_id) {
 	 	$comment_details = array();
 	 	$comment = get_comment($comment_id);
-	 	$comment_details["author"] = $comment->comment_author;
-	 	$comment_details["author_email"] = $comment->comment_author_email;
+	 	$comment_details["author name"] = $comment->comment_author;
+	 	$comment_details["author email"] = $comment->comment_author_email;
 	 	if ($comment->comment_author_url) {
-	 		$comment_details["author_website"] = $comment->comment_author_url;
+	 		$comment_details["author website"] = $comment->comment_author_url;
 	 	}
 	 	$comment_details["content"] = $comment->comment_content;
 	 	if (!is_user_logged_in()) {
 	 		$user_details = array();
-	 		$user_details["name"] = $comment->comment_author;
-	 		$user_details["email"] = $comment->comment_author_email;
+	 		$user_details["author name"] = $comment->comment_author;
+	 		$user_details["author email"] = $comment->comment_author_email;
 			$this->woopra->identify($user_details);
 		}
-	 	$this->woopra->track("comment", $comment_details, true);
+	 	$this->woopra->track("wp comment", $comment_details, true);
 	 }
 
 	 /**
@@ -171,20 +171,20 @@ class WoopraFrontend extends Woopra {
 	 	$quantity_after = $item["quantity"];
 	 	$product = get_product( $item['variation_id'] ? $item['variation_id'] : $item['product_id'] );
 	 	$params = array(
-	 		"item_sku" => $product->get_sku(),
-	 		"item_title" => $product->get_title(),
-	 		"item_price" => $product->get_price(),
+	 		"item sku" => $product->get_sku(),
+	 		"item title" => $product->get_title(),
+	 		"item price" => $product->get_price(),
 	 		"quantity" => ($quantity_after - $quantity_before),
 	 		"price" => ($quantity_after - $quantity_before)*$product->get_price()
 	 	);
-	 	$this->user['cart_size'] = $cart->get_cart_contents_count();
-	 	$this->user['cart_subtotal'] = $cart->subtotal;
+	 	$this->user['wc cart size'] = $cart->get_cart_contents_count();
+	 	$this->user['wc cart value'] = $cart->subtotal;
 	 	if (!is_user_logged_in()) {
 			$this->woopra->identify($this->user);
 	 	} else {
 	 		$this->woopra_detect();
 	 	}
-	 	$this->woopra->track('cart_update', $params, true);
+	 	$this->woopra->track('wc cart update', $params, true);
 	 }
 
 	 /**
@@ -198,22 +198,22 @@ class WoopraFrontend extends Woopra {
 	 	$item = $content[$cart_item_key];
 	 	$product = get_product( $item['variation_id'] ? $item['variation_id'] : $item['product_id'] );
 	 	$params = array(
-	 		"item_sku" => $product->get_sku(),
-	 		"item_title" => $product->get_title(),
-	 		"item_price" => $product->get_price(),
+	 		"item sku" => $product->get_sku(),
+	 		"item title" => $product->get_title(),
+	 		"item price" => $product->get_price(),
 	 		"quantity" => -$item["quantity"],
-	 		"price" => -$item["quantity"]*$product->get_price()
+	 		"value" => -$item["quantity"]*$product->get_price()
 	 	);
 	 	unset( $cart->cart_contents[ $cart_item_key ] );
 	 	$cart->calculate_totals();
-	 	$this->user['cart_size'] = $cart->get_cart_contents_count();
-	 	$this->user['cart_subtotal'] = $cart->subtotal;
+	 	$this->user['wc cart size'] = $cart->get_cart_contents_count();
+	 	$this->user['wc cart value'] = $cart->subtotal;
 	 	if (!is_user_logged_in()) {
 			$this->woopra->identify($this->user);
 	 	} else {
 	 		$this->woopra_detect();
 	 	}
-	 	$this->woopra->track('cart_update', $params, true);
+	 	$this->woopra->track('wc cart update', $params, true);
 	 }
 
 	 /**
@@ -228,20 +228,20 @@ class WoopraFrontend extends Woopra {
 	 	$item = $content[$cart_item_key];
 	 	$product = get_product( $item['variation_id'] ? $item['variation_id'] : $item['product_id'] );
 	 	$params = array(
-	 		"item_sku" => $product->get_sku(),
-	 		"item_title" => $product->get_title(),
-	 		"item_price" => $product->get_price(),
+	 		"item sku" => $product->get_sku(),
+	 		"item title" => $product->get_title(),
+	 		"item price" => $product->get_price(),
 	 		"quantity" => $quantity,
-	 		"price" => $quantity*$product->get_price()
+	 		"value" => $quantity*$product->get_price()
 	 	);
-	 	$this->user['cart_size'] = $cart->get_cart_contents_count();
-	 	$this->user['cart_subtotal'] = $cart->subtotal;
+	 	$this->user['wc cart size'] = $cart->get_cart_contents_count();
+	 	$this->user['wc cart value'] = $cart->subtotal;
 	 	if (!is_user_logged_in()) {
 			$this->woopra->identify($this->user);
 	 	} else {
 	 		$this->woopra_detect();
 	 	}
-	 	$this->woopra->track('cart_update', $params, true);
+	 	$this->woopra->track('wc cart update', $params, true);
 	 }
 
 	 /**
@@ -249,8 +249,8 @@ class WoopraFrontend extends Woopra {
 	 * @return none
 	 */
 	 function track_checkout($order_id, $params) {
-	 	$this->user["cart_subtotal"] = 0;
-	 	$this->user["cart_size"] = 0;
+	 	$this->user["wc cart size"] = 0;
+	 	$this->user["wc cart value"] = 0;
 	 	if (!is_user_logged_in()) {
 	 		$this->user['name'] = $params["billing_first_name"] . " " . $params["billing_last_name"];
 			$this->user['email'] = $params["billing_email"];
@@ -262,15 +262,15 @@ class WoopraFrontend extends Woopra {
 	 	$cart = $woocommerce->cart;
 	 	$order = new WC_Order($order_id);
 	 	$new_params = array(
-	 		"cart_subtotal" => $cart->subtotal,
-	 		"cart_total" => $order->get_total(),
-	 		"cart_size" => $order->get_item_count(),
-	 		"payment_method" => $params["payment_method"],
-	 		"shipping_method" => $order->get_shipping_method(),
-	 		"order_discount" => $order->get_total_discount(),
-	 		"order_number" => $order->get_order_number()
+	 		"cart subtotal" => $cart->subtotal,
+	 		"cart value" => $order->get_total(),
+	 		"cart size" => $order->get_item_count(),
+	 		"payment method" => $params["payment_method"],
+	 		"shipping method" => $order->get_shipping_method(),
+	 		"order discount" => $order->get_total_discount(),
+	 		"order number" => $order->get_order_number()
 	 	);
-	 	$this->woopra->track('checkout', $new_params, true);
+	 	$this->woopra->track('wc checkout', $new_params, true);
 	 }
 
 	 /**
@@ -283,10 +283,10 @@ class WoopraFrontend extends Woopra {
 			$this->woopra_detect();
 			$params = array(
 		 		"code" => $coupon->code,
-		 		"discount_type" => $coupon->discount_type,
+		 		"discount type" => $coupon->discount_type,
 		 		"amount" => $coupon->amount
 		 	);
-			$this->woopra->track('coupon_applied', $params, true);
+			$this->woopra->track('wc coupon applied', $params, true);
 		}
 	 }
 	
@@ -309,7 +309,7 @@ class WoopraFrontend extends Woopra {
 	}
 	
 	function track() {
-		if ($this->get_option('track_author') && is_single()) {
+		if ($this->get_option('track_article') && is_single()) {
 			$page_data = array();
 	        wp_reset_query();
 	        global $post;
@@ -317,7 +317,10 @@ class WoopraFrontend extends Woopra {
 	        $myvar = $myvar[0]->cat_name;
 			$page_data["author"] = js_escape(get_the_author_meta("display_name",$post->post_author));
 			$page_data["category"] = isset($myvar) ? js_escape($myvar) : "Uncategorized";
-			$this->woopra->track("pv", $page_data)->js_code();
+			$page_data["permalink"] = js_escape(get_the_permalink());
+			$page_data["title"] = js_escape(get_the_title());
+			$page_data["post date"] = get_the_time('U')*1000;
+			$this->woopra->track("wp article", $page_data)->js_code();
 		} else {
 			$this->woopra->track()->js_code();
 		}

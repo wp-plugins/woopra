@@ -16,9 +16,9 @@
  * ViperBond007, DD32, and sivel are to credit by helping this plugin envole into a very
  * pretty PHP class format. 
  * 
- * @author Elie El Khoury <elie@woopra.com>
- * @version 2.5.3
- * @copyright 2013
+ * @author Elie Khoury <elie@woopra.com>
+ * @version 2.6
+ * @copyright 2014
  * @package woopra
  */
 
@@ -27,7 +27,7 @@
  * @since 1.4.1
  * @return none
  */
-DEFINE ('WOOPRA_VERSION', '2.5.3');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
+DEFINE ('WOOPRA_VERSION', '2.6');		// MAKE SURE THIS MATCHES THE VERSION ABOVE!!!!
 
 /*
 
