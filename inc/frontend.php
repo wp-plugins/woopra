@@ -360,6 +360,8 @@ class WoopraFrontend extends Woopra {
 		if ($this->get_option('use_timeout')) {
 			$this->config["idle_timeout"] = $this->get_option('timeout')*1000;
 		}
+		$this->config["download_tracking"] = $this->get_option('track_downloads') == 1 ? true : false;
+		$this->config["outgoing_tracking"] = $this->get_option('track_outgoing') == 1 ? true : false;
 		$this->config["hide_campaign"] = $this->get_option('hide_campaign') == 1 ? true : false;
 		$this->config["app"] = "wordpress";
 	}

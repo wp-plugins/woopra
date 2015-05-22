@@ -356,6 +356,8 @@ class WoopraAdmin extends Woopra {
             'track_article'		=> 1,
 			'ignore_admin'		=> 0,
 			'track_admin'		=> 0,
+			'track_downloads' => 0,
+			'track_outgoing' => 0,
 			'use_timeout'		=> 0,
 			'process_event'		=> 1,
 			'timeout'			=> 600,
@@ -479,6 +481,20 @@ class WoopraAdmin extends Woopra {
 			<td>
 				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_article')); ?> id="track_article" name="woopra[track_article]"/> <label for="track_article"><?php _e("Track \"Article View\" action instead of \"Pageview\" for articles. (Recommended)"); ?> </label>
 				<p class="description"><?php _e("Enable this check box if you want Woopra to track your blog posts as a custom event (author and category properties are included)",'woopra'); ?></p>
+			</td>
+		</tr>
+		<tr align="top">
+			<th scope="row"><?php _e('Track Downloads','woopra') ?></th>
+			<td>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_downloads')); ?> id="track_downloads" name="woopra[track_downloads]"/> <label for="track_downloads"><?php _e("Enable Download Tracking"); ?> </label>
+				<p class="description"><?php _e("Woopra will identify downloadable files by their extensions and track when visitors click on them (e.g. .pdf, .dmg, .exe...)",'woopra'); ?></p>
+			</td>
+		</tr>
+		<tr align="top">
+			<th scope="row"><?php _e('Track Outgoing Links','woopra') ?></th>
+			<td>
+				<input type="checkbox" value="1"<?php checked('1', $this->get_option('track_outgoing')); ?> id="track_outgoing" name="woopra[track_outgoing]"/> <label for="track_outgoing"><?php _e("Enable Outgoing Link Tracking"); ?> </label>
+				<p class="description"><?php _e("Woopra will identify urls that are pointing to outbound domains and track when visitors click on them.",'woopra'); ?></p>
 			</td>
 		</tr>
 		<tr align="top">
