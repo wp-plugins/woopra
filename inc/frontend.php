@@ -179,7 +179,7 @@ class WoopraFrontend extends Woopra {
 	 		"item title" => $product->get_title(),
 	 		"item price" => $product->get_price(),
 	 		"quantity" => ($quantity_after - $quantity_before),
-	 		"price" => ($quantity_after - $quantity_before)*$product->get_price()
+	 		"value" => ($quantity_after - $quantity_before)*$product->get_price()
 	 	);
 	 	$this->user['wc cart size'] = $cart->get_cart_contents_count();
 	 	$this->user['wc cart value'] = $cart->subtotal;
