@@ -84,7 +84,8 @@ class WoopraFrontend extends Woopra {
 		 				add_action('woocommerce_cart_loaded_from_session', array(&$this, 'initialize_cart_quantities'));
 		 				add_action('woocommerce_after_cart_item_quantity_update', array(&$this, 'track_cart_quantity'));
 		 				add_action('woocommerce_before_cart_item_quantity_zero', array(&$this, 'track_cart_quantity_zero'));
-		 				add_action('woocommerce_add_to_cart', array(&$this, 'track_cart_add'));
+		 				add_action('woocommerce_add_to_cart', array(&$this, 'track_cart_add'), 2, 6);
+		 				add_action('woocommerce_cart_item_removed', array(&$this, 'track_cart_remove'));
 		 			break;
 		 			case "checkout":
 		 				add_action('woocommerce_checkout_order_processed', array(&$this, 'track_checkout'), 10, 2);
@@ -179,7 +180,7 @@ class WoopraFrontend extends Woopra {
 	 		"item title" => $product->get_title(),
 	 		"item price" => $product->get_price(),
 	 		"quantity" => ($quantity_after - $quantity_before),
-	 		"price" => ($quantity_after - $quantity_before)*$product->get_price()
+	 		"value" => ($quantity_after - $quantity_before)*$product->get_price()
 	 	);
 	 	$this->user['wc cart size'] = $cart->get_cart_contents_count();
 	 	$this->user['wc cart value'] = $cart->subtotal;
@@ -237,6 +238,34 @@ class WoopraFrontend extends Woopra {
 	 		"item price" => $product->get_price(),
 	 		"quantity" => $quantity,
 	 		"value" => $quantity*$product->get_price()
+	 	);
+	 	$this->user['wc cart size'] = $cart->get_cart_contents_count();
+	 	$this->user['wc cart value'] = $cart->subtotal;
+	 	if (!is_user_logged_in()) {
+			$this->woopra->identify($this->user);
+	 	} else {
+	 		$this->woopra_detect();
+	 	}
+	 	$this->woopra->track('wc cart update', $params, true);
+	 }
+	 
+	 /**
+	 * Tracks when item is removed from cart
+	 * @return none
+	 */
+	 function track_cart_remove($cart_item_key) {
+	 	global $woocommerce;
+	 	$cart = $woocommerce->cart;
+	 	$content = $cart->removed_cart_contents;
+	 	$item = $content[$cart_item_key];
+	 	$quantity = $item["quantity"];
+	 	$product = get_product( $item['variation_id'] ? $item['variation_id'] : $item['product_id'] );
+	 	$params = array(
+	 		"item sku" => $product->get_sku(),
+	 		"item title" => $product->get_title(),
+	 		"item price" => $product->get_price(),
+	 		"quantity" => -$quantity,
+	 		"value" => -$quantity*$product->get_price()
 	 	);
 	 	$this->user['wc cart size'] = $cart->get_cart_contents_count();
 	 	$this->user['wc cart value'] = $cart->subtotal;
@@ -313,7 +342,7 @@ class WoopraFrontend extends Woopra {
 	}
 	
 	function track() {
-		if ($this->get_option('track_article') && is_single()) {
+		if ($this->get_option('track_article') && is_single() && get_post_type(get_the_ID()) == 'post') {
 			$page_data = array();
 	        wp_reset_query();
 	        global $post;

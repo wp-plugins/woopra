@@ -4,7 +4,7 @@ Web site: http://www.woopra.com
 Tags: statistics, analytics, stats, real-time, chat
 Requires at least: 2.7.0
 Tested up to: 4.2
-Stable tag: 2.7
+Stable tag: 2.7.1
 
 This plugin adds Woopra's real-time customer analytics to any WordPress installation.
 
@@ -67,6 +67,10 @@ Q. My Woopra plugin is not working.
 A. Make sure that the plugin is active. If it's active and the code is not showing up on your pages (between <head> and </head>), make sure your theme supports/contains the `<?php wp_head(); ?>` hook.
 
 == Changelog ==
+
+= 2.7.1 (06-23-15) =
+* [FIX] WooCommerce events
+* [FIX] Limit Article View to blog posts only (exclude custom post types)
 
 = 2.7 (05-22-15) =
 * [NEW] Add download tracking option
