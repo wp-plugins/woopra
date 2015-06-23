@@ -342,7 +342,7 @@ class WoopraFrontend extends Woopra {
 	}
 	
 	function track() {
-		if ($this->get_option('track_article') && is_single()) {
+		if ($this->get_option('track_article') && is_single() && get_post_type(get_the_ID()) == 'post') {
 			$page_data = array();
 	        wp_reset_query();
 	        global $post;
